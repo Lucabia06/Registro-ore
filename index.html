@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1f1f1d" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f1f3f2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1110" media="(prefers-color-scheme: dark)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -15,12 +15,15 @@
 <title>Registro Ore</title>
 <style>
 :root{
-  --bg:#f6f6f4;--card:#fff;--text:#1d1d1b;--muted:#6b6b66;--line:#e3e3de;
-  --accent:#2f5bd3;--accent-soft:#e8eefc;--danger:#c0392b;--ok:#1e8e5a;
+  /* layout: colonna centrale, sezioni separate da titoli e superfici bianche su fondo grigio, numeri grandi */
+  --bg:#f1f3f2;--card:#fff;--text:#16201d;--muted:#6b7672;--line:#e5e9e7;
+  --accent:#1f9e89;--accent-soft:#e2f3ef;--accent-ink:#0f6b5c;--danger:#d0453a;--ok:#1f9e89;
+  --hero:#16201d;--hero-ink:#fff;--hero-muted:#a9b6b2;
 }
 @media (prefers-color-scheme: dark){
-  :root{--bg:#161615;--card:#1f1f1d;--text:#ececea;--muted:#9a9a94;--line:#33332f;
-  --accent:#7b9cf0;--accent-soft:#25304d;--danger:#e76f5f;--ok:#4cc38a;}
+  :root{--bg:#0d1110;--card:#181d1c;--text:#eef2f1;--muted:#93a09c;--line:#27302d;
+  --accent:#3cc4ab;--accent-soft:#143832;--accent-ink:#7fe0cd;--danger:#f07468;--ok:#3cc4ab;
+  --hero:#1f2826;--hero-ink:#fff;--hero-muted:#93a09c;}
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
@@ -94,6 +97,13 @@ details summary{cursor:pointer;color:var(--muted)}
 .run{display:flex;align-items:center;gap:10px;background:color-mix(in srgb,var(--ok) 12%,var(--card));border:1px solid color-mix(in srgb,var(--ok) 45%,transparent);border-radius:10px;padding:10px 12px;margin-bottom:12px}
 .run .pulse{width:10px;height:10px;border-radius:50%;background:var(--ok);flex:none;animation:pulse 1.6s infinite}
 @keyframes pulse{50%{opacity:.3}}
+/* nuova attività unificata */
+#qForm[data-m=start] .qm-date,#qForm[data-m=start] .qm-time,#qForm[data-m=todo] .qm-time,#qForm[data-m=todo] .qm-link{display:none}
+li.todo .tmin{font-size:12px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.sheet .lead{margin:0 0 12px;color:var(--muted)}
+.sub-h{display:flex;justify-content:space-between;font-size:11px;font-weight:650;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:16px 0 2px;padding:0 2px}
+#dayDone .item{padding:8px 4px}
+.badge-run{font-size:12px;color:var(--ok);font-weight:600;white-space:nowrap}
 /* da fare */
 ul.todos{list-style:none;padding:0;margin:8px 0}
 li.todo{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
@@ -165,6 +175,128 @@ li.todo.done .tt{text-decoration:line-through;color:var(--muted)}
 .yr-d{aspect-ratio:1;font-size:10px;display:flex;align-items:center;justify-content:center;border-radius:4px;background:var(--bg);cursor:pointer}
 .yr-d.today{outline:2px solid var(--accent)}
 
+/* ---------- STILE: superfici piatte, angoli morbidi, pulsanti a pillola ---------- */
+body{font-size:15px;letter-spacing:-.005em}
+header{background:var(--bg);border-bottom:0}
+header h1{font-size:18px;font-weight:700}
+nav button{border-radius:999px;padding:8px 14px;font-weight:500}
+nav button.active{background:var(--card);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+main{max-width:1100px}
+.card{border:0;border-radius:18px;padding:18px}
+.btn{border-radius:999px;padding:8px 16px;font-weight:600;border-color:var(--line)}
+.btn.primary{background:var(--accent);border-color:var(--accent)}
+.btn.small{padding:5px 12px}
+input,select,textarea{border-radius:12px;padding:11px 12px;border-color:transparent;background:var(--bg)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+label{font-weight:500}
+.seg{border:0;background:var(--bg);border-radius:999px;padding:3px;gap:2px}
+.seg button{border-radius:999px;padding:6px 14px}
+.seg button.active{background:var(--card);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.stat{border:0;border-radius:16px}
+.sheet{border-radius:22px}
+.tag{border-radius:999px}
+.toast{border-radius:999px;background:var(--hero);color:var(--hero-ink)}
+/* schermata Oggi */
+#tab-registro{max-width:640px;margin:0 auto}
+.hero{background:var(--hero);color:var(--hero-ink);border-radius:24px;padding:20px 20px 18px;margin-bottom:22px}
+.hero-top{display:flex;align-items:center;gap:6px;color:var(--hero-muted);font-size:14px;font-weight:600}
+.hero-top .icon-btn{background:transparent;border:0;color:var(--hero-muted);font-size:20px;width:32px;height:32px;border-radius:50%;cursor:pointer;line-height:1}
+.hero-top .icon-btn:hover{background:rgba(255,255,255,.08)}
+.date-pick{position:relative;cursor:pointer;padding:4px 6px;border-radius:8px}
+.date-pick input{position:absolute;inset:0;opacity:0;cursor:pointer;padding:0}
+.hero-num{font-size:44px;font-weight:700;letter-spacing:-.02em;margin:10px 0 2px;font-variant-numeric:tabular-nums;line-height:1.1}
+.hero-sub{color:var(--hero-muted);font-size:14px}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}
+.act{display:flex;flex-direction:column;align-items:center;gap:7px;background:transparent;border:0;color:var(--hero-ink);font:inherit;font-size:13px;font-weight:600;cursor:pointer;padding:4px}
+.act .ic{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.12);display:grid;place-items:center;font-size:18px}
+.act:first-child .ic{background:var(--accent);color:#fff}
+.act:hover .ic{filter:brightness(1.15)}
+.sec{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:700;color:var(--muted);margin:22px 4px 8px;text-transform:uppercase;letter-spacing:.06em}
+.sec .sec-r{font-weight:600;text-transform:none;letter-spacing:0;font-size:13px}
+.sec .link{background:none;border:0;color:var(--accent-ink);font:inherit;font-weight:600;cursor:pointer;padding:0}
+.list{padding:4px 0}
+.list:empty::after{content:attr(data-empty);display:block;padding:14px 18px;color:var(--muted)}
+.ri{display:flex;align-items:center;gap:12px;padding:11px 16px;cursor:pointer}
+.ri+.ri{border-top:1px solid var(--line)}
+.ri:hover{background:color-mix(in srgb,var(--bg) 50%,var(--card))}
+.av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;flex:none;letter-spacing:.02em}
+.ri-m{flex:1;min-width:0}
+.ri-t{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ri-s{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.ri-s i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-left:5px;vertical-align:1px}
+.ri-v{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ri.done .ri-t{color:var(--muted);text-decoration:line-through}
+.chk{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:transparent;color:transparent;flex:none;cursor:pointer;display:grid;place-items:center;font-size:14px;font-weight:700;padding:0}
+.chk:hover{border-color:var(--accent)}
+.chk.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.play{width:36px;height:36px;border-radius:50%;border:0;background:var(--accent-soft);color:var(--accent-ink);cursor:pointer;flex:none;font-size:13px;padding:0}
+.live{width:10px;height:10px;border-radius:50%;background:var(--accent);flex:none;animation:pulse 1.6s infinite;margin:0 13px}
+/* attività in corso */
+.run{background:var(--card);border:0;border-radius:18px;padding:14px 16px;gap:12px;margin-bottom:12px;box-shadow:inset 4px 0 0 var(--accent)}
+.run-t{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.run-s{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#runBanner{max-width:640px;margin:0 auto}
+body:not([data-tab=registro]) #runBanner{max-width:900px}
+/* finestre */
+.sheet-h h2{font-size:18px}
+.sheet form .row.full{margin-top:6px}
+.sheet .btn.primary{flex:1;padding:12px 16px;font-size:15px}
+#entriesList .ri{padding-left:4px;padding-right:4px}
+.moremini{background:none;border:0;color:var(--accent-ink);font:inherit;font-weight:600;cursor:pointer;padding:2px 0;text-align:left}
+
+/* riepilogo a riquadri: la superficie è proporzionale alle ore */
+#tab-riepilogo{max-width:900px;margin:0 auto}
+.sum-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.sum-bar .seg{background:var(--card)}
+.sum-bar .seg button.active{background:var(--text);color:var(--card);box-shadow:none}
+.sum-nav{display:flex;align-items:center;gap:4px;font-weight:700;font-size:16px}
+.sum-nav #sLabel{min-width:150px;text-align:center}
+.icon-btn2{width:34px;height:34px;border-radius:50%;border:0;background:var(--card);color:var(--text);font-size:18px;cursor:pointer;line-height:1}
+#sFilt{width:auto;max-width:100%;background:var(--card);border-radius:999px;padding:8px 14px;font-weight:600}
+.sum-total{margin:18px 4px 14px}
+.sum-big{font-size:44px;font-weight:700;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.sum-sub{color:var(--muted);margin-top:2px}
+.sum-sub b{color:var(--text)}
+.tm{position:relative;margin:0 -0px}
+.tile{position:absolute;border:0;border-radius:10px;text-align:left;font:inherit;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;gap:4px;overflow:hidden;transition:filter .15s}
+.tile:hover{filter:brightness(1.06)}
+.tile:focus-visible{outline:3px solid var(--text);outline-offset:2px}
+.tile .tl-n{font-weight:500;letter-spacing:-.01em;line-height:1.05;max-width:100%;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
+.tile .tl-r{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.tile .tl-h{font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tile .tl-p{font-size:12px;opacity:.8;font-weight:500}
+.tile.other{background:var(--card)!important;color:var(--text)!important;cursor:default}
+.sum-hint{font-size:13px;margin:10px 4px 0}
+.fchip{display:inline-flex;align-items:center;gap:6px}
+
+/* attività in corso: riga compatta nelle altre schede */
+body:not([data-tab=registro]) .run{padding:8px 8px 8px 16px;border-radius:999px}
+body:not([data-tab=registro]) .run .av,body:not([data-tab=registro]) .run .btn:not(.primary){display:none}
+body:not([data-tab=registro]) .run-main{display:flex;align-items:baseline;gap:10px}
+body:not([data-tab=registro]) .run .run-t{font-size:16px}
+#tab-calendario{max-width:none}
+/* medie */
+.list.avg .ri{padding:11px 0;cursor:default}
+.list.avg .ri:hover{background:none}
+.avg-bar{height:4px;border-radius:2px;background:var(--bg);margin-top:7px;overflow:hidden}
+.avg-bar i{display:block;height:100%;border-radius:2px}
+/* calendario e assistente con gli stessi controlli del riepilogo */
+#calViews{background:var(--bg)}
+#calViews button.active,#qMode button.active{background:var(--text);color:var(--card);box-shadow:none}
+#calBy,#q_kind,#q_value{border-radius:999px;font-weight:600}
+#calBy{width:auto;padding:8px 14px}
+#calViews{background:var(--card)}
+#calBy{background:var(--card)}
+#tab-calendario .sum-nav #calTitle{min-width:150px;text-align:center}
+.wk{border-color:var(--line);border-radius:12px}
+.ev{border-radius:6px}
+.mo-grid{border-radius:12px;overflow:hidden}
+#tab-assistente{max-width:760px;margin:0 auto}
+#q_result .stat{background:var(--bg)}
+.msg{border-radius:16px}
+.msg.a{border:0;background:var(--bg)}
+.card h2{font-size:16px;font-weight:700}
+
 /* ---------- SMARTPHONE ---------- */
 @media (max-width:720px){
   body{font-size:15px}
@@ -202,11 +334,23 @@ li.todo.done .tt{text-decoration:line-through;color:var(--muted)}
   .msg{max-width:92%}
   .lhead{flex-direction:column;align-items:stretch}
   .lhead .row{flex-wrap:wrap!important}
-  #search,#monthFilter{width:100%!important;flex:1 1 100%}
+  #search{width:100%!important;flex:1 1 100%}
+  .hero{border-radius:22px;padding:18px 16px 16px}
+  .sum-bar .seg{flex:1;justify-content:space-between}.sum-bar .seg button{flex:1;padding:7px 6px}
+  .sum-nav{width:100%;justify-content:space-between}
+  #sFilt{flex:1 1 100%}
+  .timewrap .btn{padding:6px 9px;font-size:13px}
+  .sum-big{font-size:38px}
+
+  nav button.active{background:none;box-shadow:none;color:var(--accent-ink)}
+  .hero-num{font-size:40px}
+  .ri{padding:11px 14px}
+  .card{border-radius:16px}
 }
+@media (max-width:360px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.hero-num,.sum-big{font-size:34px}.act .ic{width:44px;height:44px}}
 </style>
 </head>
-<body>
+<body data-tab="registro">
 <header>
   <h1>⏱ Registro Ore</h1>
   <nav id="nav">
@@ -234,37 +378,60 @@ li.todo.done .tt{text-decoration:line-through;color:var(--muted)}
 
 <!-- REGISTRO -->
 <section id="tab-registro">
-  <div class="two">
-    <div class="card">
-      <h2>Nuova attività</h2>
-      <form id="entryForm" class="grid" autocomplete="off"></form>
+  <div class="hero">
+    <div class="hero-top">
+      <button class="icon-btn" id="tPrev" aria-label="Giorno precedente">‹</button>
+      <label class="date-pick"><span id="todoTitle">Oggi</span><input type="date" id="t_date" aria-label="Scegli il giorno"></label>
+      <button class="icon-btn" id="tNext" aria-label="Giorno successivo">›</button>
     </div>
-    <div class="card">
-      <div class="row" style="justify-content:space-between">
-        <h2 style="margin:0" id="todoTitle">Da fare oggi</h2>
-        <div class="row" style="gap:4px"><button class="btn small" id="tPrev">‹</button><input type="date" id="t_date" style="width:150px;padding:4px 6px"><button class="btn small" id="tNext">›</button></div>
-      </div>
-      <form id="todoForm" class="row" style="margin-top:10px;flex-wrap:nowrap">
-        <input id="t_text" placeholder="Cosa devi fare?" style="flex:2">
-        <input id="t_client" list="dl_client" placeholder="Cliente" style="flex:1">
-        <button class="btn primary">+</button>
-      </form>
-      <ul class="todos" id="todoList"></ul>
-      <div class="row" style="justify-content:space-between">
-        <span class="muted" id="todoCount"></span>
-        <button class="btn small" id="todoCarry">Riporta le non fatte da ieri</button>
-      </div>
-      <p class="muted" style="font-size:12px;margin:8px 0 0">Tocca un elemento per modificarlo · ▶ avvia la registrazione da adesso.</p>
+    <div class="hero-num" id="dayTotal">0h 00m</div>
+    <div class="hero-sub" id="daySub">lavorate</div>
+    <div class="actions">
+      <button class="act" data-add="start"><span class="ic">▶</span>Avvia</button>
+      <button class="act" data-add="todo"><span class="ic">＋</span>Da fare</button>
+      <button class="act" data-add="done"><span class="ic">✓</span>Registra</button>
     </div>
   </div>
+  <div class="sec"><span>Da fare</span><span class="sec-r"><button class="link hidden" id="todoCarry"></button> <span id="todoCount"></span></span></div>
+  <div class="card list" id="todoList" style="padding:4px 0" data-empty="Niente in lista. Aggiungi con ＋ Da fare."></div>
+  <div class="sec"><span>Svolte</span><span class="sec-r" id="dayCount"></span></div>
+  <div class="card list" id="dayDone" style="padding:4px 0" data-empty="Nessuna attività registrata."></div>
   <datalist id="dl_client"></datalist><datalist id="dl_type"></datalist>
+</section>
+
+<!-- RIEPILOGO -->
+<section id="tab-riepilogo" class="hidden">
+  <div class="sum-bar">
+    <div class="seg" id="sPer"><button data-v="day">Giorno</button><button data-v="week">Settimana</button><button data-v="month">Mese</button><button data-v="year">Anno</button></div>
+    <div class="sum-nav"><button class="icon-btn2" id="sPrev" aria-label="Periodo precedente">‹</button><span id="sLabel"></span><button class="icon-btn2" id="sNext" aria-label="Periodo successivo">›</button></div>
+  </div>
+  <div class="sum-bar">
+    <div class="seg" id="sBy"><button data-v="client">Clienti</button><button data-v="type">Attività</button><button data-v="tag">Tag</button></div>
+    <select id="sFilt" aria-label="Filtra"></select>
+  </div>
+  <div class="sum-total"><div class="sum-big" id="sTot">0h 00m</div><div class="sum-sub" id="sSub"></div></div>
+  <div id="tm" class="tm"></div>
+  <p class="muted sum-hint" id="sHint">Tocca un riquadro per vedere cosa contiene.</p>
+
+  <div class="sec"><span>Dati</span></div>
+  <div class="card">
+    <h2 id="r_pivotTitle">Ore per periodo</h2>
+    <div class="tablewrap"><table id="r_pivot"></table></div>
+  </div>
+  <div class="card">
+    <h2>Durata media per attività</h2>
+    <div class="list avg" id="r_avg"></div>
+  </div>
+  <div class="card">
+    <h2>Durata media per tag</h2>
+    <div class="list avg" id="r_avgTag"></div>
+  </div>
 
   <div class="card">
     <div class="row lhead" style="justify-content:space-between;margin-bottom:4px">
-      <h2 style="margin:0">Voci registrate</h2>
+      <h2 style="margin:0">Tutte le attività</h2>
       <div class="row" style="flex:1;justify-content:flex-end;flex-wrap:nowrap">
-        <input id="search" placeholder="Cerca cliente, attività, tag…" style="width:240px">
-        <input type="month" id="monthFilter" style="width:160px" title="Filtra per mese">
+        <input id="search" placeholder="Cerca nel periodo…" style="width:260px">
       </div>
     </div>
     <div id="entriesList"></div>
@@ -272,50 +439,18 @@ li.todo.done .tt{text-decoration:line-through;color:var(--muted)}
   </div>
 </section>
 
-<!-- RIEPILOGO -->
-<section id="tab-riepilogo" class="hidden">
-  <div class="card">
-    <div class="grid">
-      <label>Raggruppa per<select id="r_group"><option value="client">Cliente / Lavoro</option><option value="type">Tipo di attività</option><option value="tag">Tag</option></select></label>
-      <label>Periodo<select id="r_period"><option value="day">Giorni</option><option value="week" selected>Settimane</option><option value="month">Mesi</option></select></label>
-      <label>Dal<input type="date" id="r_from"></label>
-      <label>Al<input type="date" id="r_to"></label>
-      <label>Filtra cliente<select id="r_client"><option value="">Tutti</option></select></label>
-    </div>
-  </div>
-  <div class="stats" id="r_stats"></div>
-  <div class="card">
-    <h2 id="r_pivotTitle">Ore per periodo</h2>
-    <div class="tablewrap"><table id="r_pivot"></table></div>
-  </div>
-  <div class="card">
-    <h2>Medie per tipo di attività</h2>
-    <div class="tablewrap"><table id="r_avg"></table></div>
-  </div>
-  <div class="card">
-    <h2>Medie per tag</h2>
-    <div class="tablewrap"><table id="r_avgTag"></table></div>
-  </div>
-</section>
-
 <!-- CALENDARIO -->
 <section id="tab-calendario" class="hidden">
-  <div class="card">
-    <div class="row" style="justify-content:space-between;margin-bottom:10px">
-      <div class="row"><button class="btn" id="calToday">Oggi</button><button class="btn" id="calPrev" aria-label="Precedente">‹</button><button class="btn" id="calNext" aria-label="Successivo">›</button></div>
-      <div class="seg" id="calViews"><button data-v="day">Giorno</button><button data-v="week">Sett.</button><button data-v="month">Mese</button><button data-v="year">Anno</button></div>
-    </div>
-    <div class="row" style="justify-content:space-between;margin-bottom:10px">
-      <h2 id="calTitle" style="margin:0"></h2>
-      <select id="calBy" style="width:auto"><option value="client">Colori per cliente</option><option value="tag">Colori per tag</option><option value="type">Colori per attività</option></select>
-    </div>
-    <div id="calBody"></div>
-    <div class="row" style="margin-top:12px;justify-content:space-between;align-items:flex-start">
-      <div id="calLegend" style="flex:1"></div>
-      <button class="btn small" id="calColors">🎨 Modifica colori</button>
-    </div>
-    <p class="muted hide-m" style="font-size:12px;margin:6px 0 0">Clicca su uno spazio vuoto della griglia per aggiungere un'attività a quell'ora.</p>
+  <div class="sum-bar">
+    <div class="seg" id="calViews"><button data-v="day">Giorno</button><button data-v="week">Settimana</button><button data-v="month">Mese</button><button data-v="year">Anno</button></div>
+    <div class="sum-nav"><button class="icon-btn2" id="calPrev" aria-label="Precedente">‹</button><span id="calTitle" title="Torna a oggi" style="cursor:pointer"></span><button class="icon-btn2" id="calNext" aria-label="Successivo">›</button></div>
   </div>
+  <div class="card" style="padding:12px"><div id="calBody"></div></div>
+  <div class="sum-bar" style="align-items:flex-start">
+    <div id="calLegend" style="flex:1;min-width:0"></div>
+    <div class="row" style="gap:6px"><select id="calBy" aria-label="Colora per"><option value="client">Colori per cliente</option><option value="tag">Colori per tag</option><option value="type">Colori per attività</option></select><button class="btn small" id="calColors" title="Modifica colori">🎨</button></div>
+  </div>
+  <p class="muted hide-m" style="font-size:12px;margin:2px 4px 0">Clicca su uno spazio vuoto della griglia per aggiungere un'attività a quell'ora.</p>
 </section>
 
 <!-- ASSISTENTE -->
@@ -416,19 +551,30 @@ function periodKey(ds,p){if(p==='day')return ds;if(p==='month')return ds.slice(0
 function periodLabel(k,p){
   if(p==='day')return fmtDate(k);
   if(p==='month'){const[y,m]=k.split('-');return new Date(y,m-1,1).toLocaleDateString('it-IT',{month:'short',year:'numeric'})}
-  return k.replace('-S',' sett. ');
+  return 'sett. '+Number(k.split('-S')[1]);
 }
 let toastT;function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),1800)}
 
 /* ================= Colori ================= */
-const PAL=['#3b6fd8','#e0662f','#1e9e6a','#9b4dd6','#d4a017','#d63f78','#1fa3c8','#6b8e23','#a0522d','#5b5bd6','#c0392b','#16a085'];
+const PAL=['#548b8b','#e59658','#cf4872','#283b8a','#e3d53f','#2f9e89','#7b5ea7','#3d7cc9','#b5643c','#6b8e23','#c0392b','#16a085'];
 const hash=s=>{let h=7;for(const c of String(s))h=(h*31+c.charCodeAt(0))>>>0;return h};
-const colorOf=(k,n)=>n==='(senza tag)'?'#8a8a85':(colors[k][n]||PAL[hash(n)%PAL.length]);
+/* colore predefinito: a ogni nuovo nome si assegna (e si salva) il colore meno usato, così due voci non hanno lo stesso colore */
+let colorDirty=false;
+function colorOf(k,n){
+  if(!n||n==='(senza tag)')return '#8a8a85';
+  if(colors[k][n])return colors[k][n];
+  const used={};Object.values(colors[k]).forEach(v=>used[v]=(used[v]||0)+1);
+  const st=hash(n)%PAL.length;let best=PAL[st],bc=Infinity;
+  for(let i=0;i<PAL.length;i++){const c=PAL[(st+i)%PAL.length],u=used[c]||0;if(u<bc){bc=u;best=c}}
+  colors[k][n]=best;if(!colorDirty){colorDirty=true;setTimeout(()=>{colorDirty=false;saveC()},800)}
+  return best;
+}
 const tagHtml=t=>{const c=colorOf('tag',t);return `<span class="tag" style="background:${c}22"><i style="background:${c}"></i>${esc(t)}</span>`};
 const allTags=()=>uniq([...entries.flatMap(tagsOf),...Object.keys(colors.tag)]);
 
 /* ================= Menu, tab, modale ================= */
 function showTab(name){
+  document.body.dataset.tab=name;
   document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
   document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!=='tab-'+name));
   if(name==='riepilogo')renderSummary();
@@ -472,92 +618,184 @@ document.addEventListener('click',ev=>{
 document.addEventListener('input',ev=>{const id=ev.target.id||'';const p=id.slice(0,2);
   if(id.endsWith('tags'))renderTagPick(p);if(id.endsWith('start')||id.endsWith('end'))updPreview(p)});
 
-/* form nuova attività */
-$('entryForm').innerHTML=fieldsHTML('f_')+`<div class="row full"><button class="btn primary" type="submit">Aggiungi</button><button class="btn" type="button" id="startTimer">▶ Avvia ora</button><span class="muted" id="f_dur"></span></div>`;
-function resetForm(){$('entryForm').reset();$('f_date').value=todayStr();updPreview('f_');renderTagPick('f_')}
-$('entryForm').onsubmit=ev=>{ev.preventDefault();const e=readFields('f_');e.id=uid();entries.push(e);save();resetForm();renderAll();toast(e.end?'Attività aggiunta':'Attività avviata')};
-$('startTimer').onclick=()=>{$('f_start').value=nowTime();$('f_end').value='';$('entryForm').requestSubmit()};
+/* aggiunta: Avvia / Da fare / Registra, ognuna nella sua finestra con solo i campi necessari */
+let qMode='start';
+const QM={start:{title:'Avvia attività',btn:'▶ Avvia ora',note:'Cosa stai facendo'},
+  todo:{title:'Nuova cosa da fare',btn:'Aggiungi alla lista',note:'Cosa devi fare'},
+  done:{title:'Registra attività svolta',btn:'Registra',note:'Cosa hai fatto'}};
+function openAdd(m){
+  qMode=m;
+  openModal(QM[m].title,`<form id="qForm" class="grid" autocomplete="off" data-m="${m}">
+    <label class="full qm-link" id="qLinkW">Dalla lista<select id="q_link"></select></label>
+    <label class="full"><span>${QM[m].note}${m==='todo'?'':' <span style="opacity:.7">(facoltativo)</span>'}</span><input id="q_note" ${m==='todo'?'required':''} placeholder="es. Post Instagram di ottobre"></label>
+    <label>Cliente / Lavoro<input id="q_client" list="dl_client" placeholder="es. Rossi Srl" ${m==='todo'?'':'required'}></label>
+    <label>Tipo di attività<input id="q_type" list="dl_type" placeholder="es. Grafica" ${m==='todo'?'':'required'}></label>
+    <div class="tagpick full" id="q_tagpick"></div>
+    <div class="full" id="qTagW"><button type="button" class="moremini" id="qTagBtn">+ Tag</button><label class="hidden" id="qTagL">Tag (separati da virgola)<input id="q_tags" placeholder="es. social, urgente"></label></div>
+    <label class="qm-date ${m==='start'?'hidden':''}">Giorno<input type="date" id="q_date" ${m==='start'?'':'required'}></label>
+    <label class="qm-time ${m==='done'?'':'hidden'}">Inizio<div class="timewrap"><input type="time" id="q_start" ${m==='done'?'required':''}><button type="button" class="btn" data-now="q_start">Ora</button></div></label>
+    <label class="qm-time ${m==='done'?'':'hidden'}">Fine<div class="timewrap"><input type="time" id="q_end" ${m==='done'?'required':''}><button type="button" class="btn" data-now="q_end">Ora</button></div></label>
+    <div class="row full"><button class="btn primary" id="qGo">${QM[m].btn}</button><span class="muted" id="q_dur"></span></div></form>`);
+  $('q_date').value=m==='todo'?($('t_date').value||todayStr()):todayStr();
+  if(m==='done'){const e=toMin(nowTime());$('q_end').value=minToT(e);$('q_start').value=minToT(Math.max(0,e-60))}
+  $('qTagBtn').onclick=()=>{$('qTagL').classList.remove('hidden');$('qTagBtn').classList.add('hidden');$('q_tags').focus()};
+  $('q_link').onchange=()=>{const t=todos.find(x=>x.id===$('q_link').value);if(!t)return;
+    $('q_note').value=t.text;if(t.client)$('q_client').value=t.client;if(t.type)$('q_type').value=t.type;if((t.tags||[]).length)$('q_tags').value=t.tags.join(', ');renderTagPick('q_')};
+  $('q_date').addEventListener('input',()=>{if(m==='done')renderQLink()});
+  $('qForm').onsubmit=submitQuick;
+  renderQLink();renderTagPick('q_');updPreview('q_');
+  if(!isMobile())setTimeout(()=>{const w=$('qLinkW');if(!w)return;const f=$(m==='todo'?'q_note':w.classList.contains('hidden')?'q_client':'q_link');f&&f.focus()},50);
+}
+/* "Dalla lista": collega il tempo a una voce da fare */
+function renderQLink(){
+  if(!$('q_link'))return;
+  const d=qMode==='done'?($('q_date').value||todayStr()):todayStr(),cur=$('q_link').value;
+  const open=qMode==='todo'?[]:todos.filter(t=>t.date===d&&!t.done);
+  $('q_link').innerHTML='<option value="">Nessuna, attività libera</option>'+open.map(t=>`<option value="${t.id}">${esc(t.text)}${t.client?' · '+esc(t.client):''}</option>`).join('');
+  $('q_link').value=open.some(t=>t.id===cur)?cur:'';$('qLinkW').classList.toggle('hidden',!open.length);
+}
+function submitQuick(ev){
+  ev.preventDefault();const v=readFields('q_');
+  if(qMode==='todo'){
+    todos.push({id:uid(),date:v.date||todayStr(),text:v.note,client:v.client,type:v.type,tags:v.tags,done:false});
+    saveT();if(v.date&&v.date!==$('t_date').value)$('t_date').value=v.date;closeModal();renderTodos();renderLists();toast('Aggiunta alla lista');return;
+  }
+  if(qMode==='start'){v.date=todayStr();v.start=nowTime();v.end=''}
+  const lt=todos.find(x=>x.id===$('q_link').value);
+  v.id=uid();if(lt){v.todo=lt.id;if(!lt.client)lt.client=v.client;if(!lt.type)lt.type=v.type}
+  entries.push(v);save();
+  if(lt&&qMode==='done')lt.done=true;if(lt)saveT();
+  closeModal();renderAll();toast(qMode==='start'?'Avviata':lt?'Registrata e completata':'Registrata');
+}
+document.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>openAdd(b.dataset.add));
 
 /* modale modifica / nuova */
-let modalId=null;
+let modalId=null,modalPrefill=null;
 function openEntry(id,prefill){
-  const e=id?entries.find(x=>x.id===id):prefill;if(id&&!e)return;modalId=id||null;
+  const e=id?entries.find(x=>x.id===id):prefill;if(id&&!e)return;modalId=id||null;modalPrefill=id?null:(prefill||null);
   openModal(id?'Modifica attività':'Nuova attività',`<form id="mForm" class="grid" autocomplete="off">${fieldsHTML('m_')}
     <div class="row full" style="margin-top:4px"><button class="btn primary">${id?'Salva':'Aggiungi'}</button>
     ${id?`<button type="button" class="btn" onclick="resumeEntry('${id}')">▶ Riprendi ora</button><button type="button" class="btn danger" onclick="delEntry('${id}')">Elimina</button>`:''}
     <span class="muted" id="m_dur"></span></div></form>`);
   fillFields('m_',e);renderTagPick('m_');updPreview('m_');
   $('mForm').onsubmit=ev=>{ev.preventDefault();const v=readFields('m_');
-    if(modalId)Object.assign(entries.find(x=>x.id===modalId),v);else{v.id=uid();entries.push(v)}
+    if(modalId)Object.assign(entries.find(x=>x.id===modalId),v);else{v.id=uid();if(modalPrefill&&modalPrefill.todo)v.todo=modalPrefill.todo;entries.push(v)}
     save();closeModal();renderAll();toast(modalId?'Modifiche salvate':'Attività aggiunta')};
 }
 function resumeEntry(id){const e=entries.find(x=>x.id===id);entries.push({...e,tags:[...tagsOf(e)],id:uid(),date:todayStr(),start:nowTime(),end:''});save();closeModal();renderAll();toast('Avviata: '+e.client)}
-function stopEntry(id){const e=entries.find(x=>x.id===id);e.end=nowTime();save();renderAll();toast('Fermata · '+fmtH(durMin(e)))}
+function stopEntry(id){const e=entries.find(x=>x.id===id);e.end=nowTime();save();renderAll();
+  toast('Fermata · '+fmtH(durMin(e))+(e.todo&&todos.some(t=>t.id===e.todo&&!t.done)?' · spunta la voce quando è finita':''))}
 function delEntry(id){if(!confirm('Eliminare questa voce?'))return;entries=entries.filter(x=>x.id!==id);save();closeModal();renderAll();toast('Voce eliminata')}
 
 /* ================= Lista voci ================= */
-let listLimit=80;
+let listLimit=30;
 function renderLists(){
   const fill=(id,vals)=>$(id).innerHTML=vals.map(v=>`<option value="${esc(v)}">`).join('');
   fill('dl_client',uniq([...entries.map(e=>e.client),...todos.map(t=>t.client)]));fill('dl_type',uniq(entries.map(e=>e.type)));
-  const cs=$('r_client'),cur=cs.value;cs.innerHTML='<option value="">Tutti</option>'+uniq(entries.map(e=>e.client)).map(v=>`<option>${esc(v)}</option>`).join('');cs.value=cur;
 }
 function dayLabel(d){const t=todayStr();if(d===t)return'Oggi';if(d===dStr(addDays(new Date(),-1)))return'Ieri';
   const x=parseD(d);return x.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:x.getFullYear()===new Date().getFullYear()?undefined:'numeric'})}
-function itemHtml(e){const c=colorOf('client',e.client);
-  return `<div class="item" onclick="openEntry('${e.id}')"><span class="cb" style="background:${c}"></span><div class="main"><div class="t1"><b>${esc(e.client)}</b> · ${esc(e.type)}</div>
-  <div class="t2"><span>${e.start}–${e.end||'in corso'}</span>${tagsOf(e).map(tagHtml).join('')}${e.note?`<span class="note">${esc(e.note)}</span>`:''}</div></div>
-  <div class="dur">${e.end?fmtH(durMin(e)):`<button class="btn small primary" onclick="event.stopPropagation();stopEntry('${e.id}')">■ Stop</button>`}</div></div>`}
+const initials=s=>String(s||'?').trim().split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?';
+const avHtml=c=>{const k=colorOf('client',c||'');return `<span class="av" style="background:${k}24;color:${k}">${esc(initials(c))}</span>`};
+const dotsHtml=tags=>(tags||[]).map(t=>`<i style="background:${colorOf('tag',t)}" title="${esc(t)}"></i>`).join('');
+function itemHtml(e){
+  return `<div class="ri" onclick="openEntry('${e.id}')">${avHtml(e.client)}<div class="ri-m"><div class="ri-t">${esc(e.note||e.type)}</div>
+  <div class="ri-s">${esc(e.client)}${e.note?' · '+esc(e.type):''} · ${e.start}–${e.end||'in corso'}${dotsHtml(tagsOf(e))}</div></div>
+  <div class="ri-v">${e.end?fmtH(durMin(e)):`<button class="btn small primary" onclick="event.stopPropagation();stopEntry('${e.id}')">Stop</button>`}</div></div>`}
 function renderEntries(){
-  const q=$('search').value.toLowerCase(),m=$('monthFilter').value;
-  const list=entries.filter(e=>(!m||e.date.startsWith(m))&&(!q||[e.client,e.type,e.note,...tagsOf(e)].join(' ').toLowerCase().includes(q)))
+  const q=$('search').value.toLowerCase(),[f,t]=sRange(sPer,sRef);
+  const list=entries.filter(e=>e.date>=f&&e.date<=t&&filtMatch(e,sFilt)&&(!q||[e.client,e.type,e.note,...tagsOf(e)].join(' ').toLowerCase().includes(q)))
     .sort((a,b)=>(b.date+b.start).localeCompare(a.date+a.start));
   const byDay={};list.slice(0,listLimit).forEach(e=>(byDay[e.date]=byDay[e.date]||[]).push(e));
   $('entriesList').innerHTML=Object.keys(byDay).sort().reverse().map(d=>{const it=byDay[d];
     return `<div class="day-h"><span>${dayLabel(d)}</span><span>${fmtH(it.reduce((s,e)=>s+durMin(e),0))}</span></div>`+it.map(itemHtml).join('')}).join('')
-    ||'<p class="muted">Nessuna voce. Aggiungi la prima attività qui sopra.</p>';
+    ||'<p class="muted">Nessuna attività in questo periodo.</p>';
   const tot=list.reduce((s,e)=>s+durMin(e),0);
   $('entriesFoot').innerHTML=`${list.length} voci · Totale ${fmtH(tot)} (${fmtDec(tot)} h)`+(list.length>listLimit?` · <button class="btn small" onclick="listLimit+=100;renderEntries()">Mostra altre</button>`:'');
 }
-$('search').oninput=renderEntries;$('monthFilter').oninput=renderEntries;
+$('search').oninput=renderEntries;
 
+const elapsed=e=>{const st=parseD(e.date);const[h,m]=e.start.split(':').map(Number);st.setHours(h,m,0,0);return Math.max(0,Math.floor((Date.now()-st)/1000))};
+const fmtClock=sec=>`${Math.floor(sec/3600)}:${pad(Math.floor(sec%3600/60))}:${pad(sec%60)}`;
 function renderRun(){
   $('runBanner').innerHTML=entries.filter(e=>!e.end).map(e=>{
-    const mins=e.date===todayStr()?durMin({start:e.start,end:nowTime()}):null;
-    return `<div class="run"><span class="pulse"></span><div style="flex:1;min-width:0;cursor:pointer" onclick="openEntry('${e.id}')"><b>${esc(e.client)}</b> · ${esc(e.type)}<div class="muted" style="font-size:12px">In corso dalle ${e.start}${e.date!==todayStr()?' del '+fmtDate(e.date):' · '+fmtH(mins)}</div></div><button class="btn primary small" onclick="stopEntry('${e.id}')">■ Stop</button></div>`}).join('');
+    const lt=e.todo&&todos.find(t=>t.id===e.todo&&!t.done);
+    return `<div class="run row" style="flex-wrap:nowrap">${avHtml(e.client)}<div class="run-main" style="flex:1;min-width:0;cursor:pointer" onclick="openEntry('${e.id}')">
+      <div class="run-t" data-run="${e.id}">${fmtClock(elapsed(e))}</div><div class="run-s">${esc(e.note||e.type)} · ${esc(e.client)}</div></div>
+      ${lt?`<button class="btn small" onclick="toggleTodo('${e.todo}')" title="Ferma e completa">✓ Fatto</button>`:''}<button class="btn primary small" onclick="stopEntry('${e.id}')">Stop</button></div>`}).join('');
 }
-setInterval(renderRun,30000);
+setInterval(()=>{document.querySelectorAll('[data-run]').forEach(el=>{const e=entries.find(x=>x.id===el.dataset.run);if(e&&!e.end)el.textContent=fmtClock(elapsed(e))})},1000);
+setInterval(()=>{if(document.visibilityState==='visible')renderTodos()},60000);
 
-/* ================= Da fare ================= */
+/* ================= Oggi: da fare + svolte ================= */
 $('t_date').value=todayStr();
 function renderTodos(){
   const d=$('t_date').value||todayStr();const list=todos.filter(t=>t.date===d).sort((a,b)=>a.done-b.done);
-  $('todoTitle').textContent=d===todayStr()?'Da fare oggi':'Da fare · '+parseD(d).toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'});
-  $('todoList').innerHTML=list.map(t=>`<li class="todo ${t.done?'done':''}"><input type="checkbox" ${t.done?'checked':''} onchange="toggleTodo('${t.id}')" aria-label="Fatto">
-    <span class="tt" onclick="editTodo('${t.id}')">${esc(t.text)}</span>${t.client?`<span class="tag" style="background:${colorOf('client',t.client)}22"><i style="background:${colorOf('client',t.client)}"></i>${esc(t.client)}</span>`:''}
-    <button class="btn small" title="Inizia a registrare" onclick="startTodo('${t.id}')">▶</button></li>`).join('')
-    ||'<li class="muted" style="padding:6px 0">Niente in lista per questo giorno.</li>';
-  const done=list.filter(t=>t.done).length;$('todoCount').textContent=list.length?`${done}/${list.length} completate`:'';
+  $('todoTitle').textContent=d===todayStr()?'Oggi':cap(dayLabel(d));
+  const running=new Set(entries.filter(e=>!e.end&&e.todo).map(e=>e.todo));
+  const spent={};entries.forEach(e=>{if(e.todo)spent[e.todo]=(spent[e.todo]||0)+(e.end?durMin(e):Math.floor(elapsed(e)/60))});
+  $('todoList').innerHTML=list.map(t=>`<div class="ri ${t.done?'done':''}">
+    <button class="chk ${t.done?'on':''}" onclick="toggleTodo('${t.id}')" aria-label="${t.done?'Segna da fare':'Completa'}">✓</button>
+    <div class="ri-m" onclick="editTodo('${t.id}')"><div class="ri-t">${esc(t.text)}</div><div class="ri-s">${esc([t.client,t.type].filter(Boolean).join(' · ')||'Tocca per aggiungere cliente e tipo')}${dotsHtml(t.tags)}</div></div>
+    ${spent[t.id]?`<div class="ri-v" style="font-weight:600;color:var(--muted);font-size:14px">${fmtH(spent[t.id])}</div>`:''}
+    ${running.has(t.id)?'<span class="live" title="In corso"></span>':t.done?'':`<button class="play" title="Avvia il tempo" aria-label="Avvia" onclick="startTodo('${t.id}')">▶</button>`}</div>`).join('');
+  const open=list.filter(t=>!t.done).length;$('todoCount').textContent=list.length?`${list.length-open}/${list.length}`:'';
+  const prev=dStr(addDays(parseD(d),-1)),carry=todos.filter(t=>t.date===prev&&!t.done).length;
+  $('todoCarry').textContent=carry?`Riporta ${carry} da ieri ·`:'';$('todoCarry').classList.toggle('hidden',!carry);
+  const ev=entries.filter(e=>e.date===d).sort((a,b)=>b.start.localeCompare(a.start));
+  const tot=ev.reduce((s,e)=>s+(e.end?durMin(e):Math.floor(elapsed(e)/60)),0);
+  $('dayDone').innerHTML=ev.map(itemHtml).join('');
+  $('dayTotal').textContent=fmtH(tot);
+  $('daySub').textContent=`lavorate · ${ev.length} ${ev.length===1?'attività':'attività'}${open?` · ${open} da fare`:''}`;
+  $('dayCount').textContent=ev.length?String(ev.length):'';
+  renderQLink();
 }
-$('todoForm').onsubmit=ev=>{ev.preventDefault();const text=$('t_text').value.trim();if(!text)return;
-  todos.push({id:uid(),date:$('t_date').value||todayStr(),text,client:$('t_client').value.trim(),done:false});$('t_text').value='';$('t_client').value='';saveT();renderTodos();renderLists();$('t_text').focus()};
-function toggleTodo(id){const t=todos.find(x=>x.id===id);t.done=!t.done;saveT();renderTodos()}
+function dayChanged(){renderTodos()}
+function toggleTodo(id){const t=todos.find(x=>x.id===id);if(!t)return;
+  if(t.done){t.done=false;saveT();renderTodos();return}
+  const linked=entries.filter(e=>e.todo===id),run=linked.filter(e=>!e.end);
+  if(run.length){run.forEach(e=>e.end=nowTime());save();t.done=true;saveT();renderAll();toast('Completata · tempo totale '+fmtH(linked.reduce((s,e)=>s+durMin(e),0)));return}
+  if(linked.length){t.done=true;saveT();renderAll();toast('Completata');return}
+  completeTodo(id);
+}
+/* proposta di durata: mediana delle attività dello stesso tipo, altrimenti 1 ora */
+function guessMins(t){const a=entries.filter(e=>e.end&&t.type&&e.type===t.type).map(durMin).sort((x,y)=>x-y);
+  return a.length?{m:Math.max(15,Math.round(a[Math.floor(a.length/2)]/5)*5),n:a.length}:{m:60,n:0}}
+function completeTodo(id){const t=todos.find(x=>x.id===id);renderTodos();
+  const g=guessMins(t),today=t.date===todayStr();
+  const endM=today?toMin(nowTime()):Math.min(1439,9*60+g.m),startM=Math.max(0,endM-g.m);
+  openModal('Quanto ci hai messo?',`<p class="lead">Registro il tempo di <b>${esc(t.text)}</b> nelle ore e nel calendario.${g.n?` Ti propongo ${fmtH(g.m)}, la tua durata tipica per "${esc(t.type)}".`:''}</p>
+    <form id="cForm" class="grid" autocomplete="off">${fieldsHTML('m_')}
+    <div class="row full" style="margin-top:4px"><button class="btn primary">✓ Salva e completa</button><button type="button" class="btn" id="cNoTime">Completa senza tempo</button><span class="muted" id="m_dur"></span></div></form>`);
+  fillFields('m_',{date:t.date,client:t.client,type:t.type,tags:t.tags||[],start:minToT(startM),end:minToT(endM),note:t.text});
+  $('m_end').required=true;renderTagPick('m_');updPreview('m_');
+  $('cForm').onsubmit=ev=>{ev.preventDefault();const v=readFields('m_');v.id=uid();v.todo=id;entries.push(v);save();
+    t.done=true;if(!t.client)t.client=v.client;if(!t.type)t.type=v.type;saveT();closeModal();renderAll();toast('Completata · '+fmtH(durMin(v)))};
+  $('cNoTime').onclick=()=>{t.done=true;saveT();closeModal();renderTodos();toast('Completata senza tempo')};
+}
 function delTodo(id){todos=todos.filter(x=>x.id!==id);saveT();renderTodos()}
 function editTodo(id){const t=todos.find(x=>x.id===id);if(!t)return;
-  openModal('Modifica da fare',`<form id="tdForm" class="grid"><label class="full">Cosa devi fare<input id="td_text" required></label>
-    <label>Cliente<input id="td_client" list="dl_client"></label><label>Giorno<input type="date" id="td_date" required></label>
-    <label class="full" style="flex-direction:row;align-items:center;gap:8px;color:var(--text);font-size:14px"><input type="checkbox" id="td_done" style="width:18px;height:18px">Completata</label>
-    <div class="row full"><button class="btn primary">Salva</button><button type="button" class="btn" onclick="closeModal();startTodo('${id}')">▶ Inizia</button><button type="button" class="btn danger" onclick="delTodo('${id}');closeModal()">Elimina</button></div></form>`);
-  $('td_text').value=t.text;$('td_client').value=t.client||'';$('td_date').value=t.date;$('td_done').checked=!!t.done;
-  $('tdForm').onsubmit=ev=>{ev.preventDefault();t.text=$('td_text').value.trim();t.client=$('td_client').value.trim();t.date=$('td_date').value;t.done=$('td_done').checked;saveT();closeModal();renderTodos();renderLists();toast('Salvato')};
+  openModal('Modifica da fare',`<form id="tdForm" class="grid" autocomplete="off"><label class="full">Cosa devi fare<input id="n_text" required></label>
+    <label>Cliente<input id="n_client" list="dl_client"></label><label>Tipo di attività<input id="n_type" list="dl_type"></label>
+    <label class="full">Tag (separati da virgola)<input id="n_tags"></label><div class="tagpick full" id="n_tagpick"></div>
+    <label>Giorno<input type="date" id="n_date" required></label>
+    <label style="flex-direction:row;align-items:center;gap:8px;color:var(--text);font-size:14px;align-self:center"><input type="checkbox" id="n_done" style="width:18px;height:18px">Completata</label>
+    <div class="row full"><button class="btn primary">Salva</button><button type="button" class="btn" onclick="closeModal();startTodo('${id}')">▶ Avvia</button><button type="button" class="btn danger" onclick="delTodo('${id}');closeModal()">Elimina</button></div></form>`);
+  $('n_text').value=t.text;$('n_client').value=t.client||'';$('n_type').value=t.type||'';$('n_tags').value=(t.tags||[]).join(', ');$('n_date').value=t.date;$('n_done').checked=!!t.done;renderTagPick('n_');
+  $('tdForm').onsubmit=ev=>{ev.preventDefault();t.text=$('n_text').value.trim();t.client=$('n_client').value.trim();t.type=$('n_type').value.trim();t.tags=splitTags($('n_tags').value);t.date=$('n_date').value;const becomingDone=!t.done&&$('n_done').checked;if(!becomingDone)t.done=$('n_done').checked;saveT();closeModal();renderTodos();renderLists();
+    if(becomingDone)toggleTodo(id);else toast('Salvato')};
 }
-function startTodo(id){const t=todos.find(x=>x.id===id);showTab('registro');resetForm();$('f_client').value=t.client||'';$('f_note').value=t.text;$('f_start').value=nowTime();updPreview('f_');
-  const f=$(t.client?'f_type':'f_client');f.scrollIntoView({block:'center',behavior:'smooth'});f.focus();toast('Compila il tipo e premi Aggiungi')}
+/* ▶ su un elemento da fare: se ha cliente e tipo parte subito, altrimenti chiede solo quelli */
+function startTodo(id){const t=todos.find(x=>x.id===id);if(!t)return;
+  const e={date:todayStr(),client:t.client||'',type:t.type||'',tags:[...(t.tags||[])],start:nowTime(),end:'',note:t.text,todo:t.id};
+  if(!e.client||!e.type){openEntry(null,e);toast('Completa cliente e tipo, poi premi Aggiungi');return}
+  e.id=uid();entries.push(e);save();renderAll();toast('Avviata: '+t.text);
+}
 $('todoCarry').onclick=()=>{const d=$('t_date').value||todayStr();const prev=dStr(addDays(parseD(d),-1));const open=todos.filter(t=>t.date===prev&&!t.done);
-  open.forEach(t=>t.date=d);saveT();renderTodos();toast(open.length?`Riportate ${open.length} attività`:'Nessuna attività aperta il giorno prima')};
-$('t_date').oninput=renderTodos;
-$('tPrev').onclick=()=>{$('t_date').value=dStr(addDays(parseD($('t_date').value||todayStr()),-1));renderTodos()};
-$('tNext').onclick=()=>{$('t_date').value=dStr(addDays(parseD($('t_date').value||todayStr()),1));renderTodos()};
+  open.forEach(t=>t.date=d);saveT();renderTodos();toast(`Riportate ${open.length} da ieri`)};
+$('t_date').oninput=dayChanged;
+$('tPrev').onclick=()=>{$('t_date').value=dStr(addDays(parseD($('t_date').value||todayStr()),-1));dayChanged()};
+$('tNext').onclick=()=>{$('t_date').value=dStr(addDays(parseD($('t_date').value||todayStr()),1));dayChanged()};
 
 /* ================= Tag, clienti e colori ================= */
 let mgKind='tag',mgNames=[];
@@ -573,7 +811,7 @@ function renderManage(){
   $('mgBody').innerHTML=(mgKind==='tag'?`<form id="mgAdd" class="row" style="flex-wrap:nowrap;margin-bottom:6px"><input type="color" id="mgNewC" value="${nextCol}"><input id="mgNew" placeholder="Nuovo tag" style="flex:1"><button class="btn primary">Aggiungi</button></form>`:'')+
     (mgNames.map((n,i)=>`<div class="mg-row"><input type="color" value="${colorOf(mgKind,n)}" onchange="setColor(${i},this.value)" title="Cambia colore"><input class="mgname" value="${esc(n)}" onchange="renameCat(${i},this.value)" style="flex:1"><span class="muted" style="font-size:12px;white-space:nowrap">${counts[n]} ${counts[n]===1?'voce':'voci'}</span>${mgKind==='tag'?`<button class="btn small danger" onclick="removeTag(${i})" title="Rimuovi tag">✕</button>`:''}</div>`).join('')||'<p class="muted">Ancora nessun elemento.</p>')+
     `<p class="muted" style="font-size:12px;margin-top:10px">Tocca il quadratino per cambiare colore. Modifica il nome per rinominarlo in tutte le voci: se scrivi un nome già esistente, i due vengono uniti.</p>`;
-  const f=$('mgAdd');if(f)f.onsubmit=ev=>{ev.preventDefault();const n=$('mgNew').value.trim();if(!n)return;colors.tag[n]=$('mgNewC').value;saveC();renderManage();renderTagPick('f_');toast('Tag aggiunto')};
+  const f=$('mgAdd');if(f)f.onsubmit=ev=>{ev.preventDefault();const n=$('mgNew').value.trim();if(!n)return;colors.tag[n]=$('mgNewC').value;saveC();renderManage();renderTagPick('q_');toast('Tag aggiunto')};
 }
 function setColor(i,v){colors[mgKind][mgNames[i]]=v;saveC();renderAll()}
 function renameCat(i,v){
@@ -590,37 +828,118 @@ function removeTag(i){const n=mgNames[i];if(!confirm(`Rimuovere il tag "${n}" da
 $('miManage').onclick=()=>openManage('tag');
 
 /* ================= Riepilogo ================= */
-function filtered(){const f=$('r_from').value,t=$('r_to').value,c=$('r_client').value;return entries.filter(e=>e.end&&(!f||e.date>=f)&&(!t||e.date<=t)&&(!c||e.client===c))}
+/* stato del riepilogo */
+let sPer=load('registroOre.sPer','month'),sBy=load('registroOre.sBy','client'),sRef=new Date(),sFilt='';
+if(!['day','week','month','year'].includes(sPer))sPer='month';if(!['client','type','tag'].includes(sBy))sBy='client';
+function sRange(per,ref){
+  if(per==='day'){const d=dStr(ref);return[d,d]}
+  if(per==='week'){const m=monday(ref);return[dStr(m),dStr(addDays(m,6))]}
+  if(per==='month')return[dStr(new Date(ref.getFullYear(),ref.getMonth(),1)),dStr(new Date(ref.getFullYear(),ref.getMonth()+1,0))];
+  return[`${ref.getFullYear()}-01-01`,`${ref.getFullYear()}-12-31`];
+}
+function sShift(ref,per,n){if(per==='day')return addDays(ref,n);if(per==='week')return addDays(ref,7*n);if(per==='month')return new Date(ref.getFullYear(),ref.getMonth()+n,1);return new Date(ref.getFullYear()+n,0,1)}
+function sLabelOf(per,ref){
+  if(per==='day')return cap(dayLabel(dStr(ref)));
+  if(per==='week'){const m=monday(ref),e=addDays(m,6);return `${m.getDate()} ${m.toLocaleDateString('it-IT',{month:'short'})} – ${e.getDate()} ${e.toLocaleDateString('it-IT',{month:'short'})}`}
+  if(per==='month')return cap(ref.toLocaleDateString('it-IT',{month:'long',year:'numeric'}));
+  return String(ref.getFullYear());
+}
+const filtMatch=(e,f)=>{if(!f)return true;const[k,...r]=f.split(':');const v=r.join(':');return k==='tag'?tagsOf(e).includes(v):e[k]===v};
+function filtered(range){const[f,t]=range||sRange(sPer,sRef);return entries.filter(e=>e.end&&e.date>=f&&e.date<=t&&filtMatch(e,sFilt))}
 function groupKeys(e,g){if(g==='tag'){const t=tagsOf(e);return t.length?t:['(senza tag)']}return[e[g]||'—']}
 const sumObj=o=>Object.values(o).reduce((a,b)=>a+b,0);
 const dotHtml=(g,k)=>`<i class="dot" style="background:${colorOf(g,k)};margin-right:6px"></i>`;
+const KIND={client:'Clienti',type:'Attività',tag:'Tag'},KIND1={client:'cliente',type:'attività',tag:'tag'};
+function txtOn(hex){const h=hex.replace('#','');const [r,g,b]=[0,2,4].map(i=>parseInt(h.substr(i,2),16)/255).map(c=>c<=.03928?c/12.92:((c+.055)/1.055)**2.4);
+  return .2126*r+.7152*g+.0722*b>.45?'#16201d':'#ffffff'}
+/* treemap: l'area di ogni riquadro è proporzionale alle ore (algoritmo squarified) */
+function squarify(items,W,H){
+  const tot=items.reduce((s,x)=>s+x.v,0)||1,sc=W*H/tot,nodes=items.map(x=>({...x,a:x.v*sc})),out=[];
+  const r={x:0,y:0,w:W,h:H};
+  const worst=(row,side)=>{if(!row.length)return Infinity;const s=row.reduce((t,n)=>t+n.a,0),mx=Math.max(...row.map(n=>n.a)),mn=Math.min(...row.map(n=>n.a));return Math.max(side*side*mx/(s*s),(s*s)/(side*side*mn))};
+  const lay=row=>{const s=row.reduce((t,n)=>t+n.a,0);
+    if(r.w>=r.h){const cw=s/r.h;let y=r.y;row.forEach(n=>{const hh=n.a/cw;out.push({...n,x:r.x,y,w:cw,h:hh});y+=hh});r.x+=cw;r.w-=cw}
+    else{const rh=s/r.w;let x=r.x;row.forEach(n=>{const ww=n.a/rh;out.push({...n,x,y:r.y,w:ww,h:rh});x+=ww});r.y+=rh;r.h-=rh}};
+  let row=[];
+  for(const n of nodes){const side=Math.min(r.w,r.h);if(!row.length||worst([...row,n],side)<=worst(row,side))row.push(n);else{lay(row);row=[n]}}
+  if(row.length)lay(row);return out;
+}
+let tmItems=[],tmShare=0;
+function renderTiles(list,tot){
+  const m={};list.forEach(e=>groupKeys(e,sBy).forEach(k=>m[k]=(m[k]||0)+durMin(e)));
+  let items=Object.entries(m).map(([k,v])=>({k,v})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
+  if(!items.length){$('tm').style.height='';$('tm').innerHTML=`<div class="card" style="text-align:center;padding:36px 18px"><b>Nessuna ora registrata</b><div class="muted" style="margin-top:4px">Cambia periodo o filtro, oppure registra un'attività dalla scheda Registro.</div></div>`;$('sHint').classList.add('hidden');return}
+  const share=items.reduce((s,x)=>s+x.v,0);
+  /* le voci sotto l'1,5% (oltre la decima) finiscono in "Altri" per restare leggibili */
+  const keep=items.filter((x,i)=>i<10&&x.v/share>=.015),rest=items.filter(x=>!keep.includes(x));
+  if(rest.length)keep.push({k:rest.length===1?rest[0].k:`Altri ${rest.length}`,v:rest.reduce((s,x)=>s+x.v,0),other:rest.length>1});
+  tmItems=keep;tmShare=share;drawTiles();
+  $('sHint').classList.toggle('hidden',keep.filter(x=>!x.other).length<2);
+}
+function drawTiles(){
+  const box=$('tm');if(!box||!tmItems.length)return;
+  const W=box.clientWidth||600,H=Math.round(W<520?Math.min(W*1.15,520):Math.max(320,Math.min(W*.5,460))),G=6;
+  box.style.height=H+'px';
+  box.innerHTML=squarify(tmItems,W+G,H+G).map(t=>{
+    const w=t.w-G,h=t.h-G,bg=t.other?'':colorOf(sBy,t.k),fg=t.other?'':txtOn(bg);
+    const fs=Math.max(11,Math.min(54,Math.sqrt(w*h)/6.5,w/7)),hs=Math.max(11,Math.min(22,fs*.55));
+    const showName=w>=48&&h>=30,showVal=w>=56&&h>=52,pct=Math.round(t.v/tmShare*100);
+    return `<button class="tile${t.other?' other':''}" ${t.other?'tabindex="-1"':`data-k="${esc(t.k)}"`} title="${esc(t.k)} · ${fmtH(t.v)} · ${pct}%"
+      style="left:${t.x}px;top:${t.y}px;width:${w}px;height:${h}px;${t.other?'':`background:${bg};color:${fg};`}padding:${Math.min(22,Math.max(8,Math.min(w,h)/7))}px">
+      ${showName?`<span class="tl-n" style="font-size:${fs}px">${esc(t.k)}</span>`:''}
+      ${showVal?`<span class="tl-r"><span class="tl-h" style="font-size:${hs}px">${fmtH(t.v)}</span> <span class="tl-p">${pct}%</span></span>`:''}</button>`}).join('');
+  box.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>drill(b.dataset.k));
+}
+let tmRT;addEventListener('resize',()=>{clearTimeout(tmRT);tmRT=setTimeout(drawTiles,120)});
+function drill(k){if(k==='(senza tag)')return;sFilt=`${sBy}:${k}`;sBy=sBy==='client'?'type':'client';store('registroOre.sBy',sBy);renderSummary();window.scrollTo({top:0,behavior:'smooth'})}
+function renderFiltSel(){
+  const opt=(k,v)=>`<option value="${k}:${esc(v)}">${esc(v)}</option>`;
+  const cl=uniq(entries.map(e=>e.client)),ty=uniq(entries.map(e=>e.type)),tg=uniq(entries.flatMap(tagsOf));
+  $('sFilt').innerHTML=`<option value="">Tutti i dati</option>${cl.length?`<optgroup label="Cliente">${cl.map(v=>opt('client',v)).join('')}</optgroup>`:''}${ty.length?`<optgroup label="Attività">${ty.map(v=>opt('type',v)).join('')}</optgroup>`:''}${tg.length?`<optgroup label="Tag">${tg.map(v=>opt('tag',v)).join('')}</optgroup>`:''}`;
+  $('sFilt').value=sFilt;if($('sFilt').value!==sFilt){sFilt='';$('sFilt').value=''}
+}
 function renderSummary(){
-  const g=$('r_group').value,p=$('r_period').value,list=filtered();
-  const tot=list.reduce((s,e)=>s+durMin(e),0),days=new Set(list.map(e=>e.date)).size;
-  $('r_stats').innerHTML=[['Ore totali',fmtH(tot)],['Ore decimali',fmtDec(tot)],['Giorni lavorati',days],['Media al giorno',days?fmtH(tot/days):'—'],['Voci',list.length]]
-    .map(([l,v])=>`<div class="stat"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
+  document.querySelectorAll('#sPer button').forEach(b=>b.classList.toggle('active',b.dataset.v===sPer));
+  document.querySelectorAll('#sBy button').forEach(b=>b.classList.toggle('active',b.dataset.v===sBy));
+  renderFiltSel();$('sLabel').textContent=sLabelOf(sPer,sRef);
+  const list=filtered(),tot=list.reduce((s,e)=>s+durMin(e),0),days=new Set(list.map(e=>e.date)).size;
+  const prevTot=filtered(sRange(sPer,sShift(sRef,sPer,-1))).reduce((s,e)=>s+durMin(e),0),diff=tot-prevTot;
+  const prevName={day:'al giorno prima',week:'alla settimana prima',month:'al mese prima',year:"all'anno prima"}[sPer];
+  $('sTot').textContent=fmtH(tot);
+  $('sSub').innerHTML=(sFilt?`<b>${esc(sFilt.split(':').slice(1).join(':'))}</b> · `:'')+(sPer!=='day'&&days?`${days} ${days===1?'giorno':'giorni'} · media ${fmtH(tot/days)} al giorno · `:'')+
+    (prevTot||tot?`${diff>=0?'+':'−'}${fmtH(Math.abs(diff))} rispetto ${prevName}`:'');
+  renderTiles(list,tot);
+  /* dati: tabella per sotto-periodo */
+  const g=sBy,p={day:'day',week:'day',month:'week',year:'month'}[sPer];
   const periods=uniq(list.map(e=>periodKey(e.date,p))),map={};
   list.forEach(e=>{const pk=periodKey(e.date,p),d=durMin(e);groupKeys(e,g).forEach(k=>{map[k]=map[k]||{};map[k][pk]=(map[k][pk]||0)+d})});
   const groups=Object.keys(map).sort((a,b)=>sumObj(map[b])-sumObj(map[a]));
-  const gname={client:'Cliente / Lavoro',type:'Attività',tag:'Tag'}[g];
-  $('r_pivotTitle').textContent=`Ore per ${gname.toLowerCase()} · ${({day:'giorno',week:'settimana',month:'mese'})[p]}`+(g==='tag'?' (una voce con più tag conta per ognuno)':'');
-  if(!groups.length){$('r_pivot').innerHTML='<tr><td class="muted">Nessun dato completato nel periodo selezionato.</td></tr>'}
+  $('r_pivotTitle').textContent=`Ore per ${KIND1[g]} · ${({day:'giorno',week:'giorno',month:'settimana',year:'mese'})[sPer]}`+(g==='tag'?' (una voce con più tag conta per ognuno)':'');
+  if(!groups.length){$('r_pivot').innerHTML='<tr><td class="muted">Nessun dato nel periodo selezionato.</td></tr>'}
   else{const colTot=periods.map(pk=>groups.reduce((s,k)=>s+(map[k][pk]||0),0));
-    $('r_pivot').innerHTML=`<thead><tr><th>${gname}</th>${periods.map(pk=>`<th class="num">${periodLabel(pk,p)}</th>`).join('')}<th class="num">Totale</th></tr></thead><tbody>`+
+    $('r_pivot').innerHTML=`<thead><tr><th>${cap(KIND1[g])}</th>${periods.map(pk=>`<th class="num">${periodLabel(pk,p)}</th>`).join('')}<th class="num">Totale</th></tr></thead><tbody>`+
       groups.map(k=>`<tr><td style="white-space:nowrap">${dotHtml(g,k)}${esc(k)}</td>${periods.map(pk=>`<td class="num">${map[k][pk]?fmtDec(map[k][pk]):'<span class="muted">·</span>'}</td>`).join('')}<td class="num"><b>${fmtDec(sumObj(map[k]))}</b></td></tr>`).join('')+
       (g!=='tag'?`<tr class="total"><td>Totale</td>${colTot.map(v=>`<td class="num">${fmtDec(v)}</td>`).join('')}<td class="num">${fmtDec(tot)}</td></tr>`:'')+'</tbody>'}
   $('r_avg').innerHTML=avgTable(list,'type','Attività');$('r_avgTag').innerHTML=avgTable(list,'tag','Tag');
+  renderEntries();
 }
 function statsBy(list,g){
   const m={};list.forEach(e=>groupKeys(e,g).forEach(k=>{(m[k]=m[k]||[]).push(durMin(e))}));
   return Object.entries(m).map(([k,a])=>{const s=a.reduce((x,y)=>x+y,0),so=[...a].sort((x,y)=>x-y);return{k,n:a.length,tot:s,avg:s/a.length,min:so[0],max:so[so.length-1],med:so.length%2?so[(so.length-1)/2]:(so[so.length/2-1]+so[so.length/2])/2}}).sort((a,b)=>b.tot-a.tot);
 }
 function avgTable(list,g,name){
-  const rows=statsBy(list,g);if(!rows.length)return'<tr><td class="muted">Nessun dato.</td></tr>';const max=Math.max(...rows.map(r=>r.tot));
-  return `<thead><tr><th>${name}</th><th class="num">Volte</th><th class="num">Media</th><th class="num">Mediana</th><th class="num">Min</th><th class="num">Max</th><th class="num">Totale</th><th style="width:20%;min-width:60px"></th></tr></thead><tbody>`+
-    rows.map(r=>`<tr><td style="white-space:nowrap">${dotHtml(g,r.k)}${esc(r.k)}</td><td class="num">${r.n}</td><td class="num"><b>${fmtH(r.avg)}</b></td><td class="num">${fmtH(r.med)}</td><td class="num">${fmtH(r.min)}</td><td class="num">${fmtH(r.max)}</td><td class="num">${fmtDec(r.tot)} h</td><td><div class="bar" style="width:${r.tot/max*100}%;background:${colorOf(g,r.k)}"></div></td></tr>`).join('')+'</tbody>';
+  const rows=statsBy(list,g);if(!rows.length)return'<p class="muted" style="margin:4px 0">Nessun dato nel periodo.</p>';const max=Math.max(...rows.map(r=>r.tot));
+  return rows.map(r=>{const c=colorOf(g,r.k);return `<div class="ri avg-r"><span class="av" style="background:${c}24;color:${c}">${esc(initials(r.k))}</span>
+    <div class="ri-m"><div class="ri-t">${esc(r.k)}</div><div class="ri-s">${r.n} ${r.n===1?'volta':'volte'} · ${fmtH(r.min)}–${fmtH(r.max)}</div>
+    <div class="avg-bar"><i style="width:${Math.max(2,r.tot/max*100)}%;background:${c}"></i></div></div>
+    <div class="ri-v" style="text-align:right">${fmtH(r.avg)}<div class="ri-s" style="font-weight:500">media</div></div></div>`}).join('');
 }
-['r_group','r_period','r_from','r_to','r_client'].forEach(id=>$(id).addEventListener('input',renderSummary));
+
+document.querySelectorAll('#sPer button').forEach(b=>b.onclick=()=>{sPer=b.dataset.v;store('registroOre.sPer',sPer);renderSummary()});
+document.querySelectorAll('#sBy button').forEach(b=>b.onclick=()=>{sBy=b.dataset.v;store('registroOre.sBy',sBy);renderSummary()});
+$('sPrev').onclick=()=>{sRef=sShift(sRef,sPer,-1);renderSummary()};$('sNext').onclick=()=>{sRef=sShift(sRef,sPer,1);renderSummary()};
+$('sLabel').onclick=()=>{sRef=new Date();renderSummary()};
+$('sFilt').onchange=()=>{sFilt=$('sFilt').value;if(sFilt&&sFilt.split(':')[0]===sBy){sBy=sBy==='client'?'type':'client';store('registroOre.sBy',sBy)}renderSummary()};
 
 /* ================= Risposta rapida ================= */
 function renderQuick(){
@@ -791,7 +1110,7 @@ function renderYear(seg){
 function calGo(v,ds){calView=v;calDate=parseD(ds);renderCalendar()}
 document.querySelectorAll('#calViews button').forEach(b=>b.onclick=()=>{calView=b.dataset.v;renderCalendar()});
 function calShift(n){const d=calDate;if(calView==='day')calDate=addDays(d,n);else if(calView==='week')calDate=addDays(d,7*n);else if(calView==='month')calDate=new Date(d.getFullYear(),d.getMonth()+n,1);else calDate=new Date(d.getFullYear()+n,0,1);renderCalendar()}
-$('calPrev').onclick=()=>calShift(-1);$('calNext').onclick=()=>calShift(1);$('calToday').onclick=()=>{calDate=new Date();renderCalendar()};
+$('calPrev').onclick=()=>calShift(-1);$('calNext').onclick=()=>calShift(1);$('calTitle').onclick=()=>{calDate=new Date();renderCalendar()};
 $('calColors').onclick=()=>openManage(calBy);
 /* scorrimento laterale per cambiare giorno/settimana su smartphone */
 let tx=null,ty=null;
@@ -969,8 +1288,8 @@ $('miInstall').onclick=async()=>{
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){navigator.serviceWorker.register('sw.js').catch(()=>{});navigator.storage?.persist?.()}
 
 /* ================= Avvio ================= */
-function renderAll(){renderLists();renderEntries();renderSummary();renderQuick();renderTodos();renderCalendar();renderRun();renderTagPick('f_')}
-resetForm();renderAll();
+function renderAll(){renderLists();renderEntries();renderSummary();renderQuick();renderTodos();renderCalendar();renderRun();renderTagPick('q_')}
+renderAll();
 setSync(sync.token?'wait':'off','');
 if(location.hash.startsWith('#collega=')){
   const o=readCode(decodeURIComponent(location.hash.slice(9)));history.replaceState(null,'',location.pathname+location.search);
