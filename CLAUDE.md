@@ -13,10 +13,10 @@ Ogni modifica unita in `main` viene pubblicata automaticamente.
 - L'interfaccia è in italiano.
 - **Non rompere i dati salvati.** Non rinominare né cambiare il formato di queste chiavi di localStorage:
   `registroOre.v1` (voci), `registroOre.todos`, `registroOre.colors`, `registroOre.colorsU`,
-  `registroOre.tomb`, `registroOre.sync`, `registroOre.ai`, `registroOre.calBy`.
+  `registroOre.tomb`, `registroOre.sync`, `registroOre.ai`, `registroOre.calBy`, `registroOre.goals` (obiettivi).
   Se servono nuovi campi, aggiungili come facoltativi e gestisci i dati vecchi che non li hanno.
 - **Sincronizzazione:** ogni voce e ogni elemento da fare ha `id` e `u` (ultima modifica); le eliminazioni
-  finiscono in `tomb`. Salva sempre con `save()`, `saveT()` e `saveC()`, che aggiornano questi valori e
+  finiscono in `tomb`. Salva sempre con `save()`, `saveT()`, `saveG()` (obiettivi) e `saveC()`, che aggiornano questi valori e
   avviano la sincronizzazione. Non scrivere direttamente in localStorage per voci, lista da fare o colori.
 - Dopo ogni modifica a `index.html`, aumenta di uno il numero di versione in `sw.js`
   (`const CACHE='registro-ore-vN'`), così le app installate si aggiornano.
