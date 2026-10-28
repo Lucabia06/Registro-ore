@@ -1200,7 +1200,7 @@ const PROV={
 let aiCfg=Object.assign({prov:'gemini',p:{}},load('registroOre.ai',{}));
 try{const old=localStorage.getItem('registroOre.key');if(old&&!aiCfg.p.anthropic){aiCfg.p.anthropic={key:old};aiCfg.prov='anthropic'}}catch(e){}
 if(!PROV[aiCfg.prov])aiCfg.prov='gemini';
-function getP(){const d=PROV[aiCfg.prov],s=aiCfg.p[aiCfg.prov]||{};return{kind:d.kind,key:s.key||'',model:s.model||d.model,url:s.url||d.url||''}}
+function getP(){const d=PROV[aiCfg.prov],s=aiCfg.p[aiCfg.prov]||{};return{kind:d.kind,key:s.key||'',model:('model' in s)?s.model:(d.model||''),auto:s.auto||'',url:s.url||d.url||''}}
 const storeAi=()=>store('registroOre.ai',aiCfg);
 /* elenco dei modelli disponibili per il servizio scelto */
 async function listModels(){
@@ -1214,6 +1214,7 @@ async function listModels(){
   if(!r.ok){const er=new Error((j.error&&(j.error.message||j.error))||r.statusText);er.status=r.status;throw er}
   let ids=d.kind==='gemini'?(j.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes('generateContent')).map(m=>m.name.replace('models/','')).filter(n=>/gemini/i.test(n))
     :d.kind==='ollama'?(j.models||[]).map(m=>m.name):(j.data||[]).map(m=>m.id);
+  if(d.kind==='openai')ids=ids.filter(n=>{const m=(j.data||[]).find(x=>x.id===n);return!m||m.active!==false});
   if(aiCfg.prov==='groq')ids=ids.filter(n=>!/whisper|tts|guard|embed|playai|orpheus|compound/i.test(n));
   if(aiCfg.prov==='openrouter'){const fr=ids.filter(n=>/:free$/.test(n));if(fr.length)ids=fr}
   if(aiCfg.prov==='openai')ids=ids.filter(n=>/^(gpt|o\d|chatgpt)/i.test(n)&&!/audio|realtime|image|tts|transcribe|search/i.test(n));
@@ -1223,7 +1224,7 @@ async function listModels(){
 function pickModel(ids,avoid=[],mode){
   const c=ids.filter(n=>!avoid.includes(n));if(!c.length)return null;
   const light=[/lite|mini|8b|small|instant|haiku/i];
-  const pref={gemini:[/flash(?!.*(lite|preview|exp|image|tts|live|thinking|audio))/i,/flash/i],groq:[/llama.*70b|versatile/i,/gpt-oss-120b/i,/gpt-oss|llama|qwen|kimi/i],
+  const pref={gemini:[/flash(?!.*(lite|preview|exp|image|tts|live|thinking|audio))/i,/flash/i],groq:[/gpt-oss-120b/i,/llama-4|maverick|scout/i,/llama.*70b|versatile/i,/gpt-oss|llama|qwen|kimi/i],
     openrouter:[/llama.*70b/i,/gpt-oss|qwen|mistral|gemma|deepseek|llama/i],openai:[/mini/i],anthropic:[/sonnet/i,/haiku/i]}[aiCfg.prov]||[];
   for(const re of mode==='light'?[...light,...pref]:pref){const m=c.filter(n=>re.test(n));if(m.length)return m.sort().reverse()[0]}
   return c[0];
@@ -1238,19 +1239,23 @@ async function testAI(){
     out.innerHTML=`<b>${esc(name)} ha risposto con un errore${e.status?' ('+e.status+')':''}.</b> ${esc(e.message)}`;return}
   if(!ids.length){out.innerHTML='<b>Chiave valida</b>, ma non risultano modelli disponibili.';return}
   const best=pickModel(ids),list=[...new Set([best,...ids])].slice(0,16);
-  out.innerHTML=`<b>Chiave valida, servizio raggiungibile.</b> ${p.model?ids.includes(p.model)?`Il modello <code>${esc(p.model)}</code> è disponibile.`:`Il modello <code>${esc(p.model)}</code> non è più disponibile: scegline uno qui sotto, oppure lascia fare all'app.`:`Il modello viene scelto in automatico (ora: <code>${esc(best)}</code>).`}
-    <div class="row" style="margin-top:8px;gap:6px">${list.map(n=>`<button type="button" class="pill${n===p.model?' on':''}" data-m="${esc(n)}" style="font-size:12px;padding:6px 10px">${esc(n)}</button>`).join('')}</div>`;
-  out.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{setModel(b.dataset.m);testAI();toast('Modello: '+b.dataset.m)});
+  out.innerHTML=`<b>Chiave valida, servizio raggiungibile.</b> ${p.model&&!p.auto?ids.includes(p.model)?`Il modello <code>${esc(p.model)}</code> è disponibile.`:`Il modello <code>${esc(p.model)}</code> non è più disponibile: scegline uno qui sotto, oppure lascia fare all'app.`:`Il modello viene scelto in automatico (ora: <code>${esc(best)}</code>).`}
+    <div class="row" style="margin-top:8px;gap:6px"><button type="button" class="pill${p.model?'':' on'}" data-m="" style="font-size:12px;padding:6px 10px">Automatico</button>${list.map(n=>`<button type="button" class="pill${n===p.model?' on':''}" data-m="${esc(n)}" style="font-size:12px;padding:6px 10px">${esc(n)}</button>`).join('')}</div>`;
+  out.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{setModel(b.dataset.m);testAI();toast(b.dataset.m?'Modello: '+b.dataset.m:'Modello scelto in automatico')});
 }
-function setModel(m){aiCfg.p[aiCfg.prov]={...(aiCfg.p[aiCfg.prov]||{}),key:getP().key,url:(aiCfg.p[aiCfg.prov]||{}).url||'',model:m};storeAi();loadAiUI()}
+/* setModel(m): scelta dell'utente (vuoto = automatico). setModel(m,true): modello scelto dall'app, il campo resta vuoto */
+function setModel(m,auto){const s=aiCfg.p[aiCfg.prov]||{};aiCfg.p[aiCfg.prov]=auto?{...s,key:getP().key,model:'',auto:m}:{...s,key:getP().key,model:m,auto:''};storeAi();loadAiUI()}
 function loadAiUI(){
-  const d=PROV[aiCfg.prov],c=getP();$('aiProv').value=aiCfg.prov;$('apiKey').value=c.key;$('apiModel').value=c.model;$('apiUrl').value=c.url;
+  const d=PROV[aiCfg.prov],c=getP();$('aiProv').value=aiCfg.prov;$('apiKey').value=c.key;$('apiModel').value=c.model;$('apiModel').placeholder=c.auto?'automatico (ora: '+c.auto+')':'scelto in automatico';$('apiUrl').value=c.url;
   $('aiKeyWrap').classList.toggle('hidden',!d.key);$('aiUrlWrap').classList.toggle('hidden',d.kind==='anthropic'||d.kind==='gemini');
-  $('aiHelp').textContent=d.help;$('apiModel').placeholder='scelto in automatico';$('aiStatus').textContent=$('aiProv').selectedOptions[0].text+(d.key&&!c.key&&aiCfg.prov!=='custom'?' · chiave mancante':'');
+  $('aiHelp').textContent=d.help;$('aiStatus').textContent=$('aiProv').selectedOptions[0].text+(d.key&&!c.key&&aiCfg.prov!=='custom'?' · chiave mancante':'');
 }
 $('aiProv').oninput=()=>{aiCfg.prov=$('aiProv').value;storeAi();loadAiUI();$('aiTestOut').textContent=''};
 $('aiTest').onclick=testAI;
-['apiKey','apiModel','apiUrl'].forEach(id=>$(id).addEventListener('input',()=>{aiCfg.p[aiCfg.prov]={key:$('apiKey').value.trim(),model:$('apiModel').value.trim(),url:$('apiUrl').value.trim()};storeAi();loadAiUI()}));
+['apiKey','apiModel','apiUrl'].forEach(id=>$(id).addEventListener('input',()=>{const s=aiCfg.p[aiCfg.prov]||{},d=PROV[aiCfg.prov];
+  aiCfg.p[aiCfg.prov]={...s,key:$('apiKey').value.trim(),model:$('apiModel').value.trim(),url:$('apiUrl').value.trim(),auto:id==='apiModel'?'':(s.auto||'')};storeAi();
+  $('aiStatus').textContent=$('aiProv').selectedOptions[0].text+(d.key&&!$('apiKey').value.trim()&&aiCfg.prov!=='custom'?' · chiave mancante':'');
+  if(id==='apiModel'&&!$('apiModel').value.trim())$('apiModel').placeholder='scelto in automatico'}));
 async function callAI(system,hist){
   const d=PROV[aiCfg.prov],p=getP();
   if(d.key&&!p.key&&aiCfg.prov!=='custom'){$('aiDetails').open=true;throw new Error('manca la chiave API: inseriscila in "Impostazioni AI" qui sotto.')}
@@ -1272,15 +1277,15 @@ async function callAI(system,hist){
   };
   const busy=e=>[429,500,502,503,529].includes(e.status)||/high demand|overload|temporarily unavailable|try again later|rate limit|capacity/i.test(e.message);
   const missing=e=>!busy(e)&&(e.status===404||/does not exist|not found|no longer available|decommission|deprecat|not supported|invalid model|unknown model|do not have access/i.test(e.message));
-  let model=p.model,tried=[];
-  if(!model){try{model=pickModel(await listModels());if(model)setModel(model)}catch(e){if(e.net)throw e}if(!model)throw new Error('nessun modello disponibile: usa "Verifica chiave e modelli" in Impostazioni AI.')}
+  let model=p.model||p.auto,tried=[];
+  if(!model){try{model=pickModel(await listModels());if(model)setModel(model,true)}catch(e){if(e.net)throw e}if(!model)throw new Error('nessun modello disponibile: usa "Verifica chiave e modelli" in Impostazioni AI.')}
   for(let i=0;i<5;i++){
     try{return await once(model)}
     catch(e){
       if(e.net||i===4)throw e;tried.push(model);
       const hint=String(e.message).match(/use\s+(?:the\s+)?models\/([\w.\-]+)/i);
-      if(hint&&!tried.includes(hint[1])){model=hint[1];setModel(model);toast('Modello aggiornato a '+model);continue}
-      if(missing(e)){let ids;try{ids=await listModels()}catch(x){throw e}const m=pickModel(ids,tried);if(!m)throw e;model=m;setModel(m);toast('Il modello di prima non c\'è più: ora uso '+m);continue}
+      if(hint&&!tried.includes(hint[1])){model=hint[1];setModel(model,true);toast('Modello aggiornato a '+model);continue}
+      if(missing(e)){let ids;try{ids=await listModels()}catch(x){throw e}const m=pickModel(ids,tried);if(!m)throw e;model=m;setModel(m,true);toast('Il modello di prima non c\'è più: ora uso '+m);continue}
       if(busy(e)){if(i<2){await new Promise(r=>setTimeout(r,1500*(i+1)));tried.pop();continue}
         let ids;try{ids=await listModels()}catch(x){throw e}const m=pickModel(ids,tried,'light');if(!m)throw e;model=m;toast('Servizio affollato, provo con '+m);continue}
       throw e;
@@ -1621,7 +1626,7 @@ $('miInstall').onclick=async()=>{
   <p class="muted" style="margin-top:12px">I dati restano salvati su ogni dispositivo separatamente: per portarli da uno all'altro usa <b>Backup completo</b> e poi <b>Importa</b>.</p>`;
   openModal('Installa come app',h);
 };
-const APP_VERSION=17;
+const APP_VERSION=18;
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
   const hadSW=!!navigator.serviceWorker.controller;let reloaded=false;
   navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{reg.update();
