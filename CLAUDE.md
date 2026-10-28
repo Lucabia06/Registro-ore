@@ -19,7 +19,8 @@ Ogni modifica unita in `main` viene pubblicata automaticamente.
   finiscono in `tomb`. Salva sempre con `save()`, `saveT()`, `saveG()` (obiettivi) e `saveC()`, che aggiornano questi valori e
   avviano la sincronizzazione. Non scrivere direttamente in localStorage per voci, lista da fare o colori.
 - Dopo ogni modifica a `index.html`, aumenta di uno il numero di versione in `sw.js`
-  (`const CACHE='registro-ore-vN'`), così le app installate si aggiornano.
+  (`const CACHE='registro-ore-vN'`) e, con lo stesso numero, `const APP_VERSION=N` in `index.html`:
+  così le app installate si aggiornano e il menu mostra la versione giusta.
 - L'app deve restare comoda su smartphone (larghezza 360–430 px): niente scorrimento orizzontale della pagina,
   campi di input almeno da 16 px su mobile, area toccabile adeguata. Rispetta il tema chiaro e scuro
   (variabili CSS in `:root`).

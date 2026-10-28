@@ -38,6 +38,7 @@ nav button.active{background:var(--accent-soft);color:var(--accent);font-weight:
 .menu{position:absolute;right:16px;top:calc(100% + 4px);background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.18);padding:6px;min-width:240px;display:flex;flex-direction:column;z-index:30}
 .mi{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;padding:10px 12px;border-radius:8px;font:inherit;color:var(--text);cursor:pointer}
 .mi:hover{background:var(--bg)}
+label.mi{flex-direction:row;font-size:inherit}
 .mi-sep{height:1px;background:var(--line);margin:4px 6px}
 main{max-width:1200px;margin:0 auto;padding:20px 16px 60px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
@@ -419,6 +420,7 @@ label.donechk{flex-direction:row;align-items:center;gap:10px;align-self:end;padd
   .sum-big{font-size:38px}
 
   nav button.active{background:none;box-shadow:none;color:var(--accent-ink)}
+  nav button:not(.active){opacity:.55}
   .hero-num{font-size:40px}
   .ri{padding:11px 14px}
   .card{border-radius:16px}
@@ -445,6 +447,8 @@ label.donechk{flex-direction:row;align-items:center;gap:10px;align-self:end;padd
     <div class="mi-sep"></div>
     <button class="mi" id="exportCsv">⬇︎ Esporta CSV (Excel)</button>
     <button class="mi" id="exportJson">💾 Backup completo (JSON)</button>
+    <div class="mi-sep"></div>
+    <button class="mi" id="miUpdate">⟳ Aggiorna l'app<span class="muted" id="appVer" style="margin-left:auto;font-size:12px"></span></button>
     <label class="mi">📂 Importa backup o CSV<input type="file" id="importFile" accept=".json,.csv,application/json,text/csv" hidden></label>
   </div>
 </header>
@@ -1580,7 +1584,20 @@ $('miInstall').onclick=async()=>{
   <p class="muted" style="margin-top:12px">I dati restano salvati su ogni dispositivo separatamente: per portarli da uno all'altro usa <b>Backup completo</b> e poi <b>Importa</b>.</p>`;
   openModal('Installa come app',h);
 };
-if('serviceWorker' in navigator&&location.protocol.startsWith('http')){navigator.serviceWorker.register('sw.js').catch(()=>{});navigator.storage?.persist?.()}
+const APP_VERSION=16;
+if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
+  const hadSW=!!navigator.serviceWorker.controller;let reloaded=false;
+  navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{reg.update();
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')reg.update()});setInterval(()=>reg.update(),30*60e3)}).catch(()=>{});
+  /* quando arriva una versione nuova, ricarica una volta da sola */
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(hadSW&&!reloaded){reloaded=true;location.reload()}});
+  navigator.storage?.persist?.();
+}
+async function forceUpdate(){closeMenu();toast('Aggiornamento in corso…');
+  try{const rs=await navigator.serviceWorker?.getRegistrations?.()||[];await Promise.all(rs.map(r=>r.unregister()));const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}
+  location.replace(location.pathname+'?v='+Date.now())}
+$('miUpdate').onclick=forceUpdate;$('appVer').textContent='Versione '+APP_VERSION;
+if(location.search.includes('v='))history.replaceState(null,'',location.pathname);
 
 /* ================= Avvio ================= */
 function renderAll(){renderLists();renderEntries();renderSummary();renderQuick();renderTodos();renderCalendar();renderRun();renderTagPick('q_')}
