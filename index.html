@@ -370,6 +370,22 @@ label.donechk{flex-direction:row;align-items:center;gap:10px;align-self:end;padd
 .g-cell:hover{outline:2px solid color-mix(in srgb,var(--text) 30%,transparent)}
 
 #goalList .ri-v{font-size:15px}
+/* sezioni del registro richiudibili */
+#tab-registro .sec.fold{cursor:pointer;user-select:none;-webkit-user-select:none}
+#tab-registro .sec.fold>span:first-child{display:inline-flex;align-items:center;gap:6px}
+.chev{display:inline-block;width:14px;height:14px;transition:transform .18s ease;flex:none}
+.sec.closed .chev{transform:rotate(-90deg)}
+.sec.closed{margin-bottom:0}
+.sec.closed+.card{display:none}
+/* cambio giorno con scorrimento */
+@keyframes slL{from{transform:translateX(28px);opacity:0}to{transform:none;opacity:1}}
+@keyframes slR{from{transform:translateX(-28px);opacity:0}to{transform:none;opacity:1}}
+#tab-registro.slL>:not(.hero),#tab-registro.slL .hero-num{animation:slL .22s ease}
+#tab-registro.slR>:not(.hero),#tab-registro.slR .hero-num{animation:slR .22s ease}
+#tab-registro{touch-action:pan-y}
+.gtag{display:inline-flex;align-items:center;gap:4px;margin-right:6px;color:var(--text);font-weight:500}
+.gtag::after{content:"·";color:var(--muted);margin-left:2px;font-weight:400}
+.gtag i{width:7px;height:7px;border-radius:50%;display:inline-block;margin:0!important}
 /* note, in stile Note di iPhone: elenco + editor (affiancati su desktop) */
 .nt{display:grid;grid-template-columns:minmax(260px,340px) minmax(0,1fr);gap:16px;align-items:start}
 .nt-top{display:flex;gap:8px;align-items:center;margin-bottom:10px}
@@ -402,6 +418,7 @@ label.donechk{flex-direction:row;align-items:center;gap:10px;align-self:end;padd
 .v-ic{width:30px;height:30px;border-radius:9px;flex:none;border:1.5px solid var(--c);background:color-mix(in srgb,var(--c) 14%,var(--card));display:flex;align-items:center;justify-content:center;font-size:13px}
 
 /* ---------- SMARTPHONE ---------- */
+@media (min-width:721px) and (max-width:960px){header{gap:8px;padding-left:12px;padding-right:12px}nav{gap:0}nav button{padding:8px 9px}nav button svg{display:none}}
 @media (max-width:720px){
   .nt{grid-template-columns:minmax(0,1fr)}
   .nt.editing .nt-side{display:none}
@@ -504,13 +521,13 @@ label.donechk{flex-direction:row;align-items:center;gap:10px;align-self:end;padd
       <button class="hero-add" id="addBtn" aria-label="Aggiungi attività" title="Aggiungi attività">＋</button>
     </div>
   </div>
-  <div id="impWrap" class="hidden"><div class="sec"><span>Impegni</span><span class="sec-r" id="impCount"></span></div>
+  <div id="impWrap" class="hidden"><div class="sec fold" data-fold="imp"><span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>Impegni</span><span class="sec-r" id="impCount"></span></div>
   <div class="card list" id="impList" style="padding:4px 0"></div></div>
-  <div class="sec"><span>Da fare</span><span class="sec-r"><button class="link hidden" id="todoCarry"></button> <span id="todoCount"></span></span></div>
+  <div class="sec fold" data-fold="todo"><span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>Da fare</span><span class="sec-r"><button class="link hidden" id="todoCarry"></button> <span id="todoCount"></span></span></div>
   <div class="card list" id="todoList" style="padding:4px 0" data-empty="Niente in lista. Aggiungi un'attività con ＋."></div>
-  <div class="sec"><span>Svolte</span><span class="sec-r" id="dayCount"></span></div>
+  <div class="sec fold" data-fold="done"><span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>Svolte</span><span class="sec-r" id="dayCount"></span></div>
   <div class="card list" id="dayDone" style="padding:4px 0" data-empty="Nessuna attività registrata."></div>
-  <div class="sec"><span>Obiettivi</span><span class="sec-r"><button class="link" id="goalAdd">+ Obiettivo</button></span></div>
+  <div class="sec fold" data-fold="goal"><span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>Obiettivi</span><span class="sec-r"><button class="link" id="goalAdd">+ Obiettivo</button></span></div>
   <div class="card list" id="goalList" style="padding:4px 0" data-empty="Nessun obiettivo. Premi ＋ e scegli Obiettivo: ad esempio &quot;Cercare un nuovo lavoro&quot; entro una data."></div>
   <datalist id="dl_client"></datalist><datalist id="dl_type"></datalist>
 </section>
@@ -654,8 +671,11 @@ let sigE=new Map(entries.map(e=>[e.id,sigOf(e)])),sigT=new Map(todos.map(t=>[t.i
 function track(list,sig,tb){const now=Date.now(),seen=new Set();
   list.forEach(x=>{seen.add(x.id);const s=sigOf(x);if(sig.get(x.id)!==s){x.u=now;sig.set(x.id,s)}});
   [...sig.keys()].forEach(id=>{if(!seen.has(id)){tb[id]=now;sig.delete(id)}})}
-const save=()=>{track(entries,sigE,tomb.e);store(KEY,entries);store('registroOre.tomb',tomb);scheduleSync()};
-const saveT=()=>{track(todos,sigT,tomb.t);store(TKEY,todos);store('registroOre.tomb',tomb);scheduleSync()};
+const save=()=>{linkG();track(entries,sigE,tomb.e);store(KEY,entries);store('registroOre.tomb',tomb);scheduleSync()};
+const saveT=()=>{linkG();track(todos,sigT,tomb.t);store(TKEY,todos);store('registroOre.tomb',tomb);scheduleSync()};
+/* applica i collegamenti agli obiettivi prima di salvare; le altre liste toccate vengono salvate subito dopo */
+let linking=false;
+function linkG(){if(linking||typeof linkGoals!=='function')return;linking=true;try{if(linkGoals()){goalSaved();queueMicrotask(()=>{linking=true;try{track(entries,sigE,tomb.e);store(KEY,entries);track(todos,sigT,tomb.t);store(TKEY,todos);track(events,sigV,tomb.v);store('registroOre.events',events);store('registroOre.tomb',tomb)}finally{linking=false}})}}finally{linking=false}}
 const saveC=()=>{colorsU=Date.now();store(CKEY,colors);store('registroOre.colorsU',colorsU);scheduleSync()};
 let goals=load('registroOre.goals',[]);if(!Array.isArray(goals))goals=[];tomb.g=tomb.g||{};
 let sigG=new Map(goals.map(g=>[g.id,sigOf(g)]));
@@ -667,7 +687,7 @@ let sigV=new Map(events.map(v=>[v.id,sigOf(v)]));
 let notes=load('registroOre.notes',[]);if(!Array.isArray(notes))notes=[];tomb.n=tomb.n||{};
 let sigN=new Map(notes.map(n=>[n.id,sigOf(n)]));
 const saveN=()=>{track(notes,sigN,tomb.n);store('registroOre.notes',notes);store('registroOre.tomb',tomb);scheduleSync()};
-const saveV=()=>{track(events,sigV,tomb.v);store('registroOre.events',events);store('registroOre.tomb',tomb);scheduleSync()};
+const saveV=()=>{linkG();track(events,sigV,tomb.v);store('registroOre.events',events);store('registroOre.tomb',tomb);scheduleSync()};
 
 /* ================= Utilità ================= */
 const $=id=>document.getElementById(id);
@@ -747,9 +767,9 @@ function fieldsHTML(p){return `
   <label>Tipo di attività<input id="${p}type" list="dl_type" placeholder="es. Grafica" required></label>
   <label>Inizio<div class="timewrap"><input type="time" id="${p}start" required><button type="button" class="btn" data-now="${p}start">Ora</button></div></label>
   <label>Fine<div class="timewrap"><input type="time" id="${p}end"><button type="button" class="btn" data-now="${p}end">Ora</button></div></label>
-  <label class="full">Note<input id="${p}note" placeholder="Descrizione facoltativa"></label>`}
-function readFields(p){const v={date:$(p+'date').value,client:$(p+'client').value.trim(),type:$(p+'type').value.trim(),start:$(p+'start').value,end:$(p+'end').value,note:$(p+'note').value.trim()};if($(p+'tags'))v.tags=splitTags($(p+'tags').value);return v}
-function fillFields(p,e){e=e||{};$(p+'date').value=e.date||todayStr();$(p+'client').value=e.client||'';$(p+'type').value=e.type||'';if($(p+'tags'))$(p+'tags').value=tagsOf(e).join(', ');$(p+'start').value=e.start||'';$(p+'end').value=e.end||'';$(p+'note').value=e.note||''}
+  <label class="full">Note<input id="${p}note" placeholder="Descrizione facoltativa"></label>${goalField(p+'goal','')}`}
+function readFields(p){const v={date:$(p+'date').value,client:$(p+'client').value.trim(),type:$(p+'type').value.trim(),start:$(p+'start').value,end:$(p+'end').value,note:$(p+'note').value.trim()};if($(p+'goal'))v.goal=$(p+'goal').value;if($(p+'tags'))v.tags=splitTags($(p+'tags').value);return v}
+function fillFields(p,e){e=e||{};$(p+'date').value=e.date||todayStr();$(p+'client').value=e.client||'';$(p+'type').value=e.type||'';if($(p+'tags'))$(p+'tags').value=tagsOf(e).join(', ');$(p+'start').value=e.start||'';$(p+'end').value=e.end||'';$(p+'note').value=e.note||'';if($(p+'goal')){if(e.goal&&![...$(p+'goal').options].some(o=>o.value===e.goal))$(p+'goal').innerHTML=goalOpts(e.goal);$(p+'goal').value=e.goal||''}}
 function renderTagPick(p){
   const el=$(p+'tagpick');if(!el)return;const cur=splitTags($(p+'tags').value);
   el.innerHTML=uniq([...allTags(),...cur]).map(t=>{const c=colorOf('tag',t);return `<span class="tag ${cur.includes(t)?'on':''}" data-t="${esc(t)}" style="background:${c}22;color:${c}"><i style="background:${c}"></i><span style="color:var(--text)">${esc(t)}</span></span>`}).join('');
@@ -789,6 +809,7 @@ function openAdd(pre={}){
     <label class="qm-time">Inizio<input type="time" id="q_start"></label>
     <label class="qm-time">Fine<input type="time" id="q_end"></label>
     <div class="full muted" id="q_dur" style="font-size:13px"></div>
+    ${goalField('q_goal',pre.goal||'')}
     <div class="row full btns" style="flex-wrap:nowrap"><button type="button" class="btn" id="qList">Aggiungi alla lista</button><button type="button" class="btn primary" id="qStart">▶ Inizia attività</button></div></form>`);
   $('q_date').value=pre.date||$('t_date').value||todayStr();
   if(pre.note)$('q_note').value=pre.note;if(pre.client)$('q_client').value=pre.client;if(pre.type)$('q_type').value=pre.type;
@@ -812,9 +833,11 @@ function submitQuick(action){
   const note=$('q_note').value.trim(),client=$('q_client').value.trim(),type=$('q_type').value.trim();
   [['client',client,'q_cc'],['type',type,'q_tc']].forEach(([k,n,id])=>{if(n&&$(id).dataset.touched){colors[k][n]=$(id).value;saveC()}});
   const date=action==='start'?todayStr():($('q_date').value||todayStr());
-  const t={id:uid(),date,text:note,client,type,done:done};todos.push(t);saveT();
-  if(done){entries.push({id:uid(),date,client,type,start:$('q_start').value,end:$('q_end').value,note,todo:t.id});save()}
-  else if(action==='start'){entries.push({id:uid(),date,client,type,start:nowTime(),end:'',note,todo:t.id});save()}
+  const goal=$('q_goal')?$('q_goal').value:'';
+  const t={id:uid(),date,text:note,client,type,done:done};setGoal(t,goal);
+  if(done){const e={id:uid(),date,client,type,start:$('q_start').value,end:$('q_end').value,note,todo:t.id};setGoal(e,goal);if(goal)e.gm=goal+'|'+date;entries.push(e)}
+  else if(action==='start'){const e={id:uid(),date,client,type,start:nowTime(),end:'',note,todo:t.id};setGoal(e,goal);entries.push(e)}
+  todos.push(t);saveT();save();
   if(date!==$('t_date').value&&$('tab-registro').offsetParent!==null)$('t_date').value=date;
   closeModal();renderAll();toast(done?'Salvata come fatta':action==='start'?'Iniziata: '+note:'Aggiunta alla lista');
 }
@@ -831,10 +854,11 @@ function openEntry(id,prefill){
     <span class="muted" id="m_dur"></span></div></form>`);
   fillFields('m_',e);renderTagPick('m_');updPreview('m_');
   $('mForm').onsubmit=ev=>{ev.preventDefault();const v=readFields('m_');
-    if(modalId)Object.assign(entries.find(x=>x.id===modalId),v);else{v.id=uid();if(modalPrefill&&modalPrefill.todo)v.todo=modalPrefill.todo;entries.push(v)}
+    if(!v.goal)delete v.goal;
+    if(modalId){const x=entries.find(x=>x.id===modalId);Object.assign(x,v);if(!v.goal&&$('m_goal'))delete x.goal}else{v.id=uid();if(modalPrefill&&modalPrefill.todo)v.todo=modalPrefill.todo;entries.push(v)}
     save();closeModal();renderAll();toast(modalId?'Modifiche salvate':'Attività aggiunta')};
 }
-function resumeEntry(id){const e=entries.find(x=>x.id===id);entries.push({...e,tags:[...tagsOf(e)],id:uid(),date:todayStr(),start:nowTime(),end:''});save();closeModal();renderAll();toast('Avviata: '+e.client)}
+function resumeEntry(id){const e=entries.find(x=>x.id===id);const n={...e,tags:[...tagsOf(e)],id:uid(),date:todayStr(),start:nowTime(),end:''};delete n.gm;entries.push(n);save();closeModal();renderAll();toast('Avviata: '+e.client)}
 function stopEntry(id){const e=entries.find(x=>x.id===id);e.end=nowTime();save();renderAll();
   toast('Fermata · '+fmtH(durMin(e))+(e.todo&&todos.some(t=>t.id===e.todo&&!t.done)?' · spunta la voce quando è finita':''))}
 function delEntry(id){if(!confirm('Eliminare questa voce?'))return;entries=entries.filter(x=>x.id!==id);save();closeModal();renderAll();toast('Voce eliminata')}
@@ -852,7 +876,7 @@ const avHtml=c=>{const k=colorOf('client',c||'');return `<span class="av" style=
 const dotsHtml=()=>'';
 function itemHtml(e){
   return `<div class="ri" onclick="openEntry('${e.id}')">${avHtml(e.client)}<div class="ri-m"><div class="ri-t">${esc(e.note||e.type)}</div>
-  <div class="ri-s">${esc(e.client)}${e.note?' · '+esc(e.type):''} · ${e.start}–${e.end||'in corso'}${dotsHtml(tagsOf(e))}</div></div>
+  <div class="ri-s">${gTag(e.goal)}${esc(e.client)}${e.note?' · '+esc(e.type):''} · ${e.start}–${e.end||'in corso'}</div></div>
   <div class="ri-v">${e.end?fmtH(durMin(e)):`<button class="btn small primary" onclick="event.stopPropagation();stopEntry('${e.id}')">Stop</button>`}</div></div>`}
 function renderEntries(){
   const q=$('search').value.toLowerCase(),[f,t]=sRange(sPer,sRef);
@@ -877,7 +901,7 @@ function renderRun(){
       ${lt?`<button class="btn small" onclick="toggleTodo('${e.todo}')" title="Ferma e completa">✓ Fatto</button>`:''}<button class="btn primary small" onclick="stopEntry('${e.id}')">Stop</button></div>`}).join('');
 }
 setInterval(()=>{document.querySelectorAll('[data-run]').forEach(el=>{const e=entries.find(x=>x.id===el.dataset.run);if(e&&!e.end)el.textContent=fmtClock(elapsed(e))})},1000);
-setInterval(()=>{if(document.visibilityState==='visible')renderTodos()},60000);
+setInterval(()=>{if(document.visibilityState==='visible'){if(linkGoals()){goalSaved();saveV();save();saveT();renderAll()}else renderTodos()}},60000);
 
 /* ================= Oggi: da fare + svolte ================= */
 $('t_date').value=todayStr();
@@ -888,7 +912,7 @@ function renderTodos(){
   const spent={};entries.forEach(e=>{if(e.todo)spent[e.todo]=(spent[e.todo]||0)+(e.end?durMin(e):Math.floor(elapsed(e)/60))});
   $('todoList').innerHTML=list.map(t=>`<div class="ri ${t.done?'done':''}">
     <button class="chk ${t.done?'on':''}" onclick="toggleTodo('${t.id}')" aria-label="${t.done?'Segna da fare':'Completa'}">✓</button>
-    <div class="ri-m" onclick="editTodo('${t.id}')"><div class="ri-t">${esc(t.text)}</div><div class="ri-s">${esc([t.client,t.type].filter(Boolean).join(' · ')||'Tocca per aggiungere cliente e tipo')}${dotsHtml(t.tags)}</div></div>
+    <div class="ri-m" onclick="editTodo('${t.id}')"><div class="ri-t">${esc(t.text)}</div><div class="ri-s">${gTag(t.goal)}${esc([t.client,t.type].filter(Boolean).join(' · ')||'Tocca per aggiungere cliente e tipo')}</div></div>
     ${spent[t.id]?`<div class="ri-v" style="font-weight:600;color:var(--muted);font-size:14px">${fmtH(spent[t.id])}</div>`:''}
     ${running.has(t.id)?'<span class="live" title="In corso"></span>':t.done?'':`<button class="play" title="Avvia il tempo" aria-label="Avvia" onclick="startTodo('${t.id}')">▶</button>`}</div>`).join('');
   const open=list.filter(t=>!t.done).length;$('todoCount').textContent=list.length?`${list.length-open}/${list.length}`:'';
@@ -919,10 +943,10 @@ function completeTodo(id){const t=todos.find(x=>x.id===id);renderTodos();
   openModal('Quanto ci hai messo?',`<p class="lead">Registro il tempo di <b>${esc(t.text)}</b> nelle ore e nel calendario.${g.n?` Ti propongo ${fmtH(g.m)}, la tua durata tipica per "${esc(t.type)}".`:''}</p>
     <form id="cForm" class="grid" autocomplete="off">${fieldsHTML('m_')}
     <div class="row full" style="margin-top:4px"><button class="btn primary">✓ Salva e completa</button><button type="button" class="btn" id="cNoTime">Completa senza tempo</button><span class="muted" id="m_dur"></span></div></form>`);
-  fillFields('m_',{date:t.date,client:t.client,type:t.type,tags:t.tags||[],start:minToT(startM),end:minToT(endM),note:t.text});
+  fillFields('m_',{date:t.date,client:t.client,type:t.type,tags:t.tags||[],start:minToT(startM),end:minToT(endM),note:t.text,goal:t.goal});
   $('m_end').required=true;renderTagPick('m_');updPreview('m_');
-  $('cForm').onsubmit=ev=>{ev.preventDefault();const v=readFields('m_');v.id=uid();v.todo=id;entries.push(v);save();
-    t.done=true;if(!t.client)t.client=v.client;if(!t.type)t.type=v.type;saveT();closeModal();renderAll();toast('Completata · '+fmtH(durMin(v)))};
+  $('cForm').onsubmit=ev=>{ev.preventDefault();const v=readFields('m_');v.id=uid();v.todo=id;if(!v.goal)delete v.goal;else setGoal(t,v.goal);if(v.goal&&v.date===t.date)v.gm=v.goal+'|'+v.date;entries.push(v);
+    t.done=true;if(!t.client)t.client=v.client;if(!t.type)t.type=v.type;saveT();save();closeModal();renderAll();toast('Completata · '+fmtH(durMin(v)))};
   $('cNoTime').onclick=()=>{t.done=true;saveT();closeModal();renderTodos();toast('Completata senza tempo')};
 }
 function delTodo(id){todos=todos.filter(x=>x.id!==id);saveT();renderTodos()}
@@ -931,14 +955,15 @@ function editTodo(id){const t=todos.find(x=>x.id===id);if(!t)return;
     <label>Cliente<input id="n_client" list="dl_client"></label><label>Tipo di attività<input id="n_type" list="dl_type"></label>
     <label>Giorno<input type="date" id="n_date" required></label>
     <label style="flex-direction:row;align-items:center;gap:8px;color:var(--text);font-size:14px;align-self:center"><input type="checkbox" id="n_done" style="width:18px;height:18px">Completata</label>
+    ${goalField('n_goal',t.goal||'')}
     <div class="row full"><button class="btn primary">Salva</button><button type="button" class="btn" onclick="closeModal();startTodo('${id}')">▶ Avvia</button><button type="button" class="btn danger" onclick="delTodo('${id}');closeModal()">Elimina</button></div></form>`);
   $('n_text').value=t.text;$('n_client').value=t.client||'';$('n_type').value=t.type||'';$('n_date').value=t.date;$('n_done').checked=!!t.done;
-  $('tdForm').onsubmit=ev=>{ev.preventDefault();t.text=$('n_text').value.trim();t.client=$('n_client').value.trim();t.type=$('n_type').value.trim();t.date=$('n_date').value;const becomingDone=!t.done&&$('n_done').checked;if(!becomingDone)t.done=$('n_done').checked;saveT();closeModal();renderTodos();renderLists();
+  $('tdForm').onsubmit=ev=>{ev.preventDefault();t.text=$('n_text').value.trim();t.client=$('n_client').value.trim();t.type=$('n_type').value.trim();t.date=$('n_date').value;if($('n_goal')){setGoal(t,$('n_goal').value);entries.filter(e=>e.todo===t.id).forEach(e=>setGoal(e,t.goal));save()}const becomingDone=!t.done&&$('n_done').checked;if(!becomingDone)t.done=$('n_done').checked;saveT();closeModal();renderTodos();renderLists();
     if(becomingDone)toggleTodo(id);else toast('Salvato')};
 }
 /* ▶ su un elemento da fare: se ha cliente e tipo parte subito, altrimenti chiede solo quelli */
 function startTodo(id){const t=todos.find(x=>x.id===id);if(!t)return;
-  const e={date:todayStr(),client:t.client||'',type:t.type||'',tags:[...(t.tags||[])],start:nowTime(),end:'',note:t.text,todo:t.id};
+  const e={date:todayStr(),client:t.client||'',type:t.type||'',tags:[...(t.tags||[])],start:nowTime(),end:'',note:t.text,todo:t.id};setGoal(e,t.goal);
   if(!e.client||!e.type){openEntry(null,e);toast('Completa cliente e tipo, poi premi Aggiungi');return}
   e.id=uid();entries.push(e);save();renderAll();toast('Avviata: '+t.text);
 }
@@ -947,6 +972,23 @@ $('todoCarry').onclick=()=>{const d=$('t_date').value||todayStr();const prev=dSt
 $('t_date').oninput=dayChanged;
 $('tPrev').onclick=()=>{$('t_date').value=dStr(addDays(parseD($('t_date').value||todayStr()),-1));dayChanged()};
 $('tNext').onclick=()=>{$('t_date').value=dStr(addDays(parseD($('t_date').value||todayStr()),1));dayChanged()};
+/* cambio giorno: scorri a sinistra = giorno dopo, a destra = giorno prima (touch, trackpad, frecce) */
+function shiftDay(n){const el=$('tab-registro');el.classList.remove('slL','slR');void el.offsetWidth;el.classList.add(n>0?'slL':'slR');
+  $('t_date').value=dStr(addDays(parseD($('t_date').value||todayStr()),n));dayChanged()}
+$('tab-registro').addEventListener('animationend',()=>$('tab-registro').classList.remove('slL','slR'));
+{let sx=null,sy=null,st=0;const reg=$('tab-registro');
+  reg.addEventListener('touchstart',e=>{if(e.touches.length!==1||e.target.closest('input,textarea,select,.segs')){sx=null;return}sx=e.touches[0].clientX;sy=e.touches[0].clientY;st=Date.now()},{passive:true});
+  reg.addEventListener('touchend',e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.6&&Date.now()-st<800)shiftDay(dx<0?1:-1)},{passive:true});
+  let acc=0,lock=0;reg.addEventListener('wheel',e=>{if(Math.abs(e.deltaX)<=Math.abs(e.deltaY))return;e.preventDefault();if(Date.now()<lock)return;acc+=e.deltaX;
+    if(Math.abs(acc)>70){shiftDay(acc>0?1:-1);acc=0;lock=Date.now()+650}},{passive:false});
+  addEventListener('keydown',e=>{if(document.body.dataset.tab!=='registro'||!$('modal').classList.contains('hidden')||e.target.closest('input,textarea,select,[contenteditable]')||e.metaKey||e.ctrlKey||e.altKey)return;
+    if(e.key==='ArrowLeft')shiftDay(-1);else if(e.key==='ArrowRight')shiftDay(1)})}
+/* sezioni richiudibili (stato ricordato solo su questo dispositivo) */
+let fold=load('registroOre.fold',{});
+document.querySelectorAll('#tab-registro .sec.fold').forEach(h=>{const k=h.dataset.fold;h.classList.toggle('closed',!!fold[k]);h.setAttribute('role','button');h.setAttribute('aria-expanded',!fold[k]);h.tabIndex=0;
+  const tg=()=>{fold[k]=!fold[k];if(!fold[k])delete fold[k];store('registroOre.fold',fold);h.classList.toggle('closed',!!fold[k]);h.setAttribute('aria-expanded',!fold[k])};
+  h.addEventListener('click',e=>{if(e.target.closest('button'))return;tg()});h.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target===h){e.preventDefault();tg()}})});
 
 /* ================= Obiettivi ================= */
 const PER1={day:'giorno',week:'settimana',month:'mese'};
@@ -957,6 +999,27 @@ function goalProgress(g,ref){const[f,t]=sRange(g.per,ref||new Date());
 const isText=g=>g.kind==='text';
 const gOn=(g,ds)=>((g.days||{})[ds]||0)>0;
 const gColor=g=>g.color||PAL[hash(g.id+g.text)%PAL.length];
+/* collegamento obiettivo ↔ attività / da fare / impegno */
+function goalOpts(sel){const t=todayStr(),l=goals.filter(g=>isText(g)&&(g.to>=t||g.id===sel)).sort((a,b)=>a.text.localeCompare(b.text));
+  return `<option value="">Nessuno</option>`+l.map(g=>`<option value="${g.id}"${g.id===sel?' selected':''}>${esc(g.text)}</option>`).join('')}
+const goalField=(id,sel)=>goals.some(g=>isText(g)&&(g.to>=todayStr()||g.id===sel))?`<label class="full">Obiettivo collegato<select id="${id}">${goalOpts(sel)}</select><small class="muted" style="font-size:12px;font-weight:400">Quando la completi, l'obiettivo viene spuntato da solo per quel giorno.</small></label>`:'';
+const setGoal=(o,v)=>{if(v)o.goal=v;else delete o.goal};
+const gTag=id=>{const g=id&&goals.find(x=>x.id===id);return g?`<span class="gtag"><i style="background:${gColor(g)}"></i>${esc(g.text)}</span>`:''};
+let linkMsgs=[];
+function markGoalDay(gid,ds){const g=goals.find(x=>x.id===gid);if(!g||!isText(g)||ds<g.from||ds>g.to||ds>todayStr()||gOn(g,ds))return false;
+  g.days={...(g.days||{}),[ds]:Date.now()};linkMsgs.push(g.text);return true}
+/* spunta automatica: una volta per elemento e giorno (se poi togli la spunta a mano, resta tolta) */
+function linkGoals(){let ch=false;const t=todayStr();
+  const one=x=>{if(!x.goal){if(x.gm)delete x.gm;return}const k=x.goal+'|'+x.date;
+    const done=x.end!==undefined?!!x.end:!!x.done;
+    if(done&&x.date<=t&&x.gm!==k){if(markGoalDay(x.goal,x.date))ch=true;x.gm=k}
+    else if(!done&&x.gm===k&&x.done===false){const g=goals.find(y=>y.id===x.goal);if(g&&gOn(g,x.date)){g.days={...g.days,[x.date]:-Date.now()};ch=true}delete x.gm}};
+  todos.forEach(one);entries.forEach(one);
+  events.forEach(v=>{if(!v.goal){if(v.gm)delete v.gm;return}const[gid,last]=(v.gm||'|').split('|'),end=[vEnd(v),t].sort()[0];
+    const from=gid===v.goal&&last>=v.date?dStr(addDays(parseD(last),1)):v.date;if(from>end)return;
+    daysBetween(from,end).forEach(d=>{if(markGoalDay(v.goal,d))ch=true});v.gm=v.goal+'|'+end});
+  return ch}
+function goalSaved(){if(linkMsgs.length){const m=[...new Set(linkMsgs)];linkMsgs=[];saveG();setTimeout(()=>toast('Obiettivo spuntato: '+m.join(', ')),900)}}
 const fmtShort=ds=>parseD(ds).toLocaleDateString('it-IT',{day:'numeric',month:'short'});
 function daysBetween(a,b){const out=[];if(a>b)return out;for(let d=parseD(a);dStr(d)<=b;d=addDays(d,1))out.push(dStr(d));return out}
 /* statistiche nel periodo [f,t] limitato all'intervallo dell'obiettivo e a oggi */
@@ -1036,6 +1099,7 @@ function editEvent(id,pre){
     <label class="v-time">Fine<input type="time" id="v_end"></label>
     <label class="full">Luogo<input id="v_place" placeholder="facoltativo"></label>
     <label class="full">Nota<input id="v_note" placeholder="facoltativa"></label>
+    ${goalField('v_goal',v.goal||'').replace("Quando la completi, l'obiettivo viene spuntato da solo per quel giorno.","Nei giorni dell'impegno l'obiettivo viene spuntato da solo.")}
     <p class="full muted" style="margin:0;font-size:13px">Gli impegni compaiono nel calendario ma non contano nelle ore di lavoro.</p>
     <div class="row full btns" style="flex-wrap:nowrap"><button class="btn primary">Salva</button>${id?'<button type="button" class="btn danger" id="vDel">Elimina</button>':''}</div></form>`);
   const now=toMin(nowTime()),r=Math.min(1380,Math.ceil(now/60)*60);
@@ -1051,7 +1115,8 @@ function editEvent(id,pre){
     $('v_end').setCustomValidity(!all&&to===d&&$('v_end').value&&$('v_end').value<=$('v_start').value?'La fine deve venire dopo l\'inizio':'');
     if(!f.reportValidity())return;
     const nv={title:$('v_title').value.trim(),date:d,to:to>d?to:'',allDay:all,start:all?'':$('v_start').value,end:all?'':$('v_end').value,place:$('v_place').value.trim(),note:$('v_note').value.trim(),color:$('v_col').value};
-    if(id)Object.assign(v,nv);else events.push({id:uid(),...nv});
+    const gsel=$('v_goal')?$('v_goal').value:(v.goal||'');
+    if(id){Object.assign(v,nv);setGoal(v,gsel)}else{const o={id:uid(),...nv};setGoal(o,gsel);events.push(o)}
     saveV();closeModal();renderAll();toast('Impegno salvato')};
   if(id)$('vDel').onclick=()=>{events=events.filter(x=>x.id!==id);saveV();closeModal();renderAll();toast('Impegno eliminato')};
   if(!id&&!isMobile())setTimeout(()=>$('v_title')&&$('v_title').focus(),50);
@@ -1059,7 +1124,7 @@ function editEvent(id,pre){
 function renderEvents(){
   const el=$('impList');if(!el)return;const d=$('t_date').value||todayStr(),list=events.filter(v=>vOn(v,d)).sort(vSort);
   $('impWrap').classList.toggle('hidden',!list.length);$('impCount').textContent=list.length>1?String(list.length):'';
-  el.innerHTML=list.map(v=>`<div class="ri" onclick="editEvent('${v.id}')"><span class="v-ic" style="--c:${vColor(v)}" aria-hidden="true">${v.allDay||vBar(v)?'◷':'•'}</span><div class="ri-m"><div class="ri-t">${esc(v.title)}</div><div class="ri-s">${esc(vTime(v))}${v.place?' · '+esc(v.place):''}${v.note?' · '+esc(v.note):''}</div></div></div>`).join('');
+  el.innerHTML=list.map(v=>`<div class="ri" onclick="editEvent('${v.id}')"><span class="v-ic" style="--c:${vColor(v)}" aria-hidden="true">${v.allDay||vBar(v)?'◷':'•'}</span><div class="ri-m"><div class="ri-t">${esc(v.title)}</div><div class="ri-s">${gTag(v.goal)}${esc(vTime(v))}${v.place?' · '+esc(v.place):''}${v.note?' · '+esc(v.note):''}</div></div></div>`).join('');
 }
 $('goalAdd').onclick=()=>openCreate('goal',{date:$('t_date').value||todayStr()});
 
@@ -1750,7 +1815,7 @@ $('miInstall').onclick=async()=>{
   <p class="muted" style="margin-top:12px">I dati restano salvati su ogni dispositivo separatamente: per portarli da uno all'altro usa <b>Backup completo</b> e poi <b>Importa</b>.</p>`;
   openModal('Installa come app',h);
 };
-const APP_VERSION=20;
+const APP_VERSION=21;
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
   const hadSW=!!navigator.serviceWorker.controller;let reloaded=false;
   navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{reg.update();
@@ -1807,6 +1872,7 @@ $('noteExportAll').onclick=()=>{flushNote();const l=notes.filter(n=>(n.text||'')
   download(`note-${todayStr()}.txt`,l.map(n=>`${n.text.trim()}\n\n(${new Date(n.u||n.c).toLocaleString('it-IT')})`).join('\n\n────────────\n\n'),'text/plain')};
 addEventListener('pagehide',flushNote);document.addEventListener('visibilitychange',()=>{if(document.hidden)flushNote()});
 function renderAll(){renderLists();renderEntries();renderSummary();renderQuick();renderTodos();renderCalendar();renderRun();renderTagPick('q_');renderNotes()}
+if(linkGoals()){goalSaved();saveV();save();saveT()}
 renderAll();
 setSync(sync.token?'wait':'off','');
 if(location.hash.startsWith('#collega=')){
