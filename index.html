@@ -1190,8 +1190,8 @@ $('q_kind').oninput=renderQuick;$('q_value').oninput=showQuick;
 const chatHist=[];
 const PROV={
   gemini:{kind:'gemini',model:'gemini-3.8-flash',key:true,help:'Chiave gratuita da aistudio.google.com/apikey (accedi con un account Google → "Create API key"). Attenzione: nel piano gratuito Google può usare i dati inviati per migliorare i suoi modelli.'},
-  groq:{kind:'openai',url:'https://api.groq.com/openai/v1',model:'llama-3.3-70b-versatile',key:true,help:'Chiave gratuita da console.groq.com/keys, con limiti di utilizzo giornalieri.'},
-  openrouter:{kind:'openai',url:'https://openrouter.ai/api/v1',model:'meta-llama/llama-3.3-70b-instruct:free',key:true,help:'Chiave da openrouter.ai/keys. I modelli che finiscono con ":free" sono gratuiti, con limiti giornalieri. L\'elenco è su openrouter.ai/models.'},
+  groq:{kind:'openai',url:'https://api.groq.com/openai/v1',model:'',key:true,help:'Chiave gratuita da console.groq.com/keys, con limiti di utilizzo giornalieri.'},
+  openrouter:{kind:'openai',url:'https://openrouter.ai/api/v1',model:'',key:true,help:'Chiave da openrouter.ai/keys. I modelli che finiscono con ":free" sono gratuiti, con limiti giornalieri. L\'elenco è su openrouter.ai/models.'},
   ollama:{kind:'ollama',url:'http://localhost:11434',model:'llama3.2',key:false,help:'Gratis e privato: i dati non escono dal Mac (funziona solo sul computer dove è installato). 1) Installa Ollama da ollama.com. 2) Nel Terminale: ollama pull llama3.2  3) Per permettere al tool di collegarsi, una volta sola: launchctl setenv OLLAMA_ORIGINS "*"  e poi riavvia l\'app Ollama.'},
   anthropic:{kind:'anthropic',model:'claude-sonnet-4-5',key:true,help:'Chiave da platform.claude.com → Settings → API Keys. A pagamento (frazioni di centesimo a domanda).'},
   openai:{kind:'openai',url:'https://api.openai.com/v1',model:'gpt-4o-mini',key:true,help:'Chiave da platform.openai.com/api-keys. A pagamento.'},
@@ -1202,53 +1202,90 @@ try{const old=localStorage.getItem('registroOre.key');if(old&&!aiCfg.p.anthropic
 if(!PROV[aiCfg.prov])aiCfg.prov='gemini';
 function getP(){const d=PROV[aiCfg.prov],s=aiCfg.p[aiCfg.prov]||{};return{kind:d.kind,key:s.key||'',model:s.model||d.model,url:s.url||d.url||''}}
 const storeAi=()=>store('registroOre.ai',aiCfg);
-/* verifica Gemini: raggiungibilità, chiave valida e modelli disponibili (tocca un modello per sceglierlo) */
-async function testGemini(){
-  const out=$('aiTestOut'),p=getP();if(!p.key){out.textContent='Inserisci prima la chiave API.';return}
-  out.textContent='Verifica in corso…';
-  let r;try{r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models?pageSize=200&key=${encodeURIComponent(p.key)}`)}
-  catch(e){out.innerHTML=`<b>Google non è raggiungibile da qui.</b> ${navigator.onLine?'Il dispositivo è online, quindi la richiesta è stata bloccata: controlla VPN, blocco contenuti o rete aziendale, e prova con un\'altra connessione.':'Il dispositivo risulta offline.'}${location.protocol==='file:'?' Stai aprendo il file dal computer: usa l\'indirizzo su GitHub Pages.':''}<br><span style="opacity:.7">Dettaglio tecnico: ${esc(e.name+': '+e.message)} · ${esc(location.origin)}</span>`;return}
+/* elenco dei modelli disponibili per il servizio scelto */
+async function listModels(){
+  const d=PROV[aiCfg.prov],p=getP(),base=(p.url||'').replace(/\/$/,'');let url,headers={};
+  if(d.kind==='gemini')url=`https://generativelanguage.googleapis.com/v1beta/models?pageSize=200&key=${encodeURIComponent(p.key)}`;
+  else if(d.kind==='anthropic'){url='https://api.anthropic.com/v1/models?limit=100';headers={'x-api-key':p.key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'}}
+  else if(d.kind==='ollama')url=base+'/api/tags';
+  else{url=base+'/models';if(p.key)headers={Authorization:'Bearer '+p.key}}
+  let r;try{r=await fetch(url,{headers})}catch(e){const er=new Error(e.name+': '+e.message);er.net=true;throw er}
   let j={};try{j=await r.json()}catch(e){}
-  if(!r.ok){out.innerHTML=`<b>Google ha risposto con un errore (${r.status}).</b> ${esc((j.error&&j.error.message)||r.statusText)}`;return}
-  const ms=(j.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes('generateContent')).map(m=>m.name.replace('models/','')).filter(n=>/gemini/i.test(n));
-  const fl=ms.filter(n=>/flash/i.test(n)),list=(fl.length?fl:ms).slice(0,12);
-  out.innerHTML=`<b>Chiave valida, Google raggiungibile.</b> ${ms.includes(p.model)?`Il modello <code>${esc(p.model)}</code> è disponibile.`:`Il modello <code>${esc(p.model)}</code> non è nell'elenco: scegline uno qui sotto.`}<div class="row" style="margin-top:8px;gap:6px">${list.map(n=>`<button type="button" class="pill${n===p.model?' on':''}" data-m="${esc(n)}" style="font-size:12px;padding:6px 10px">${esc(n)}</button>`).join('')}</div>`;
-  out.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{aiCfg.p.gemini={...(aiCfg.p.gemini||{}),key:p.key,model:b.dataset.m};storeAi();loadAiUI();testGemini();toast('Modello: '+b.dataset.m)});
+  if(!r.ok){const er=new Error((j.error&&(j.error.message||j.error))||r.statusText);er.status=r.status;throw er}
+  let ids=d.kind==='gemini'?(j.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes('generateContent')).map(m=>m.name.replace('models/','')).filter(n=>/gemini/i.test(n))
+    :d.kind==='ollama'?(j.models||[]).map(m=>m.name):(j.data||[]).map(m=>m.id);
+  if(aiCfg.prov==='groq')ids=ids.filter(n=>!/whisper|tts|guard|embed|playai|orpheus|compound/i.test(n));
+  if(aiCfg.prov==='openrouter'){const fr=ids.filter(n=>/:free$/.test(n));if(fr.length)ids=fr}
+  if(aiCfg.prov==='openai')ids=ids.filter(n=>/^(gpt|o\d|chatgpt)/i.test(n)&&!/audio|realtime|image|tts|transcribe|search/i.test(n));
+  return ids;
 }
+/* sceglie il modello più adatto; "light" preferisce i modelli leggeri, di solito meno affollati */
+function pickModel(ids,avoid=[],mode){
+  const c=ids.filter(n=>!avoid.includes(n));if(!c.length)return null;
+  const light=[/lite|mini|8b|small|instant|haiku/i];
+  const pref={gemini:[/flash(?!.*(lite|preview|exp|image|tts|live|thinking|audio))/i,/flash/i],groq:[/llama.*70b|versatile/i,/gpt-oss-120b/i,/gpt-oss|llama|qwen|kimi/i],
+    openrouter:[/llama.*70b/i,/gpt-oss|qwen|mistral|gemma|deepseek|llama/i],openai:[/mini/i],anthropic:[/sonnet/i,/haiku/i]}[aiCfg.prov]||[];
+  for(const re of mode==='light'?[...light,...pref]:pref){const m=c.filter(n=>re.test(n));if(m.length)return m.sort().reverse()[0]}
+  return c[0];
+}
+/* verifica: raggiungibilità, chiave valida e modelli disponibili (tocca un modello per sceglierlo) */
+async function testAI(){
+  const out=$('aiTestOut'),d=PROV[aiCfg.prov],p=getP(),name=$('aiProv').selectedOptions[0].text.replace(/ \(.*\)/,'');
+  if(d.key&&!p.key&&aiCfg.prov!=='custom'){out.textContent='Inserisci prima la chiave API.';return}
+  out.textContent='Verifica in corso…';let ids;
+  try{ids=await listModels()}
+  catch(e){if(e.net){out.innerHTML=d.kind==='ollama'?'<b>Ollama non risponde.</b> È aperto su questo computer? Hai impostato OLLAMA_ORIGINS e riavviato Ollama?':`<b>${esc(name)} non è raggiungibile da qui.</b> ${navigator.onLine?'Il dispositivo è online, quindi la richiesta è stata bloccata: controlla VPN, blocco contenuti o rete aziendale, e prova con un\'altra connessione.':'Il dispositivo risulta offline.'}${location.protocol==='file:'?' Stai aprendo il file dal computer: usa l\'indirizzo su GitHub Pages.':''}<br><span style="opacity:.7">Dettaglio tecnico: ${esc(e.message)} · ${esc(location.origin)}</span>`;return}
+    out.innerHTML=`<b>${esc(name)} ha risposto con un errore${e.status?' ('+e.status+')':''}.</b> ${esc(e.message)}`;return}
+  if(!ids.length){out.innerHTML='<b>Chiave valida</b>, ma non risultano modelli disponibili.';return}
+  const best=pickModel(ids),list=[...new Set([best,...ids])].slice(0,16);
+  out.innerHTML=`<b>Chiave valida, servizio raggiungibile.</b> ${p.model?ids.includes(p.model)?`Il modello <code>${esc(p.model)}</code> è disponibile.`:`Il modello <code>${esc(p.model)}</code> non è più disponibile: scegline uno qui sotto, oppure lascia fare all'app.`:`Il modello viene scelto in automatico (ora: <code>${esc(best)}</code>).`}
+    <div class="row" style="margin-top:8px;gap:6px">${list.map(n=>`<button type="button" class="pill${n===p.model?' on':''}" data-m="${esc(n)}" style="font-size:12px;padding:6px 10px">${esc(n)}</button>`).join('')}</div>`;
+  out.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{setModel(b.dataset.m);testAI();toast('Modello: '+b.dataset.m)});
+}
+function setModel(m){aiCfg.p[aiCfg.prov]={...(aiCfg.p[aiCfg.prov]||{}),key:getP().key,url:(aiCfg.p[aiCfg.prov]||{}).url||'',model:m};storeAi();loadAiUI()}
 function loadAiUI(){
   const d=PROV[aiCfg.prov],c=getP();$('aiProv').value=aiCfg.prov;$('apiKey').value=c.key;$('apiModel').value=c.model;$('apiUrl').value=c.url;
   $('aiKeyWrap').classList.toggle('hidden',!d.key);$('aiUrlWrap').classList.toggle('hidden',d.kind==='anthropic'||d.kind==='gemini');
-  $('aiHelp').textContent=d.help;$('aiTestW').classList.toggle('hidden',d.kind!=='gemini');$('aiStatus').textContent=$('aiProv').selectedOptions[0].text+(d.key&&!c.key&&aiCfg.prov!=='custom'?' · chiave mancante':'');
+  $('aiHelp').textContent=d.help;$('apiModel').placeholder='scelto in automatico';$('aiStatus').textContent=$('aiProv').selectedOptions[0].text+(d.key&&!c.key&&aiCfg.prov!=='custom'?' · chiave mancante':'');
 }
 $('aiProv').oninput=()=>{aiCfg.prov=$('aiProv').value;storeAi();loadAiUI();$('aiTestOut').textContent=''};
-$('aiTest').onclick=testGemini;
+$('aiTest').onclick=testAI;
 ['apiKey','apiModel','apiUrl'].forEach(id=>$(id).addEventListener('input',()=>{aiCfg.p[aiCfg.prov]={key:$('apiKey').value.trim(),model:$('apiModel').value.trim(),url:$('apiUrl').value.trim()};storeAi();loadAiUI()}));
 async function callAI(system,hist){
   const d=PROV[aiCfg.prov],p=getP();
   if(d.key&&!p.key&&aiCfg.prov!=='custom'){$('aiDetails').open=true;throw new Error('manca la chiave API: inseriscila in "Impostazioni AI" qui sotto.')}
   const post=async(url,headers,body)=>{
     let r;try{r=await fetch(url,{method:'POST',headers:{'content-type':'application/json',...headers},body:JSON.stringify(body)})}
-    catch(e){throw new Error(d.kind==='ollama'?'Ollama non raggiungibile. È aperto su questo computer? Hai impostato OLLAMA_ORIGINS e riavviato Ollama? (vedi Impostazioni AI)':`connessione non riuscita (${navigator.onLine?'sei online, ma il browser ha bloccato la richiesta':'il dispositivo risulta offline'}${location.protocol==='file:'?'; stai usando il file dal computer, prova dall\'indirizzo su GitHub Pages':''}). Usa "Verifica chiave e modelli" in Impostazioni AI per capire il motivo.`)}
-    const t=await r.text();let j;try{j=JSON.parse(t)}catch(e){throw new Error(t.slice(0,200)||r.statusText)}
-    if(!r.ok)throw new Error((j.error&&(j.error.message||j.error))||r.statusText);return j};
-  if(d.kind==='anthropic'){
-    const j=await post('https://api.anthropic.com/v1/messages',{'x-api-key':p.key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},{model:p.model,max_tokens:1024,system,messages:hist});
-    return j.content.filter(c=>c.type==='text').map(c=>c.text).join('\n');
-  }
-  if(d.kind==='gemini'){
-    const ask=model=>post(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(p.key)}`,{},
+    catch(e){const er=new Error(d.kind==='ollama'?'Ollama non raggiungibile. È aperto su questo computer? Hai impostato OLLAMA_ORIGINS e riavviato Ollama? (vedi Impostazioni AI)':`connessione non riuscita (${navigator.onLine?'sei online, ma il browser ha bloccato la richiesta':'il dispositivo risulta offline'}${location.protocol==='file:'?'; stai usando il file dal computer, prova dall\'indirizzo su GitHub Pages':''}). Usa "Verifica chiave e modelli" in Impostazioni AI per capire il motivo.`);er.net=true;throw er}
+    const t=await r.text();let j;try{j=JSON.parse(t)}catch(e){const er=new Error(t.slice(0,200)||r.statusText);er.status=r.status;throw er}
+    if(!r.ok){const er=new Error((j.error&&(j.error.message||j.error))||r.statusText);er.status=r.status;throw er}return j};
+  const msgs=[{role:'system',content:system},...hist],base=(p.url||'').replace(/\/$/,'');
+  const once=async model=>{
+    if(d.kind==='anthropic'){const j=await post('https://api.anthropic.com/v1/messages',{'x-api-key':p.key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},{model,max_tokens:1024,system,messages:hist});
+      return j.content.filter(c=>c.type==='text').map(c=>c.text).join('\n')}
+    if(d.kind==='gemini'){const j=await post(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(p.key)}`,{},
       {systemInstruction:{parts:[{text:system}]},contents:hist.map(m=>({role:m.role==='assistant'?'model':'user',parts:[{text:m.content}]}))});
-    let j;
-    try{j=await ask(p.model)}
-    catch(e){/* se Google indica un modello sostitutivo ("use models/…"), lo adotta e riprova una volta */
-      const m=String(e.message).match(/use\s+(?:the\s+)?models\/([\w.\-]+)/i);if(!m||m[1]===p.model)throw e;
-      aiCfg.p.gemini={...(aiCfg.p.gemini||{}),model:m[1]};storeAi();loadAiUI();j=await ask(m[1]);toast('Modello Gemini aggiornato a '+m[1])}
-    return(j.candidates?.[0]?.content?.parts||[]).map(x=>x.text||'').join('')||'(nessuna risposta)';
+      return(j.candidates?.[0]?.content?.parts||[]).map(x=>x.text||'').join('')||'(nessuna risposta)'}
+    if(d.kind==='ollama'){const j=await post(base+'/api/chat',{},{model,stream:false,messages:msgs});return j.message?.content||'(nessuna risposta)'}
+    const j=await post(base+'/chat/completions',p.key?{Authorization:'Bearer '+p.key}:{},{model,messages:msgs});
+    return j.choices?.[0]?.message?.content||'(nessuna risposta)';
+  };
+  const busy=e=>[429,500,502,503,529].includes(e.status)||/high demand|overload|temporarily unavailable|try again later|rate limit|capacity/i.test(e.message);
+  const missing=e=>!busy(e)&&(e.status===404||/does not exist|not found|no longer available|decommission|deprecat|not supported|invalid model|unknown model|do not have access/i.test(e.message));
+  let model=p.model,tried=[];
+  if(!model){try{model=pickModel(await listModels());if(model)setModel(model)}catch(e){if(e.net)throw e}if(!model)throw new Error('nessun modello disponibile: usa "Verifica chiave e modelli" in Impostazioni AI.')}
+  for(let i=0;i<5;i++){
+    try{return await once(model)}
+    catch(e){
+      if(e.net||i===4)throw e;tried.push(model);
+      const hint=String(e.message).match(/use\s+(?:the\s+)?models\/([\w.\-]+)/i);
+      if(hint&&!tried.includes(hint[1])){model=hint[1];setModel(model);toast('Modello aggiornato a '+model);continue}
+      if(missing(e)){let ids;try{ids=await listModels()}catch(x){throw e}const m=pickModel(ids,tried);if(!m)throw e;model=m;setModel(m);toast('Il modello di prima non c\'è più: ora uso '+m);continue}
+      if(busy(e)){if(i<2){await new Promise(r=>setTimeout(r,1500*(i+1)));tried.pop();continue}
+        let ids;try{ids=await listModels()}catch(x){throw e}const m=pickModel(ids,tried,'light');if(!m)throw e;model=m;toast('Servizio affollato, provo con '+m);continue}
+      throw e;
+    }
   }
-  const msgs=[{role:'system',content:system},...hist],base=p.url.replace(/\/$/,'');
-  if(d.kind==='ollama'){const j=await post(base+'/api/chat',{},{model:p.model,stream:false,messages:msgs});return j.message?.content||'(nessuna risposta)'}
-  const j=await post(base+'/chat/completions',p.key?{Authorization:'Bearer '+p.key}:{},{model:p.model,messages:msgs});
-  return j.choices?.[0]?.message?.content||'(nessuna risposta)';
 }
 const WELCOME='Ciao! Chiedimi qualcosa sui tuoi dati, es. "Quanto ci impiego in media per una grafica social?", "Quante ore ho fatto per Rossi Srl a ottobre?" o "Cosa mi resta da fare oggi e quanto ci vorrà?"';
 function addMsg(t,who){const d=document.createElement('div');d.className='msg '+who;d.textContent=t;$('chat').appendChild(d);$('chat').scrollTop=1e9;return d}
@@ -1584,7 +1621,7 @@ $('miInstall').onclick=async()=>{
   <p class="muted" style="margin-top:12px">I dati restano salvati su ogni dispositivo separatamente: per portarli da uno all'altro usa <b>Backup completo</b> e poi <b>Importa</b>.</p>`;
   openModal('Installa come app',h);
 };
-const APP_VERSION=16;
+const APP_VERSION=17;
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
   const hadSW=!!navigator.serviceWorker.controller;let reloaded=false;
   navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{reg.update();
