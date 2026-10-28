@@ -200,9 +200,15 @@ label{font-weight:500}
 /* schermata Oggi */
 #tab-registro{max-width:640px;margin:0 auto}
 .hero{background:var(--hero);color:var(--hero-ink);border-radius:24px;padding:20px 20px 18px;margin-bottom:22px}
-.hero-top{display:flex;align-items:center;gap:6px;color:var(--hero-muted);font-size:14px;font-weight:600}
-.hero-top .icon-btn{background:transparent;border:0;color:var(--hero-muted);font-size:20px;width:32px;height:32px;border-radius:50%;cursor:pointer;line-height:1}
-.hero-top .icon-btn:hover{background:rgba(255,255,255,.08)}
+.hero-top{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;color:var(--hero-muted);font-size:14px;font-weight:600}
+.hero-nav{display:flex;align-items:center;gap:4px;grid-column:2}
+.hero-top .icon-btn{background:rgba(255,255,255,.08);border:0;color:var(--hero-ink);font-size:22px;width:36px;height:36px;border-radius:50%;cursor:pointer;line-height:1;flex:none}
+.hero-top .date-pick{display:flex;flex-direction:column;align-items:center;text-align:center;padding:4px 10px;min-width:150px}
+#todoTitle{color:var(--hero-ink);font-size:19px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+#todoDate{color:var(--hero-muted);font-size:13px;font-weight:500;margin-top:1px;line-height:1.2}
+.today-btn{grid-column:3;justify-self:end;background:var(--accent);color:#fff;border:0;border-radius:999px;font:inherit;font-size:13px;font-weight:600;padding:7px 12px;cursor:pointer;white-space:nowrap}
+.today-btn:hover{filter:brightness(1.08)}
+.hero-top .icon-btn:hover{background:rgba(255,255,255,.16)}
 .date-pick{position:relative;cursor:pointer;padding:4px 6px;border-radius:8px}
 .date-pick input{position:absolute;inset:0;opacity:0;cursor:pointer;padding:0}
 .hero-num{font-size:44px;font-weight:700;letter-spacing:-.02em;margin:10px 0 2px;font-variant-numeric:tabular-nums;line-height:1.1}
@@ -420,6 +426,10 @@ label.donechk{flex-direction:row;align-items:center;gap:10px;align-self:end;padd
 /* ---------- SMARTPHONE ---------- */
 @media (min-width:721px) and (max-width:960px){header{gap:8px;padding-left:12px;padding-right:12px}nav{gap:0}nav button{padding:8px 9px}nav button svg{display:none}}
 @media (max-width:720px){
+  .hero-top{grid-template-columns:minmax(0,1fr)}
+  .hero-nav{grid-column:1;justify-self:center}
+  .today-btn{grid-column:1;justify-self:center;padding:5px 12px;font-size:12px;margin-top:2px}
+  .hero-top .date-pick{min-width:0;padding:4px 6px}
   .nt{grid-template-columns:minmax(0,1fr)}
   .nt.editing .nt-side{display:none}
   .nt:not(.editing) .nt-main{display:none}
@@ -512,9 +522,12 @@ label.donechk{flex-direction:row;align-items:center;gap:10px;align-self:end;padd
 <section id="tab-registro">
   <div class="hero">
     <div class="hero-top">
-      <button class="icon-btn" id="tPrev" aria-label="Giorno precedente">‹</button>
-      <label class="date-pick"><span id="todoTitle">Oggi</span><input type="date" id="t_date" aria-label="Scegli il giorno"></label>
-      <button class="icon-btn" id="tNext" aria-label="Giorno successivo">›</button>
+      <div class="hero-nav">
+        <button class="icon-btn" id="tPrev" aria-label="Giorno precedente">‹</button>
+        <label class="date-pick"><span id="todoTitle">Oggi</span><span id="todoDate"></span><input type="date" id="t_date" aria-label="Scegli il giorno"></label>
+        <button class="icon-btn" id="tNext" aria-label="Giorno successivo">›</button>
+      </div>
+      <button class="today-btn hidden" id="tToday" aria-label="Torna a oggi">Oggi</button>
     </div>
     <div class="hero-row">
       <div style="min-width:0"><div class="hero-num" id="dayTotal">0h 00m</div><div class="hero-sub" id="daySub">lavorate</div></div>
@@ -907,7 +920,10 @@ setInterval(()=>{if(document.visibilityState==='visible'){if(linkGoals()){goalSa
 $('t_date').value=todayStr();
 function renderTodos(){
   const d=$('t_date').value||todayStr();const list=todos.filter(t=>t.date===d).sort((a,b)=>a.done-b.done);
-  $('todoTitle').textContent=d===todayStr()?'Oggi':cap(dayLabel(d));
+  {const x=parseD(d),t=todayStr(),off=Math.round((x-parseD(t))/864e5),y=x.getFullYear()!==new Date().getFullYear();
+    $('todoTitle').textContent=off===0?'Oggi':off===-1?'Ieri':off===1?'Domani':cap(x.toLocaleDateString('it-IT',{weekday:'long'}));
+    $('todoDate').textContent=(Math.abs(off)<=1?cap(x.toLocaleDateString('it-IT',{weekday:'long'}))+' ':'')+x.toLocaleDateString('it-IT',{day:'numeric',month:'long',year:y?'numeric':undefined});
+    $('tToday').classList.toggle('hidden',off===0);$('tToday').textContent=off>0?'‹ Oggi':'Oggi ›'}
   const running=new Set(entries.filter(e=>!e.end&&e.todo).map(e=>e.todo));
   const spent={};entries.forEach(e=>{if(e.todo)spent[e.todo]=(spent[e.todo]||0)+(e.end?durMin(e):Math.floor(elapsed(e)/60))});
   $('todoList').innerHTML=list.map(t=>`<div class="ri ${t.done?'done':''}">
@@ -972,6 +988,7 @@ $('todoCarry').onclick=()=>{const d=$('t_date').value||todayStr();const prev=dSt
 $('t_date').oninput=dayChanged;
 $('tPrev').onclick=()=>{$('t_date').value=dStr(addDays(parseD($('t_date').value||todayStr()),-1));dayChanged()};
 $('tNext').onclick=()=>{$('t_date').value=dStr(addDays(parseD($('t_date').value||todayStr()),1));dayChanged()};
+$('tToday').onclick=()=>{const d=$('t_date').value||todayStr();if(d===todayStr())return;const el=$('tab-registro');el.classList.remove('slL','slR');void el.offsetWidth;el.classList.add(d>todayStr()?'slR':'slL');$('t_date').value=todayStr();dayChanged()};
 /* cambio giorno: scorri a sinistra = giorno dopo, a destra = giorno prima (touch, trackpad, frecce) */
 function shiftDay(n){const el=$('tab-registro');el.classList.remove('slL','slR');void el.offsetWidth;el.classList.add(n>0?'slL':'slR');
   $('t_date').value=dStr(addDays(parseD($('t_date').value||todayStr()),n));dayChanged()}
@@ -1815,7 +1832,7 @@ $('miInstall').onclick=async()=>{
   <p class="muted" style="margin-top:12px">I dati restano salvati su ogni dispositivo separatamente: per portarli da uno all'altro usa <b>Backup completo</b> e poi <b>Importa</b>.</p>`;
   openModal('Installa come app',h);
 };
-const APP_VERSION=21;
+const APP_VERSION=22;
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
   const hadSW=!!navigator.serviceWorker.controller;let reloaded=false;
   navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{reg.update();
