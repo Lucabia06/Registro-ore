@@ -890,7 +890,7 @@ const save=()=>{linkG();track(entries,sigE,tomb.e);store(KEY,entries);store('reg
 const saveT=()=>{linkG();track(todos,sigT,tomb.t);store(TKEY,todos);store('registroOre.tomb',tomb);scheduleSync()};
 /* applica i collegamenti agli obiettivi prima di salvare; le altre liste toccate vengono salvate subito dopo */
 let linking=false;
-function linkG(){if(linking||typeof linkGoals!=='function')return;linking=true;try{if(linkGoals()){goalSaved();queueMicrotask(()=>{linking=true;try{track(entries,sigE,tomb.e);store(KEY,entries);track(todos,sigT,tomb.t);store(TKEY,todos);track(events,sigV,tomb.v);store('registroOre.events',events);store('registroOre.tomb',tomb)}finally{linking=false}})}}finally{linking=false}}
+function linkG(){if(linking||typeof linkGoals!=='function')return;linking=true;try{let ch=false;try{ch=linkGoals()}catch(e){console.error('[obiettivi]',e)}if(ch){goalSaved();queueMicrotask(()=>{linking=true;try{track(entries,sigE,tomb.e);store(KEY,entries);track(todos,sigT,tomb.t);store(TKEY,todos);track(events,sigV,tomb.v);store('registroOre.events',events);store('registroOre.tomb',tomb)}finally{linking=false}})}}finally{linking=false}}
 const saveC=()=>{colorsU=Date.now();store(CKEY,colors);store('registroOre.colorsU',colorsU);scheduleSync()};
 let goals=load('registroOre.goals',[]);if(!Array.isArray(goals))goals=[];tomb.g=tomb.g||{};
 let sigG=new Map(goals.map(g=>[g.id,sigOf(g)]));
@@ -1128,7 +1128,10 @@ function renderRun(){
       <div class="run-t" data-run="${e.id}">${fmtClock(elapsed(e))}</div><div class="run-s">${esc(e.note||e.type)} · ${esc(e.client)}</div></div>
       ${lt?`<button class="btn small" onclick="toggleTodo('${e.todo}')" title="Ferma e completa">✓ Fatto</button>`:''}<button class="btn primary small" onclick="stopEntry('${e.id}')">Stop</button></div>`}).join('');
 }
-setInterval(()=>{document.querySelectorAll('[data-run]').forEach(el=>{const e=entries.find(x=>x.id===el.dataset.run);if(e&&!e.end)el.textContent=fmtClock(elapsed(e))})},1000);
+/* ogni secondo aggiorna il timer; se un'attività in corso non ha ancora il suo riquadro in alto, lo ridisegna */
+setInterval(()=>{const run=entries.filter(e=>!e.end),shown=[...document.querySelectorAll('[data-run]')].map(el=>el.dataset.run);
+  if(run.length!==shown.length||run.some(e=>!shown.includes(e.id))){try{renderRun()}catch(e){console.error('[timer]',e);if(!window._runErr){window._runErr=1;toast('Errore nel timer: '+e.message,9000)}}}
+  document.querySelectorAll('[data-run]').forEach(el=>{const e=entries.find(x=>x.id===el.dataset.run);if(e&&!e.end)el.textContent=fmtClock(elapsed(e))})},1000);
 setInterval(()=>{if(document.visibilityState==='visible'){if(linkGoals()){goalSaved();saveV();save();saveT();renderAll()}else renderTodos()}},60000);
 
 /* ================= Oggi: da fare + svolte ================= */
@@ -2050,7 +2053,7 @@ $('miInstall').onclick=async()=>{
   <p class="muted" style="margin-top:12px">I dati restano salvati su ogni dispositivo separatamente: per portarli da uno all'altro usa <b>Backup completo</b> e poi <b>Importa</b>.</p>`;
   openModal('Installa come app',h);
 };
-const APP_VERSION=29;
+const APP_VERSION=30;
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
   const hadSW=!!navigator.serviceWorker.controller;let reloaded=false;
   navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{reg.update();
