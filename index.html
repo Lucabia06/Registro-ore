@@ -450,6 +450,7 @@ body:not([data-area=fin]) .mi.nf,body[data-area=fin] .mi.na{display:none}
 .fcv button{font-size:13px;padding:5px 12px}
 .ftm{position:relative}
 .ftm .tile{cursor:default}
+.ftm .tile.other{background:var(--bg)!important}
 .fdonut{display:grid;grid-template-columns:minmax(120px,190px) minmax(0,1fr);gap:18px;align-items:center}
 .fdonut svg{width:100%;height:auto;display:block}
 .fdonut .lg div{display:flex;align-items:center;gap:8px;font-size:13.5px;padding:3px 0}
@@ -939,7 +940,7 @@ function periodLabel(k,p){
   if(p==='month'){const[y,m]=k.split('-');return new Date(y,m-1,1).toLocaleDateString('it-IT',{month:'short',year:'numeric'})}
   return 'sett. '+Number(k.split('-S')[1]);
 }
-let toastT;function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),1800)}
+let toastT;function toast(t,ms){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),ms||1800)}
 
 /* ================= Colori ================= */
 const PAL=['#548b8b','#e59658','#cf4872','#283b8a','#e3d53f','#2f9e89','#7b5ea7','#3d7cc9','#b5643c','#6b8e23','#c0392b','#16a085'];
@@ -2049,7 +2050,7 @@ $('miInstall').onclick=async()=>{
   <p class="muted" style="margin-top:12px">I dati restano salvati su ogni dispositivo separatamente: per portarli da uno all'altro usa <b>Backup completo</b> e poi <b>Importa</b>.</p>`;
   openModal('Installa come app',h);
 };
-const APP_VERSION=28;
+const APP_VERSION=29;
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
   const hadSW=!!navigator.serviceWorker.controller;let reloaded=false;
   navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{reg.update();
@@ -2580,7 +2581,10 @@ $('noteShare').onclick=()=>{flushNote();const n=notes.find(x=>x.id===noteId);if(
 $('noteExportAll').onclick=()=>{flushNote();const l=notes.filter(n=>(n.text||'').trim()).sort((a,b)=>(b.u||0)-(a.u||0));
   download(`note-${todayStr()}.txt`,l.map(n=>`${n.text.trim()}\n\n(${new Date(n.u||n.c).toLocaleString('it-IT')})`).join('\n\n────────────\n\n'),'text/plain')};
 addEventListener('pagehide',flushNote);document.addEventListener('visibilitychange',()=>{if(document.hidden)flushNote()});
-function renderAll(){renderLists();renderEntries();renderSummary();renderQuick();renderTodos();renderCalendar();renderRun();renderTagPick('q_');renderNotes()}
+/* ogni sezione si disegna per conto suo: un errore in una non deve bloccare le altre (es. il timer) */
+let renderErrShown=false;
+function renderAll(){[renderRun,renderTodos,renderLists,renderEntries,renderSummary,renderQuick,renderCalendar,()=>renderTagPick('q_'),renderNotes].forEach(fn=>{
+  try{fn()}catch(e){console.error('[render]',fn.name||'',e);if(!renderErrShown){renderErrShown=true;const m='Errore in "'+(fn.name||'app').replace('render','')+'": '+e.message;setTimeout(()=>toast(m,9000),2000)}}})}
 if(linkGoals()){goalSaved();saveV();save();saveT()}
 renderAll();
 setSync(sync.token?'wait':'off','');
