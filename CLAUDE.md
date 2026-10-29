@@ -13,7 +13,7 @@ Ogni modifica unita in `main` viene pubblicata automaticamente.
 - L'interfaccia è in italiano.
 - **Non rompere i dati salvati.** Non rinominare né cambiare il formato di queste chiavi di localStorage:
   `registroOre.v1` (voci), `registroOre.todos`, `registroOre.colors`, `registroOre.colorsU`,
-  `registroOre.tomb`, `registroOre.sync`, `registroOre.ai`, `registroOre.calBy`, `registroOre.goals`, `registroOre.events`, `registroOre.notes`, `registroOre.fin` (bilancio cifrato: non leggere né scrivere i record in chiaro, usa `saveF()`). `registroOre.goals` (obiettivi).
+  `registroOre.tomb`, `registroOre.sync`, `registroOre.ai`, `registroOre.calBy`, `registroOre.goals`, `registroOre.events`, `registroOre.notes`, `registroOre.fin` (bilancio cifrato: non leggere né scrivere i record in chiaro, usa `saveF()`). `registroOre.fin` (bilancio cifrato: non leggere né scrivere i record in chiaro, usa `saveF()`). `registroOre.goals` (obiettivi).
   Se servono nuovi campi, aggiungili come facoltativi e gestisci i dati vecchi che non li hanno.
 - **Sincronizzazione:** ogni voce e ogni elemento da fare ha `id` e `u` (ultima modifica); le eliminazioni
   finiscono in `tomb`. Salva sempre con `save()`, `saveT()`, `saveG()` (obiettivi) e `saveC()`, che aggiornano questi valori e

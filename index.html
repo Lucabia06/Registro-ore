@@ -425,6 +425,27 @@ body:not([data-area=fin]) .mi.nf,body[data-area=fin] .mi.na{display:none}
 .fl-rem input:focus-visible+.chk-ui{outline:2px solid var(--accent);outline-offset:2px}
 .fl-link{background:none;border:0;color:var(--accent-ink);font:inherit;font-size:14px;font-weight:600;cursor:pointer;padding:4px}
 .rc-code{font-family:ui-monospace,Menlo,monospace;font-size:20px;font-weight:700;letter-spacing:.06em;text-align:center;background:var(--bg);border-radius:12px;padding:14px 10px;user-select:all;-webkit-user-select:all;word-break:break-all}
+.cbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 10px;align-items:center;padding:7px 0}
+.cbar+.cbar{border-top:1px solid var(--line)}
+.cbar .n{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:8px}
+.cbar .n i{width:10px;height:10px;border-radius:3px;flex:none}
+.cbar .v{font-weight:700;font-variant-numeric:tabular-nums;font-size:14px;text-align:right}
+.cbar .v small{display:block;font-size:11px;color:var(--muted);font-weight:500}
+.cbar .t{grid-column:1/-1;height:6px;border-radius:3px;background:color-mix(in srgb,var(--text) 8%,transparent);overflow:hidden}
+.cbar .t i{display:block;height:100%;border-radius:3px}
+.imp-sum{background:var(--bg);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.45}
+.imp-list{max-height:46vh;overflow:auto;border:1px solid var(--line);border-radius:12px}
+.imp-r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:8px 12px;align-items:center}
+.imp-r+.imp-r{border-top:1px solid var(--line)}
+.imp-r .d{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.imp-r .d small{font-weight:500;color:var(--muted);margin-left:4px}
+.imp-r .a{font-variant-numeric:tabular-nums;font-weight:700;font-size:14px;text-align:right}
+.imp-r input{grid-column:1/-1;padding:6px 10px;font-size:15px}
+.imp-r.off{opacity:.45}
+.imp-prev{font-size:13px}
+.imp-prev b{display:block;margin:8px 0 2px}
+.imp-prev div{display:flex;justify-content:space-between;gap:10px;padding:1px 0;color:var(--muted)}
+.imp-prev div span:last-child{color:var(--text);font-variant-numeric:tabular-nums}
 .fl-err{color:var(--danger);font-size:14px;min-height:18px;margin:0}
 .fl-warn{font-size:13px;text-align:left;background:color-mix(in srgb,#f1c232 18%,var(--card));border-radius:10px;padding:10px 12px;margin:12px 0 0}
 /* sezioni del registro richiudibili */
@@ -563,6 +584,7 @@ main .sec.fold>span:first-child{display:inline-flex;align-items:center;gap:6px}
     <button class="mi nf" id="miFinLock">🔒 Blocca il bilancio</button>
     <button class="mi nf" id="miFinPass">🔑 Cambia password del bilancio</button>
     <button class="mi nf" id="miFinRec">🧩 Nuovo codice di recupero</button>
+    <button class="mi nf" id="miFinImp">⬆︎ Importa movimenti Revolut (CSV)</button>
     <button class="mi nf" id="miFinCsv">⬇︎ Esporta bilancio (CSV)</button>
     <div class="mi-sep nf"></div>
     <button class="mi" id="miSync">🔄 Sincronizzazione tra dispositivi</button>
@@ -697,7 +719,9 @@ main .sec.fold>span:first-child{display:inline-flex;align-items:center;gap:6px}
   <div class="card list" id="fmOut" style="padding:4px 0" data-empty="Nessuna spesa in questo mese."></div>
   <div class="sec fold" data-fold="fin"><span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>Entrate</span><span class="sec-r" id="fmInT"></span></div>
   <div class="card list" id="fmIn" style="padding:4px 0" data-empty="Nessuna entrata in questo mese."></div>
-  <div class="row" style="justify-content:center;gap:8px;margin-top:6px"><button class="btn small" id="fmCopy">↻ Copia voci dal mese precedente</button></div>
+  <div id="fmCatW" class="hidden"><div class="sec fold" data-fold="fcat"><span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>Spese per categoria</span><span class="sec-r" id="fmCatT"></span></div>
+  <div class="card" id="fmCat"></div></div>
+  <div class="row" style="justify-content:center;gap:8px;margin-top:6px;flex-wrap:wrap"><button class="btn small" id="fmCopy">↻ Copia voci dal mese precedente</button><button class="btn small" id="fmImp">⬆︎ Importa da Revolut</button></div>
 </section>
 <section id="tab-fanno" class="hidden">
   <div class="hero fin-hero">
@@ -720,6 +744,8 @@ main .sec.fold>span:first-child{display:inline-flex;align-items:center;gap:6px}
   <div class="sec"><span>Mese per mese</span><span class="sec-r"><button class="link" id="fyStart"></button></span></div>
   <div class="card" style="padding:8px 10px;overflow-x:auto" id="fyTable"></div>
   <div class="card" id="fyChart"></div>
+  <div id="fyCatW" class="hidden"><div class="sec fold" data-fold="fycat"><span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>Spese per categoria</span><span class="sec-r" id="fyCatT"></span></div>
+  <div class="card" id="fyCat"></div></div>
   <div class="sec"><span>Note</span></div>
   <textarea id="fyNote" placeholder="Appunti sul bilancio, obiettivi di risparmio, promemoria…"></textarea>
 </section>
@@ -1990,7 +2016,7 @@ $('miInstall').onclick=async()=>{
   <p class="muted" style="margin-top:12px">I dati restano salvati su ogni dispositivo separatamente: per portarli da uno all'altro usa <b>Backup completo</b> e poi <b>Importa</b>.</p>`;
   openModal('Installa come app',h);
 };
-const APP_VERSION=24;
+const APP_VERSION=25;
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
   const hadSW=!!navigator.serviceWorker.controller;let reloaded=false;
   navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{reg.update();
@@ -2085,7 +2111,7 @@ $('flForm').onsubmit=async ev=>{ev.preventDefault();const p=$('flPass').value,re
     if(flMode==='create'){
       const dek=await genDek();code=newRecCode();const salt=newSalt(),rsalt=newSalt();
       finStore.meta={v:2,salt,wp:await wrapDek(dek,await fDerive(p,salt)),rsalt,wr:await wrapDek(dek,await fDerive(normRC(code),rsalt)),check:await fEnc('ok',dek),c:Date.now(),gen:1};
-      store(FKEY,finStore);finKey=dek;fin=[{id:'cfg',t:'cfg',start:fMonthStr(new Date()),saldo:null,saldoD:'',nota:''}];sigF=new Map();await saveF();
+      store(FKEY,finStore);finKey=dek;fin=[{id:'cfg',t:'cfg',start:'',saldo:null,saldoD:'',nota:''}];sigF=new Map();await saveF();
       await rememberKey(rem);armLock();renderAiFin();intro='Bilancio creato. Conserva questo codice: ti serve se dimentichi la password.';
     }else if(flMode==='rec'){
       const dek=await openWithCode($('flCode').value);
@@ -2162,7 +2188,7 @@ const fMonthStr=d=>d.getFullYear()+'-'+pad(d.getMonth()+1);
 const mParse=m=>{const[y,mo]=m.split('-').map(Number);return new Date(y,mo-1,1)};
 const mAdd=(m,n)=>{const d=mParse(m);return fMonthStr(new Date(d.getFullYear(),d.getMonth()+n,1))};
 const mLabel=(m,o)=>cap(mParse(m).toLocaleDateString('it-IT',o||{month:'long'}));
-const fCfg=()=>{let c=fin.find(o=>o.t==='cfg');if(!c){c={id:'cfg',t:'cfg',start:fMonthStr(new Date()),saldo:null,saldoD:'',nota:''};fin.push(c)}return c};
+const fCfg=()=>{let c=fin.find(o=>o.t==='cfg');if(!c){c={id:'cfg',t:'cfg',start:'',saldo:null,saldoD:'',nota:''};fin.push(c)}return c};
 const fVoci=m=>fin.filter(o=>o.t==='voce'&&o.m===m);
 function fTot(m){const v=fVoci(m),s=(k,st)=>v.filter(o=>o.k===k&&(!st||o.st===st)).reduce((a,o)=>a+(o.amt||0),0);
   const r={outA:s('out','act'),outC:s('out','com'),inA:s('in','act'),inC:s('in','com')};r.ris=r.inA-r.outA;r.risP=r.inA+r.inC-r.outA-r.outC;return r}
@@ -2183,6 +2209,7 @@ function renderFMese(){
   $('fmOut').innerHTML=v.filter(o=>o.k==='out').map(fItem).join('');$('fmIn').innerHTML=v.filter(o=>o.k==='in').map(fItem).join('');
   $('fmOutT').textContent=t.outA||t.outC?eur(t.outA)+(t.outC?' + '+eur(t.outC)+' da pagare':''):'';
   $('fmInT').textContent=t.inA||t.inC?eur(t.inA)+(t.inC?' + '+eur(t.inC)+' previste':''):'';
+  renderCats('fmCatW','fmCat','fmCatT',[m]);
   const prev=fVoci(mAdd(m,-1));$('fmCopy').classList.toggle('hidden',!prev.length||prev.every(p=>v.some(x=>x.k===p.k&&x.name===p.name)));
 }
 function fShift(n){const el=$('tab-fmese');el.classList.remove('slL','slR');void el.offsetWidth;el.classList.add(n>0?'slL':'slR');fMonth=mAdd(fMonth,n);renderFMese()}
@@ -2245,6 +2272,7 @@ function renderFAnno(){
   const mx=Math.max(1,...rows.map(r=>Math.max(r.inA,r.outA)));
   $('fyChart').innerHTML=`<div class="fbars">${rows.map(r=>`<div class="${r.on?'':'off'}" onclick="fGoMonth('${r.m}')" title="${mLabel(r.m)}: entrate ${eur(r.inA)}, spese ${eur(r.outA)}"><div class="b"><i style="height:${r.inA/mx*100}%;background:var(--en)"></i><i style="height:${r.outA/mx*100}%;background:var(--sp)"></i></div><span>${mLabel(r.m,{month:'narrow'})}</span></div>`).join('')}</div>
     <div class="f-legend"><span><i style="background:var(--en)"></i>Entrate</span><span><i style="background:var(--sp)"></i>Spese</span></div>`;
+  renderCats('fyCatW','fyCat','fyCatT',P.map(r=>r.m));
   if(document.activeElement!==$('fyNote'))$('fyNote').value=c.nota||'';
 }
 function fGoMonth(m){fMonth=m;showTab('fmese')}
@@ -2298,6 +2326,106 @@ function gotCred(id){const o=fin.find(x=>x.id===id);if(!o)return;
   $('fgForm').onsubmit=ev=>{ev.preventDefault();const a=parseAmt($('fg_amt').value);$('fg_amt').setCustomValidity(isNaN(a)?'Scrivi un importo':'');if(!$('fgForm').reportValidity())return;
     const v={id:uid(),t:'voce',k:'in',name:o.name,amt:a,m:$('fg_m').value,st:'act',cred:o.id};fin.push(v);o.got=v.m;o.voce=v.id;o.amt=a;saveF();closeModal();renderFin();toast('Registrata tra le entrate di '+mLabel(v.m))}}
 $('fcAdd').onclick=()=>openCred(null);
+
+/* ---- spese per categoria ---- */
+const CAT_COL={'Casa e utenze':'#3d7cc9','Spesa alimentare':'#4f9d45','Ristoranti e bar':'#e8833a','Trasporti':'#7b5ea7','Carburante':'#b5643c','Viaggi':'#16a085','Abbonamenti e digitale':'#cf4872','Salute e benessere':'#2bb3c0','Shopping':'#e3b53f','Contanti':'#6b8e23','Commissioni':'#8a8f98','Bonifici inviati':'#283b8a','Altro':'#a0a7a4','Senza categoria':'#c3c9c6'};
+const catColor=c=>CAT_COL[c]||PAL[hash(c)%PAL.length];
+function catBars(list,tot){return list.map(([c,v])=>`<div class="cbar"><div class="n"><i style="background:${catColor(c)}"></i>${esc(c)}</div><div class="v">${eur(v)}<small>${tot?Math.round(v/tot*100):0}%</small></div><div class="t"><i style="width:${tot?Math.max(1,v/tot*100):0}%;background:${catColor(c)}"></i></div></div>`).join('')}
+function catTotals(months){const by={};fin.filter(o=>o.t==='voce'&&o.k==='out'&&o.st==='act'&&months.includes(o.m)).forEach(o=>{const c=o.cat||'Senza categoria';by[c]=(by[c]||0)+o.amt});
+  const l=Object.entries(by).filter(([,v])=>v>0.004).sort((a,b)=>b[1]-a[1]);return{l,tot:l.reduce((a,[,v])=>a+v,0)}}
+function renderCats(wrap,el,tl,months){const{l,tot}=catTotals(months);$(wrap).classList.toggle('hidden',!l.length||(l.length===1&&l[0][0]==='Senza categoria'));
+  $(el).innerHTML=catBars(l,tot);$(tl).textContent=l.length?eur(tot):''}
+
+/* ================= Import movimenti Revolut (CSV) =================
+   Il file viene letto solo sul dispositivo. Le spese vengono riassunte per mese e categoria
+   ("Revolut · Spesa alimentare"), oppure importate una per una. I movimenti già importati vengono saltati. */
+const FCATS=[
+ ['Spesa alimentare',/esselunga|conad|\bcoop\b|carrefour|\blidl|eurospin|\bpam\b|ipercoop|iper |\baldi\b|penny|despar|famila|tigros|bennet|naturasi|\bcrai\b|\bsigma\b|supermerc|market|alimentari|unes|\bmd\b|in'?s mercato/i],
+ ['Ristoranti e bar',/\bbar\b|caff|cafe|ristor|pizzer|trattor|osteria|sushi|mc ?donald|burger|starbucks|deliveroo|glovo|just ?eat|\bkfc\b|poke|gelat|\bpub\b|bistr|panific|pasticc|ramen|kebab|piadin|food|cucina|enoteca|birrer|brew/i],
+ ['Abbonamenti e digitale',/netflix|spotify|disney|apple\.com|icloud|google|youtube|prime ?video|amazon ?prime|\bdazn|adobe|openai|chatgpt|anthropic|claude\.ai|microsoft|canva|figma|notion|dropbox|patreon|audible|playstation|xbox|steam|nintendo|github|linkedin|duolingo|now ?tv/i],
+ ['Trasporti',/trenitalia|\bitalo\b|\batm\b|atac|\buber\b|free ?now|taxi|telepass|autostrad|parchegg|parking|enjoy|share ?now|\blime\b|\bbird\b|\bdott\b|\btier\b|flixbus|metro|\btper|\bgtt\b|trenord|mooney|easypark|bus\b/i],
+ ['Carburante',/\beni\b|\bq8|tamoil|\besso\b|\bshell\b|\bagip|totalerg|\bip\b|benzin|carbur|repsol|enilive/i],
+ ['Viaggi',/booking|airbnb|hotel|expedia|ryanair|easyjet|wizz|vueling|ita airways|lufthansa|trivago|hostel|volotea|aeroport|airport/i],
+ ['Casa e utenze',/\benel\b|\bhera\b|\ba2a\b|\biren\b|edison|\bacea\b|\btim\b|vodafone|windtre|\bwind\b|iliad|fastweb|\bsky\b|ho\.? ?mobile|very ?mobile|kena|condomin|affitto|\bikea|leroy|brico|obi\b/i],
+ ['Salute e benessere',/farmac|pharm|ospedal|medic|dentist|clinic|ottic|parafarm|palestra|\bgym|fitness|mcfit|virgin active|piscina|parrucch|barbier|estetic|sanitar|analisi/i],
+ ['Shopping',/amazon|amzn|zalando|decathlon|h ?& ?m\b|\bzara\b|mediaworld|unieuro|\bebay|aliexpress|shein|apple store|primark|uniqlo|euronics|vinted|\btemu\b|\bovs\b|sephora|douglas|feltrinelli|mondadori|libreria|nike|adidas|foot ?locker|tiger/i]];
+const impKey=d=>String(d||'').toLowerCase().replace(/\d{3,}/g,'').replace(/[*#]+/g,' ').replace(/\s+/g,' ').trim();
+function guessCat(r){const rules=fCfg().rules||{};if(rules[r.key])return rules[r.key];
+  if(/ATM|PRELIEVO/i.test(r.type))return 'Contanti';if(/FEE|COMMISS|TARIFF/i.test(r.type))return 'Commissioni';
+  for(const[c,re]of FCATS)if(re.test(r.desc))return c;
+  if(/TRANSFER|BONIFICO|TRASFERIMENTO/i.test(r.type))return r.amt<0?'Bonifici inviati':'Bonifici ricevuti';return 'Altro'}
+function parseCSV(t){t=t.replace(/^﻿/,'');const first=t.split(/\r?\n/)[0]||'';const d=[',',';','\t'].sort((a,b)=>first.split(b).length-first.split(a).length)[0];
+  const rows=[];let row=[],cur='',q=false;for(let i=0;i<t.length;i++){const c=t[i];
+    if(q){if(c==='"'){if(t[i+1]==='"'){cur+='"';i++}else q=false}else cur+=c}
+    else if(c==='"')q=true;else if(c===d){row.push(cur);cur=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;row.push(cur);rows.push(row);row=[];cur=''}else cur+=c}
+  if(cur||row.length){row.push(cur);rows.push(row)}return rows.filter(r=>r.some(x=>x.trim()))}
+function numAmt(v){v=String(v||'').trim().replace(/[€\s ]/g,'').replace('−','-');if(!v)return NaN;
+  const lc=v.lastIndexOf(','),ld=v.lastIndexOf('.');if(lc>-1&&ld>-1){v=lc>ld?v.replace(/\./g,'').replace(',','.'):v.replace(/,/g,'')}else if(lc>-1)v=v.replace(',','.');return parseFloat(v)}
+function isoDate(v){v=String(v||'').trim();let m=v.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return`${m[1]}-${m[2]}-${m[3]}`;
+  m=v.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})/);if(m){const y=m[3].length===2?'20'+m[3]:m[3];return`${y}-${pad(+m[2])}-${pad(+m[1])}`}return ''}
+function parseRevolut(text){const rows=parseCSV(text);if(rows.length<2)throw new Error('il file è vuoto o non è un CSV');
+  const h=rows[0].map(x=>x.trim().toLowerCase()),col=(...n)=>h.findIndex(x=>n.some(k=>x===k||x.startsWith(k)));
+  const ci={type:col('type','tipo'),start:col('started date','data di inizio','start'),done:col('completed date','data di completamento','data completamento','completed'),desc:col('description','descrizione'),
+    amt:col('amount','importo'),fee:col('fee','commissione','costo','tariffa'),cur:col('currency','valuta'),state:col('state','stato'),bal:col('balance','saldo'),prod:col('product','prodotto')};
+  if(ci.amt<0||ci.desc<0||(ci.start<0&&ci.done<0))throw new Error('non riconosco le colonne: serve l\'estratto conto CSV di Revolut (con Data, Descrizione, Importo)');
+  return rows.slice(1).map(r=>{const g=i=>i>=0?(r[i]||'').trim():'';const date=isoDate(g(ci.done))||isoDate(g(ci.start));const fee=numAmt(g(ci.fee))||0,a=numAmt(g(ci.amt));
+    const o={date,m:date.slice(0,7),desc:g(ci.desc)||'(senza descrizione)',type:g(ci.type).toUpperCase(),state:g(ci.state).toUpperCase(),cur:g(ci.cur).toUpperCase()||'EUR',prod:g(ci.prod),amt:Math.round(((isNaN(a)?0:a)-Math.abs(fee))*100)/100};
+    o.key=impKey(o.desc);o.h=(hash([g(ci.start),g(ci.done),o.desc,g(ci.amt),g(ci.fee),g(ci.bal)].join('|'))).toString(36)+'.'+o.date.replace(/-/g,'');return o}).filter(o=>o.date&&o.amt)}
+let impState=null;
+function openImport(){if(!finKey){toast('Sblocca prima il bilancio');return}
+  openModal('Importa movimenti Revolut',`<div class="grid" data-fin>
+    <p class="full lead" style="margin:0">Dall'app Revolut: <b>Conto → ⋯ → Estratto conto → Excel (CSV)</b>, scegli il periodo e salva il file. Poi selezionalo qui.</p>
+    <label class="full btn" style="text-align:center;cursor:pointer;flex-direction:row;justify-content:center">📄 Scegli il file CSV<input type="file" id="impFile" accept=".csv,text/csv,text/plain" style="display:none"></label>
+    <p class="full muted" style="margin:0;font-size:13px">Il file viene letto solo su questo dispositivo: i movimenti finiscono cifrati nel bilancio, il file non viene caricato da nessuna parte.</p>
+    <p class="full fl-err" id="impErr"></p></div>`);
+  $('impFile').onchange=async ev=>{const fl=ev.target.files[0];if(!fl)return;try{const rows=parseRevolut(await fl.text());if(!rows.length)throw new Error('nessun movimento trovato');
+    impState={rows,mode:'cat',exTop:true,exEx:true,inc:true,ov:{},all:false};renderImport()}catch(e){$('impErr').textContent='Non riesco a leggere il file: '+e.message}}}
+const isTop=r=>/TOPUP|TOP-UP|RICARICA/i.test(r.type),isEx=r=>/EXCHANGE|CAMBIO/i.test(r.type),isRef=r=>/REFUND|RIMBORSO|STORNO/i.test(r.type)||(r.amt>0&&/CARD/i.test(r.type));
+function impSel(){const st=impState,done=new Set((fin.find(o=>o.t==='imp')||{}).h||[]);const out={ok:[],dup:0,skip:0,cur:0};
+  st.rows.forEach(r=>{if(done.has(r.h)){out.dup++;return}if(r.state&&!/COMPLETED|COMPLETAT|ESEGUIT/.test(r.state)){out.skip++;return}if(r.cur!=='EUR'){out.cur++;return}
+    if((st.exTop&&isTop(r))||(st.exEx&&isEx(r))){out.skip++;return}if(r.amt>0&&!isRef(r)&&!st.inc){out.skip++;return}out.ok.push(r)});return out}
+const impCat=r=>impState.ov[r.key]||guessCat(r);
+function impPlan(){const sel=impSel(),by={},ins=[];
+  sel.ok.forEach(r=>{if(r.amt<0||isRef(r)){const c=impCat(r),k=r.m+'|'+c;by[k]=(by[k]||0)-r.amt}else ins.push(r)});
+  return{sel,by,ins}}
+function renderImport(){const st=impState,{sel,by,ins}=impPlan(),cats=uniq([...FCATS.map(x=>x[0]),'Contanti','Commissioni','Bonifici inviati','Altro',...fin.filter(o=>o.cat).map(o=>o.cat),...Object.values(st.ov)]);
+  const ms=[...new Set(sel.ok.map(r=>r.m))].sort(),sp=sel.ok.filter(r=>r.amt<0||isRef(r));
+  const grp={};sp.forEach(r=>{const g=grp[r.key]||(grp[r.key]={key:r.key,desc:r.desc,n:0,tot:0,r});g.n++;g.tot-=r.amt});const gl=Object.values(grp).sort((a,b)=>b.tot-a.tot),show=st.all?gl:gl.slice(0,30);
+  const months=ms.map(m=>{const l=Object.entries(by).filter(([k,v])=>k.startsWith(m+'|')&&Math.abs(v)>0.004).map(([k,v])=>[k.split('|')[1],v]).sort((a,b)=>b[1]-a[1]);const inn=ins.filter(r=>r.m===m);
+    return `<b>${mLabel(m,{month:'long',year:'numeric'})}</b>${l.map(([c,v])=>`<div><span>${esc(c)}</span><span>−${eur(v)}</span></div>`).join('')}${inn.map(r=>`<div><span>↘︎ ${esc(r.desc)}</span><span>+${eur(r.amt)}</span></div>`).join('')}`}).join('');
+  $('modalBody').innerHTML=`<div class="grid" data-fin>
+    <div class="full imp-sum"><b>${sel.ok.length}</b> movimenti da importare${ms.length?` (${mLabel(ms[0],{month:'short',year:'numeric'})} – ${mLabel(ms[ms.length-1],{month:'short',year:'numeric'})})`:''}${sel.dup?` · ${sel.dup} già importati, saltati`:''}${sel.skip?` · ${sel.skip} esclusi`:''}${sel.cur?` · ${sel.cur} in altre valute, saltati`:''}</div>
+    <div class="full seg" id="impMode" style="width:fit-content"><button type="button" data-v="cat">Riassunto per categoria</button><button type="button" data-v="one">Ogni movimento</button></div>
+    <p class="full muted" style="margin:-4px 0 0;font-size:13px">${st.mode==='cat'?'Una voce al mese per ogni categoria, es. "Revolut · Spesa alimentare". I rimborsi riducono la categoria.':'Ogni movimento diventa una voce del suo mese, con la sua categoria.'}</p>
+    <label class="full fl-rem" style="justify-content:flex-start"><input type="checkbox" id="impTop" ${st.exTop?'checked':''}><span class="chk-ui">✓</span><span>Escludi le ricariche del conto (soldi tuoi spostati su Revolut)</span></label>
+    <label class="full fl-rem" style="justify-content:flex-start"><input type="checkbox" id="impEx" ${st.exEx?'checked':''}><span class="chk-ui">✓</span><span>Escludi i cambi valuta</span></label>
+    <label class="full fl-rem" style="justify-content:flex-start"><input type="checkbox" id="impInc" ${st.inc?'checked':''}><span class="chk-ui">✓</span><span>Importa anche le entrate (bonifici ricevuti)</span></label>
+    <div class="full"><div class="sec" style="margin:8px 2px 6px"><span>Categorie</span><span class="sec-r">${gl.length} esercenti</span></div>
+      <p class="muted" style="margin:0 0 8px;font-size:13px">Controlla le categorie proposte: le tue correzioni vengono ricordate per i prossimi import.</p>
+      <div class="imp-list">${show.map(g=>`<div class="imp-r"><div class="d" title="${esc(g.desc)}">${esc(g.desc)}${g.n>1?`<small>× ${g.n}</small>`:''}</div><div class="a">${g.tot<0?'+'+eur(-g.tot):eur(g.tot)}</div>
+        <input list="dl_impcat" data-k="${esc(g.key)}" value="${esc(impCat(g.r))}" aria-label="Categoria di ${esc(g.desc)}"></div>`).join('')||'<p class="muted" style="padding:10px 12px;margin:0">Nessuna spesa.</p>'}
+      ${gl.length>show.length?`<button type="button" class="btn small" id="impAll" style="margin:8px 12px">Mostra tutti (${gl.length})</button>`:''}</div>
+      <datalist id="dl_impcat">${cats.map(c=>`<option value="${esc(c)}">`).join('')}</datalist></div>
+    <details class="full"><summary>Anteprima per mese</summary><div class="imp-prev">${months||'<p class="muted">Niente da importare.</p>'}</div></details>
+    <div class="row full btns" style="flex-wrap:nowrap"><button type="button" class="btn primary" id="impGo" ${sel.ok.length?'':'disabled'}>Importa ${sel.ok.length} movimenti</button><button type="button" class="btn" onclick="closeModal()">Annulla</button></div></div>`;
+  document.querySelectorAll('#impMode button').forEach(b=>{b.classList.toggle('active',b.dataset.v===st.mode);b.onclick=()=>{st.mode=b.dataset.v;renderImport()}});
+  $('impTop').onchange=e=>{st.exTop=e.target.checked;renderImport()};$('impEx').onchange=e=>{st.exEx=e.target.checked;renderImport()};$('impInc').onchange=e=>{st.inc=e.target.checked;renderImport()};
+  if($('impAll'))$('impAll').onclick=()=>{st.all=true;renderImport()};
+  document.querySelectorAll('.imp-r input').forEach(i=>i.addEventListener('change',()=>{const v=i.value.trim();if(v)st.ov[i.dataset.k]=v;else delete st.ov[i.dataset.k];const sc=$('modalBody').scrollTop;renderImport();$('modalBody').scrollTop=sc}));
+  $('impGo').onclick=doImport}
+function doImport(){const st=impState,{sel,by,ins}=impPlan(),c=fCfg();let n=0;
+  c.rules={...(c.rules||{}),...st.ov};
+  {const first=sel.ok.map(r=>r.m).sort()[0];if(first&&c.start&&first<c.start)c.start=first}
+  if(st.mode==='cat'){Object.entries(by).forEach(([k,v])=>{v=Math.round(v*100)/100;if(Math.abs(v)<0.005)return;const[m,cat]=k.split('|'),name='Revolut · '+cat;
+      const ex=fin.find(o=>o.t==='voce'&&o.src==='revolut'&&o.m===m&&o.name===name);
+      if(ex)ex.amt=Math.round((ex.amt+v)*100)/100;else fin.push({id:uid(),t:'voce',k:'out',name,amt:v,m,st:'act',cat,src:'revolut'});n++});
+    ins.forEach(r=>{fin.push({id:uid(),t:'voce',k:'in',name:r.desc,amt:r.amt,m:r.m,st:'act',cat:'Entrate Revolut',src:'revolut'});n++})}
+  else sel.ok.forEach(r=>{const out=r.amt<0;fin.push({id:uid(),t:'voce',k:out?'out':'in',name:r.desc+' ('+fmtShort(r.date)+')',amt:Math.abs(r.amt),m:r.m,st:'act',cat:out||isRef(r)?impCat(r):'Entrate Revolut',src:'revolut'});n++});
+  fin.filter(o=>o.t==='voce'&&o.src==='revolut'&&o.amt<0).forEach(o=>{o.amt=-o.amt;o.k=o.k==='out'?'in':'out'});
+  let rec=fin.find(o=>o.t==='imp');if(!rec){rec={id:'imp',t:'imp',h:[]};fin.push(rec)}rec.h=[...new Set([...rec.h,...sel.ok.map(r=>r.h)])];
+  saveF();closeModal();const ms=[...new Set(sel.ok.map(r=>r.m))].sort();if(ms.length)fMonth=ms[ms.length-1];showTab('fmese');renderFin();
+  toast(`Importati ${sel.ok.length} movimenti in ${ms.length} ${ms.length===1?'mese':'mesi'}`);impState=null}
+$('miFinImp').onclick=()=>{closeMenu();openImport()};$('fmImp').onclick=openImport;
 
 /* ---- esporta ---- */
 $('miFinCsv').onclick=()=>{closeMenu();if(!finKey){toast('Sblocca prima il bilancio');return}
