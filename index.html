@@ -916,7 +916,9 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const pad=n=>String(n).padStart(2,'0');
 const todayStr=()=>dStr(new Date());
 const nowTime=()=>{const d=new Date();return `${pad(d.getHours())}:${pad(d.getMinutes())}`};
-const toMin=t=>{if(!t)return null;const[h,m]=t.split(':').map(Number);return h*60+m};
+const toMin=t=>{if(typeof t!=='string'||!/^\d{1,2}:\d{2}/.test(t))return null;const[h,m]=t.split(':').map(Number);return h*60+m};
+/* voce valida: data AAAA-MM-GG e orario di inizio (le voci senza orario arrivano da import di file diversi) */
+const validE=e=>!!e&&/^\d{4}-\d{2}-\d{2}$/.test(e.date||'')&&toMin(e.start)!=null&&(!e.end||toMin(e.end)!=null);
 function durMin(e){const s=toMin(e.start),f=toMin(e.end);if(s==null||f==null)return 0;let d=f-s;if(d<0)d+=1440;return d}
 const fmtH=m=>{m=Math.round(m);return `${Math.floor(m/60)}h ${pad(m%60)}m`};
 const fmtDec=m=>(m/60).toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -1119,17 +1121,17 @@ function renderEntries(){
 }
 $('search').oninput=renderEntries;
 
-const elapsed=e=>{const st=parseD(e.date);const[h,m]=e.start.split(':').map(Number);st.setHours(h,m,0,0);return Math.max(0,Math.floor((Date.now()-st)/1000))};
+const elapsed=e=>{if(!validE(e))return 0;const st=parseD(e.date);const[h,m]=e.start.split(':').map(Number);st.setHours(h,m,0,0);return Math.max(0,Math.floor((Date.now()-st)/1000))};
 const fmtClock=sec=>`${Math.floor(sec/3600)}:${pad(Math.floor(sec%3600/60))}:${pad(sec%60)}`;
 function renderRun(){
-  $('runBanner').innerHTML=entries.filter(e=>!e.end).map(e=>{
+  $('runBanner').innerHTML=entries.filter(e=>!e.end&&validE(e)).map(e=>{
     const lt=e.todo&&todos.find(t=>t.id===e.todo&&!t.done);
     return `<div class="run row" style="flex-wrap:nowrap">${avHtml(e.client)}<div class="run-main" style="flex:1;min-width:0;cursor:pointer" onclick="openEntry('${e.id}')">
       <div class="run-t" data-run="${e.id}">${fmtClock(elapsed(e))}</div><div class="run-s">${esc(e.note||e.type)} · ${esc(e.client)}</div></div>
       ${lt?`<button class="btn small" onclick="toggleTodo('${e.todo}')" title="Ferma e completa">✓ Fatto</button>`:''}<button class="btn primary small" onclick="stopEntry('${e.id}')">Stop</button></div>`}).join('');
 }
 /* ogni secondo aggiorna il timer; se un'attività in corso non ha ancora il suo riquadro in alto, lo ridisegna */
-setInterval(()=>{const run=entries.filter(e=>!e.end),shown=[...document.querySelectorAll('[data-run]')].map(el=>el.dataset.run);
+setInterval(()=>{const run=entries.filter(e=>!e.end&&validE(e)),shown=[...document.querySelectorAll('[data-run]')].map(el=>el.dataset.run);
   if(run.length!==shown.length||run.some(e=>!shown.includes(e.id))){try{renderRun()}catch(e){console.error('[timer]',e);if(!window._runErr){window._runErr=1;toast('Errore nel timer: '+e.message,9000)}}}
   document.querySelectorAll('[data-run]').forEach(el=>{const e=entries.find(x=>x.id===el.dataset.run);if(e&&!e.end)el.textContent=fmtClock(elapsed(e))})},1000);
 setInterval(()=>{if(document.visibilityState==='visible'){if(linkGoals()){goalSaved();saveV();save();saveT();renderAll()}else renderTodos()}},60000);
@@ -1152,7 +1154,7 @@ function renderTodos(){
   const open=list.filter(t=>!t.done).length;$('todoCount').textContent=list.length?`${list.length-open}/${list.length}`:'';
   const prev=dStr(addDays(parseD(d),-1)),carry=todos.filter(t=>t.date===prev&&!t.done).length;
   $('todoCarry').textContent=carry?`Riporta ${carry} da ieri ·`:'';$('todoCarry').classList.toggle('hidden',!carry);
-  const ev=entries.filter(e=>e.date===d).sort((a,b)=>b.start.localeCompare(a.start));
+  const ev=entries.filter(e=>e.date===d&&validE(e)).sort((a,b)=>b.start.localeCompare(a.start));
   const tot=ev.reduce((s,e)=>s+(e.end?durMin(e):Math.floor(elapsed(e)/60)),0);
   $('dayDone').innerHTML=ev.map(itemHtml).join('');
   $('dayTotal').textContent=fmtH(tot);
@@ -1899,8 +1901,9 @@ $('importFile').onchange=async ev=>{
       imp=lines.map(l=>{const c=[...l.matchAll(/"((?:[^"]|"")*)"|([^,]+)|(?<=,)(?=,|$)/g)].map(m=>(m[1]??m[2]??'').replace(/""/g,'"'));
         return{date:c[0],client:c[1],type:c[2],tags:(c[3]||'').split('|').filter(Boolean),start:c[4],end:c[5],note:c[7]||''}})}
     imp.forEach(e=>{if(!e.id)e.id=uid()});
-    const ids=new Set(entries.map(e=>e.id));const nuovi=imp.filter(e=>!ids.has(e.id)&&e.date);
-    entries.push(...nuovi);save();renderAll();alert(`Importate ${nuovi.length} voci.`);
+    const ids=new Set(entries.map(e=>e.id)),ok=imp.filter(validE),nuovi=ok.filter(e=>!ids.has(e.id)),bad=imp.length-ok.length;
+    if(!ok.length&&imp.length){alert('Questo file non contiene voci del Registro ore (servono data e orari).'+(/revolut|estratt|denaro|saldo|importo|descrizione/i.test(txt.slice(0,3000))?'\n\nSembra un estratto conto: per importarlo vai su Bilancio → ⬆︎ Importa da Revolut.':''));ev.target.value='';return}
+    entries.push(...nuovi);save();renderAll();alert(`Importate ${nuovi.length} voci.`+(bad?` ${bad} righe senza data o orario sono state saltate.`:''));
   }catch(e){alert('File non valido: '+e.message)}
   ev.target.value='';
 };
@@ -1974,7 +1977,7 @@ async function syncNow(){
     const txt=f?(f.truncated?await(await fetch(f.raw_url,{cache:'no-store'})).text():f.content):'';
     const remote=await unpack(txt);
     const L=localData(),M=remote?mergeAll(L,remote):L,cm=canon(M);
-    if(cm!==canon(L)){applyData(M);renderAll()}
+    if(cm!==canon(L)){applyData(M);renderAll();setTimeout(checkBadEntries,400)}
     if(!remote||cm!==canon(remote))await gh('/gists/'+sync.gist,{method:'PATCH',body:JSON.stringify({files:{[GFILE]:{content:await pack(M)}}})});
     sync.last=Date.now();storeSync();setSync('ok','Sincronizzato alle '+nowTime());
   }catch(e){
@@ -2053,7 +2056,7 @@ $('miInstall').onclick=async()=>{
   <p class="muted" style="margin-top:12px">I dati restano salvati su ogni dispositivo separatamente: per portarli da uno all'altro usa <b>Backup completo</b> e poi <b>Importa</b>.</p>`;
   openModal('Installa come app',h);
 };
-const APP_VERSION=30;
+const APP_VERSION=31;
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
   const hadSW=!!navigator.serviceWorker.controller;let reloaded=false;
   navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{reg.update();
@@ -2589,7 +2592,15 @@ let renderErrShown=false;
 function renderAll(){[renderRun,renderTodos,renderLists,renderEntries,renderSummary,renderQuick,renderCalendar,()=>renderTagPick('q_'),renderNotes].forEach(fn=>{
   try{fn()}catch(e){console.error('[render]',fn.name||'',e);if(!renderErrShown){renderErrShown=true;const m='Errore in "'+(fn.name||'app').replace('render','')+'": '+e.message;setTimeout(()=>toast(m,9000),2000)}}})}
 if(linkGoals()){goalSaved();saveV();save();saveT()}
-renderAll();
+/* pulizia: voci non valide (es. da un import dell'estratto conto nel Registro) */
+let badAsked=false;
+function checkBadEntries(){const bad=entries.filter(e=>!validE(e));if(!bad.length||badAsked||!$('modal').classList.contains('hidden'))return;badAsked=true;
+  openModal('Voci non valide nel Registro',`<p class="lead" style="margin-top:0">Ho trovato <b>${bad.length}</b> ${bad.length===1?'voce':'voci'} senza data o orario valido, probabilmente arrivate importando un file diverso (ad esempio l'estratto conto) dal menu ⋯ → Importa. Bloccavano il timer delle attività.</p>
+    <div class="card list" style="padding:4px 0;max-height:34vh;overflow:auto;margin:0 0 12px">${bad.slice(0,30).map(e=>`<div class="ri"><div class="ri-m"><div class="ri-t">${esc(e.client||e.note||'(vuota)')}</div><div class="ri-s">${esc([e.date,e.type,e.start].filter(Boolean).join(' · ')||'—')}</div></div></div>`).join('')}${bad.length>30?`<p class="muted" style="padding:6px 16px;margin:0">…e altre ${bad.length-30}</p>`:''}</div>
+    <div class="row btns" style="flex-wrap:nowrap"><button class="btn danger" id="badDel">Elimina ${bad.length===1?'la voce':'le '+bad.length+' voci'}</button><button class="btn" id="badKeep">Non ora</button></div>`);
+  $('badDel').onclick=()=>{const ids=new Set(bad.map(e=>e.id));entries=entries.filter(e=>!ids.has(e.id));save();closeModal();renderAll();toast('Voci non valide eliminate')};
+  $('badKeep').onclick=closeModal}
+renderAll();setTimeout(checkBadEntries,600);
 setSync(sync.token?'wait':'off','');
 if(location.hash.startsWith('#collega=')){
   const o=readCode(decodeURIComponent(location.hash.slice(9)));history.replaceState(null,'',location.pathname+location.search);
