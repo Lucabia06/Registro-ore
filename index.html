@@ -204,8 +204,8 @@ label{font-weight:500}
 .hero-nav{display:flex;align-items:center;gap:4px;grid-column:2}
 .hero-top .icon-btn{background:rgba(255,255,255,.08);border:0;color:var(--hero-ink);font-size:22px;width:36px;height:36px;border-radius:50%;cursor:pointer;line-height:1;flex:none}
 .hero-top .date-pick{display:flex;flex-direction:column;align-items:center;text-align:center;padding:4px 10px;min-width:150px}
-#todoTitle{color:var(--hero-ink);font-size:19px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
-#todoDate{color:var(--hero-muted);font-size:13px;font-weight:500;margin-top:1px;line-height:1.2}
+#todoTitle,.h-title{color:var(--hero-ink);font-size:19px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+#todoDate,.h-date{color:var(--hero-muted);font-size:13px;font-weight:500;margin-top:1px;line-height:1.2}
 .today-btn{grid-column:3;justify-self:end;background:var(--accent);color:#fff;border:0;border-radius:999px;font:inherit;font-size:13px;font-weight:600;padding:7px 12px;cursor:pointer;white-space:nowrap}
 .today-btn:hover{filter:brightness(1.08)}
 .hero-top .icon-btn:hover{background:rgba(255,255,255,.16)}
@@ -376,9 +376,60 @@ label.donechk{flex-direction:row;align-items:center;gap:10px;align-self:end;padd
 .g-cell:hover{outline:2px solid color-mix(in srgb,var(--text) 30%,transparent)}
 
 #goalList .ri-v{font-size:15px}
+/* aree: Agenda | Bilancio */
+.area-sw{display:flex;background:var(--card);border-radius:999px;padding:3px;gap:2px;flex:none;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.area-sw button{border:0;background:none;font:inherit;font-size:14px;font-weight:600;color:var(--muted);padding:7px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.area-sw button.on{background:var(--text);color:var(--card)}
+body[data-area=fin] nav .na,body:not([data-area=fin]) nav .nf{display:none!important}
+body[data-area=fin] #runBanner,body[data-area=fin] #syncBtn{display:none}
+body:not([data-area=fin]) .mi.nf,body[data-area=fin] .mi.na{display:none}
+/* bilancio */
+:root{--sp:#e8833a;--en:#4f9d45;--ri:#4a86e8}
+.fin-hero .hero-num.neg{color:#ff9a8a}
+.f-chk{border-style:dashed}
+.f-chk.on{border-style:solid}
+.f-chk.out.on{background:var(--sp);border-color:var(--sp)}
+.f-chk.in.on{background:var(--en);border-color:var(--en)}
+.ri.com .ri-v{color:var(--muted);font-weight:600}
+.f-tag{display:inline-block;font-size:11px;font-weight:600;border:1px dashed currentColor;border-radius:999px;padding:0 7px;margin-right:6px;vertical-align:1px}
+.f-tag.out{color:var(--sp)}.f-tag.in{color:var(--en)}
+.f-row-btn{background:var(--accent-soft);color:var(--accent-ink);border:0;border-radius:999px;font:inherit;font-size:13px;font-weight:600;padding:6px 12px;cursor:pointer;white-space:nowrap}
+.ftab{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:14px}
+.ftab th{font-size:12px;color:var(--muted);font-weight:600;text-align:right;padding:6px 8px;border-bottom:1px solid var(--line)}
+.ftab th:first-child,.ftab td:first-child{text-align:left}
+.ftab td{padding:9px 8px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+.ftab tr.m{cursor:pointer}.ftab tr.m:hover td{background:color-mix(in srgb,var(--bg) 60%,var(--card))}
+.ftab tr.off td{opacity:.42}
+.ftab tr.cur td:first-child{font-weight:700;color:var(--accent-ink)}
+.ftab tfoot td{font-weight:700;border-bottom:0;border-top:2px solid var(--line)}
+.ftab small{display:block;font-size:11px;color:var(--muted);font-weight:500}
+.ftab .pos{color:var(--en)}.ftab .neg{color:var(--danger)}
+.fbars{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:6px;align-items:end;height:130px;padding-top:6px}
+.fbars>div{display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;cursor:pointer;min-width:0}
+.fbars .b{display:flex;gap:2px;align-items:flex-end;height:100%;width:100%;justify-content:center}
+.fbars .b i{width:42%;max-width:14px;border-radius:3px 3px 0 0;min-height:2px}
+.fbars span{font-size:10px;color:var(--muted)}
+.fbars>div.off{opacity:.35}
+.f-legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:8px}.f-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.fcards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:6px}
+.fcard{cursor:pointer}.fcard .k{font-size:13px;color:var(--muted);font-weight:600}.fcard .v{font-size:24px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}.fcard .s{font-size:12px;color:var(--muted);margin-top:2px}
+#fyNote{width:100%;min-height:110px;border:0;background:color-mix(in srgb,#f1c232 16%,var(--card));border-radius:12px;padding:12px 14px;font:inherit;font-size:15px;line-height:1.5;color:var(--text);resize:vertical}
+.lockc{max-width:420px;margin:40px auto;text-align:center;padding:28px 22px}
+.lockc .lock-ic{width:64px;height:64px;border-radius:50%;background:var(--accent-soft);display:grid;place-items:center;margin:0 auto 12px;font-size:28px}
+.lockc h2{margin:0 0 6px}
+.lockc form{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.lockc input{width:100%;text-align:center}
+.fl-rem{display:flex;flex-direction:row!important;align-items:center;gap:10px;justify-content:center;font-size:14px;color:var(--text);cursor:pointer;user-select:none}
+.fl-rem input{position:absolute;opacity:0;width:1px;height:1px}
+.fl-rem input:checked+.chk-ui{background:var(--accent);border-color:var(--accent);color:#fff}
+.fl-rem input:focus-visible+.chk-ui{outline:2px solid var(--accent);outline-offset:2px}
+.fl-link{background:none;border:0;color:var(--accent-ink);font:inherit;font-size:14px;font-weight:600;cursor:pointer;padding:4px}
+.rc-code{font-family:ui-monospace,Menlo,monospace;font-size:20px;font-weight:700;letter-spacing:.06em;text-align:center;background:var(--bg);border-radius:12px;padding:14px 10px;user-select:all;-webkit-user-select:all;word-break:break-all}
+.fl-err{color:var(--danger);font-size:14px;min-height:18px;margin:0}
+.fl-warn{font-size:13px;text-align:left;background:color-mix(in srgb,#f1c232 18%,var(--card));border-radius:10px;padding:10px 12px;margin:12px 0 0}
 /* sezioni del registro richiudibili */
-#tab-registro .sec.fold{cursor:pointer;user-select:none;-webkit-user-select:none}
-#tab-registro .sec.fold>span:first-child{display:inline-flex;align-items:center;gap:6px}
+main .sec.fold{cursor:pointer;user-select:none;-webkit-user-select:none}
+main .sec.fold>span:first-child{display:inline-flex;align-items:center;gap:6px}
 .chev{display:inline-block;width:14px;height:14px;transition:transform .18s ease;flex:none}
 .sec.closed .chev{transform:rotate(-90deg)}
 .sec.closed{margin-bottom:0}
@@ -386,8 +437,8 @@ label.donechk{flex-direction:row;align-items:center;gap:10px;align-self:end;padd
 /* cambio giorno con scorrimento */
 @keyframes slL{from{transform:translateX(28px);opacity:0}to{transform:none;opacity:1}}
 @keyframes slR{from{transform:translateX(-28px);opacity:0}to{transform:none;opacity:1}}
-#tab-registro.slL>:not(.hero),#tab-registro.slL .hero-num{animation:slL .22s ease}
-#tab-registro.slR>:not(.hero),#tab-registro.slR .hero-num{animation:slR .22s ease}
+#tab-registro.slL>:not(.hero),#tab-registro.slL .hero-num,#tab-fmese.slL>:not(.hero),#tab-fmese.slL .hero-num{animation:slL .22s ease}
+#tab-registro.slR>:not(.hero),#tab-registro.slR .hero-num,#tab-fmese.slR>:not(.hero),#tab-fmese.slR .hero-num{animation:slR .22s ease}
 #tab-registro{touch-action:pan-y}
 .gtag{display:inline-flex;align-items:center;gap:4px;margin-right:6px;color:var(--text);font-weight:500}
 .gtag::after{content:"·";color:var(--muted);margin-left:2px;font-weight:400}
@@ -426,6 +477,9 @@ label.donechk{flex-direction:row;align-items:center;gap:10px;align-self:end;padd
 /* ---------- SMARTPHONE ---------- */
 @media (min-width:721px) and (max-width:960px){header{gap:8px;padding-left:12px;padding-right:12px}nav{gap:0}nav button{padding:8px 9px}nav button svg{display:none}}
 @media (max-width:720px){
+  .area-sw button{padding:6px 12px;font-size:13.5px}
+  .fcard .v{font-size:20px}
+  .ftab{font-size:12.5px}.ftab td,.ftab th{padding:8px 3px}.ftab small{font-size:10px}
   .hero-top{grid-template-columns:minmax(0,1fr)}
   .hero-nav{grid-column:1;justify-self:center}
   .today-btn{grid-column:1;justify-self:center;padding:5px 12px;font-size:12px;margin-top:2px}
@@ -491,20 +545,28 @@ label.donechk{flex-direction:row;align-items:center;gap:10px;align-self:end;padd
 </head>
 <body data-tab="registro">
 <header>
-  <h1>⏱ Registro Ore</h1>
+  <div class="area-sw" id="areaSw" role="tablist" aria-label="Area"><button data-area="agenda" class="on">Agenda</button><button data-area="fin">🔒 Bilancio</button></div>
   <nav id="nav">
-    <button data-tab="registro" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Registro</span></button>
-    <button data-tab="riepilogo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 21h18M6 17v-6M12 17V5M18 17v-9"/></svg><span>Riepilogo</span></button>
-    <button data-tab="calendario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span>Calendario</span></button>
-    <button data-tab="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg><span>Note</span></button>
-    <button data-tab="assistente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></svg><span>Assistente</span></button>
+    <button class="na" data-tab="registro" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Registro</span></button>
+    <button class="na" data-tab="riepilogo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 21h18M6 17v-6M12 17V5M18 17v-9"/></svg><span>Riepilogo</span></button>
+    <button class="na" data-tab="calendario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span>Calendario</span></button>
+    <button class="na" data-tab="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg><span>Note</span></button>
+    <button class="na" data-tab="assistente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></svg><span>Assistente</span></button>
+    <button class="nf" data-tab="fmese"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 15h3"/></svg><span>Mese</span></button>
+    <button class="nf" data-tab="fanno"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 21h18M6 17v-5M10 17V8M14 17v-7M18 17V5"/></svg><span>Anno</span></button>
+    <button class="nf" data-tab="fcred"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/><path d="M16 3.5l2 2.5"/></svg><span>Da ricevere</span></button>
   </nav>
   <div class="spacer"></div>
   <button class="btn hidden" id="syncBtn" aria-label="Sincronizzazione"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 8.5a4 4 0 0 1-.5 9.5z"/></svg></button>
   <button class="btn" id="menuBtn" title="Menu" aria-label="Menu">⋯</button>
   <div class="menu hidden" id="menu">
+    <button class="mi nf" id="miFinLock">🔒 Blocca il bilancio</button>
+    <button class="mi nf" id="miFinPass">🔑 Cambia password del bilancio</button>
+    <button class="mi nf" id="miFinRec">🧩 Nuovo codice di recupero</button>
+    <button class="mi nf" id="miFinCsv">⬇︎ Esporta bilancio (CSV)</button>
+    <div class="mi-sep nf"></div>
     <button class="mi" id="miSync">🔄 Sincronizzazione tra dispositivi</button>
-    <button class="mi" id="miManage">🎨 Clienti, attività e colori</button>
+    <button class="mi na" id="miManage">🎨 Clienti, attività e colori</button>
     <button class="mi" id="miInstall">📲 Installa come app</button>
     <div class="mi-sep"></div>
     <button class="mi" id="exportCsv">⬇︎ Esporta CSV (Excel)</button>
@@ -597,6 +659,83 @@ label.donechk{flex-direction:row;align-items:center;gap:10px;align-self:end;padd
 </section>
 
 <!-- ASSISTENTE -->
+<!-- BILANCIO (dati cifrati) -->
+<section id="tab-flock" class="hidden">
+  <div class="card lockc">
+    <div class="lock-ic" aria-hidden="true">🔒</div>
+    <h2 id="flTitle">Bilancio protetto</h2>
+    <p class="muted" id="flText" style="margin:0"></p>
+    <form id="flForm" autocomplete="on">
+      <input type="text" name="username" autocomplete="username" value="Bilancio" style="display:none" readonly>
+      <input type="text" id="flCode" class="hidden" placeholder="Codice di recupero" autocomplete="off" autocapitalize="characters" spellcheck="false" style="font-family:ui-monospace,Menlo,monospace;letter-spacing:.05em">
+      <input type="password" id="flPass" name="password" autocomplete="current-password" placeholder="Password del bilancio" required minlength="8">
+      <input type="password" id="flPass2" autocomplete="new-password" placeholder="Ripeti la password" class="hidden">
+      <label class="fl-rem" id="flRemW"><input type="checkbox" id="flRem"><span class="chk-ui" aria-hidden="true">✓</span><span>Ricordami su questo dispositivo</span></label>
+      <button class="btn primary" id="flGo">Sblocca</button>
+      <p class="fl-err" id="flErr" role="alert"></p>
+      <button type="button" class="link fl-link" id="flForgot">Password dimenticata? Usa il codice di recupero</button>
+    </form>
+    <div class="fl-warn hidden" id="flWarn"></div>
+  </div>
+</section>
+<section id="tab-fmese" class="hidden">
+  <div class="hero fin-hero">
+    <div class="hero-top">
+      <div class="hero-nav">
+        <button class="icon-btn" id="fmPrev" aria-label="Mese precedente">‹</button>
+        <label class="date-pick"><span id="fmTitle" class="h-title"></span><span id="fmYear" class="h-date"></span><input type="month" id="fmPick" aria-label="Scegli il mese"></label>
+        <button class="icon-btn" id="fmNext" aria-label="Mese successivo">›</button>
+      </div>
+      <button class="today-btn hidden" id="fmToday">Oggi</button>
+    </div>
+    <div class="hero-row">
+      <div style="min-width:0"><div class="hero-num" id="fmNum">0,00 €</div><div class="hero-sub" id="fmSub"></div></div>
+      <button class="hero-add" id="fmAdd" aria-label="Aggiungi voce" title="Aggiungi voce">＋</button>
+    </div>
+  </div>
+  <div class="sec fold" data-fold="fout"><span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>Spese</span><span class="sec-r" id="fmOutT"></span></div>
+  <div class="card list" id="fmOut" style="padding:4px 0" data-empty="Nessuna spesa in questo mese."></div>
+  <div class="sec fold" data-fold="fin"><span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>Entrate</span><span class="sec-r" id="fmInT"></span></div>
+  <div class="card list" id="fmIn" style="padding:4px 0" data-empty="Nessuna entrata in questo mese."></div>
+  <div class="row" style="justify-content:center;gap:8px;margin-top:6px"><button class="btn small" id="fmCopy">↻ Copia voci dal mese precedente</button></div>
+</section>
+<section id="tab-fanno" class="hidden">
+  <div class="hero fin-hero">
+    <div class="hero-top">
+      <div class="hero-nav">
+        <button class="icon-btn" id="fyPrev" aria-label="Anno precedente">‹</button>
+        <div class="date-pick" style="cursor:default"><span id="fyTitle" class="h-title"></span><span class="h-date">bilancio dell'anno</span></div>
+        <button class="icon-btn" id="fyNext" aria-label="Anno successivo">›</button>
+      </div>
+      <button class="today-btn hidden" id="fyToday">Oggi</button>
+    </div>
+    <div class="hero-row">
+      <div style="min-width:0"><div class="hero-num" id="fyNum">0,00 €</div><div class="hero-sub" id="fySub"></div></div>
+    </div>
+  </div>
+  <div class="fcards">
+    <div class="card fcard" id="fySaldo" role="button" tabindex="0"></div>
+    <div class="card fcard" id="fyCred" role="button" tabindex="0"></div>
+  </div>
+  <div class="sec"><span>Mese per mese</span><span class="sec-r"><button class="link" id="fyStart"></button></span></div>
+  <div class="card" style="padding:8px 10px;overflow-x:auto" id="fyTable"></div>
+  <div class="card" id="fyChart"></div>
+  <div class="sec"><span>Note</span></div>
+  <textarea id="fyNote" placeholder="Appunti sul bilancio, obiettivi di risparmio, promemoria…"></textarea>
+</section>
+<section id="tab-fcred" class="hidden">
+  <div class="hero fin-hero">
+    <div class="hero-row">
+      <div style="min-width:0"><div class="hero-sub" style="font-weight:600">Pagamenti da ricevere</div><div class="hero-num" id="fcNum">0,00 €</div><div class="hero-sub" id="fcSub"></div></div>
+      <button class="hero-add" id="fcAdd" aria-label="Aggiungi pagamento da ricevere" title="Aggiungi">＋</button>
+    </div>
+  </div>
+  <div class="sec fold" data-fold="fcopen"><span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>In attesa</span><span class="sec-r" id="fcOpenT"></span></div>
+  <div class="card list" id="fcOpen" style="padding:4px 0" data-empty="Nessun pagamento in attesa. Premi ＋ per aggiungerne uno."></div>
+  <div class="sec fold" data-fold="fcgot"><span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>Ricevuti</span><span class="sec-r" id="fcGotT"></span></div>
+  <div class="card list" id="fcGot" style="padding:4px 0" data-empty="Ancora nessuno."></div>
+</section>
+
 <!-- NOTE -->
 <section id="tab-note" class="hidden">
   <div class="nt" id="nt">
@@ -638,6 +777,7 @@ label.donechk{flex-direction:row;align-items:center;gap:10px;align-self:end;padd
       <button class="btn primary">Invia</button>
       <button class="btn" type="button" id="chatReset" title="Nuova conversazione">↺</button>
     </form>
+    <p class="muted" id="aiFinSt" style="font-size:12.5px;margin:8px 2px 0"></p>
     <details style="margin-top:12px" id="aiDetails">
       <summary>Impostazioni AI (scegli il servizio)</summary>
       <div class="grid" style="margin-top:10px">
@@ -657,7 +797,9 @@ label.donechk{flex-direction:row;align-items:center;gap:10px;align-self:end;padd
       <p class="muted" id="aiHelp"></p>
       <div class="row" id="aiTestW"><button type="button" class="btn small" id="aiTest">Verifica chiave e modelli</button></div>
       <div id="aiTestOut" class="muted" style="font-size:13px;margin-top:8px"></div>
-      <p class="muted">Chiavi e impostazioni restano solo su questo dispositivo. Ogni domanda invia al servizio scelto le tue voci (cliente, attività, date, durate) e la lista da fare di oggi.</p>
+      <label class="fl-rem" style="justify-content:flex-start;margin-top:10px"><input type="checkbox" id="aiFin"><span class="chk-ui" aria-hidden="true">✓</span><span>L'assistente può leggere il bilancio quando è sbloccato</span></label>
+      <p class="muted" style="font-size:13px;margin-top:6px">Quando è attivo e il bilancio è sbloccato, voci, saldo e pagamenti da ricevere vengono inviati in chiaro al servizio AI scelto (alcuni servizi gratuiti possono usare le richieste per migliorare i loro modelli). Con il bilancio bloccato non viene inviato nulla.</p>
+      <p class="muted">Chiavi e impostazioni restano solo su questo dispositivo. Ogni domanda invia al servizio scelto le tue voci (cliente, attività, date, durate), la lista da fare di oggi, gli impegni e, se lo consenti, il bilancio.</p>
     </details>
   </div>
 </section>
@@ -700,6 +842,12 @@ let sigV=new Map(events.map(v=>[v.id,sigOf(v)]));
 let notes=load('registroOre.notes',[]);if(!Array.isArray(notes))notes=[];tomb.n=tomb.n||{};
 let sigN=new Map(notes.map(n=>[n.id,sigOf(n)]));
 const saveN=()=>{track(notes,sigN,tomb.n);store('registroOre.notes',notes);store('registroOre.tomb',tomb);scheduleSync()};
+/* ================= Bilancio: archivio cifrato =================
+   Ogni record è cifrato a parte (AES-GCM, chiave da password con PBKDF2): la sincronizzazione unisce i record
+   per id e "u" senza mai vederne il contenuto. La chiave resta solo in memoria finché il bilancio è sbloccato. */
+const FKEY='registroOre.fin';
+let finStore=Object.assign({meta:null,items:[]},load(FKEY,{}));if(!Array.isArray(finStore.items))finStore.items=[];tomb.f=tomb.f||{};
+let finKey=null,fin=[],sigF=new Map(),finBad=0;
 const saveV=()=>{linkG();track(events,sigV,tomb.v);store('registroOre.events',events);store('registroOre.tomb',tomb);scheduleSync()};
 
 /* ================= Utilità ================= */
@@ -753,14 +901,21 @@ const tagHtml=t=>{const c=colorOf('tag',t);return `<span class="tag" style="back
 const allTags=()=>uniq([...entries.flatMap(tagsOf),...Object.keys(colors.tag)]);
 
 /* ================= Menu, tab, modale ================= */
+const FTABS=['fmese','fanno','fcred','flock'];
+let lastTab={agenda:'registro',fin:'fmese'};
 function showTab(name){
+  const area=FTABS.includes(name)?'fin':'agenda';
+  if(area==='fin'&&name!=='flock'){lastTab.fin=name;if(!finKey){showLock();name='flock'}}else if(area==='agenda')lastTab.agenda=name;
+  document.body.dataset.area=area;document.querySelectorAll('#areaSw button').forEach(b=>b.classList.toggle('on',b.dataset.area===area));
+  if(name==='flock')document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===lastTab.fin));
   document.body.dataset.tab=name;
-  document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
+  if(name!=='flock')document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
   document.querySelectorAll('main>section').forEach(s=>s.classList.toggle('hidden',s.id!=='tab-'+name));
   if(name==='riepilogo'){renderSummary();autoRecap()}
-  if(name==='assistente')renderQuick();
+  if(name==='assistente'){renderQuick();renderAiFin()}
   if(name==='calendario')renderCalendar();
   if(name==='note')renderNotes();
+  if(area==='fin'&&finKey)renderFin();
   window.scrollTo(0,0);
 }
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
@@ -1002,8 +1157,8 @@ $('tab-registro').addEventListener('animationend',()=>$('tab-registro').classLis
   addEventListener('keydown',e=>{if(document.body.dataset.tab!=='registro'||!$('modal').classList.contains('hidden')||e.target.closest('input,textarea,select,[contenteditable]')||e.metaKey||e.ctrlKey||e.altKey)return;
     if(e.key==='ArrowLeft')shiftDay(-1);else if(e.key==='ArrowRight')shiftDay(1)})}
 /* sezioni richiudibili (stato ricordato solo su questo dispositivo) */
-let fold=load('registroOre.fold',{});
-document.querySelectorAll('#tab-registro .sec.fold').forEach(h=>{const k=h.dataset.fold;h.classList.toggle('closed',!!fold[k]);h.setAttribute('role','button');h.setAttribute('aria-expanded',!fold[k]);h.tabIndex=0;
+let fold=load('registroOre.fold',{fcgot:true});
+document.querySelectorAll('main .sec.fold').forEach(h=>{const k=h.dataset.fold;h.classList.toggle('closed',!!fold[k]);h.setAttribute('role','button');h.setAttribute('aria-expanded',!fold[k]);h.tabIndex=0;
   const tg=()=>{fold[k]=!fold[k];if(!fold[k])delete fold[k];store('registroOre.fold',fold);h.classList.toggle('closed',!!fold[k]);h.setAttribute('aria-expanded',!fold[k])};
   h.addEventListener('click',e=>{if(e.target.closest('button'))return;tg()});h.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target===h){e.preventDefault();tg()}})});
 
@@ -1443,6 +1598,8 @@ function loadAiUI(){
 }
 $('aiProv').oninput=()=>{aiCfg.prov=$('aiProv').value;storeAi();loadAiUI();$('aiTestOut').textContent=''};
 $('aiTest').onclick=testAI;
+$('aiFin').checked=aiCfg.fin!==false;$('aiFin').onchange=()=>{aiCfg.fin=$('aiFin').checked;storeAi();renderAiFin()};
+function renderAiFin(){const el=$('aiFinSt');if(!el)return;el.textContent=aiCfg.fin===false?'Bilancio escluso dall\'assistente (Impostazioni AI).':finKey?'🔓 Bilancio sbloccato: l\'assistente può usarlo per rispondere.':'🔒 Bilancio bloccato: l\'assistente non lo vede.'}
 ['apiKey','apiModel','apiUrl'].forEach(id=>$(id).addEventListener('input',()=>{const s=aiCfg.p[aiCfg.prov]||{},d=PROV[aiCfg.prov];
   aiCfg.p[aiCfg.prov]={...s,key:$('apiKey').value.trim(),model:$('apiModel').value.trim(),url:$('apiUrl').value.trim(),auto:id==='apiModel'?'':(s.auto||'')};storeAi();
   $('aiStatus').textContent=$('aiProv').selectedOptions[0].text+(d.key&&!$('apiKey').value.trim()&&aiCfg.prov!=='custom'?' · chiave mancante':'');
@@ -1492,7 +1649,7 @@ $('chatForm').onsubmit=async ev=>{
   ev.preventDefault();const q=$('chatInput').value.trim();if(!q)return;$('chatInput').value='';addMsg(q,'u');
   chatHist.push({role:'user',content:q});const wait=addMsg('Sto analizzando i dati…','a');
   const td=todos.filter(t=>t.date===todayStr()).map(t=>`- [${t.done?'x':' '}] ${t.text}${t.client?' ('+t.client+')':''}`).join('\n')||'(vuota)';
-  const system=`Sei un assistente che analizza il registro ore di lavoro di un freelance/professionista. Oggi è ${todayStr()}. Rispondi in italiano, in modo conciso, con numeri precisi (ore e minuti). Calcola con attenzione partendo dai dati CSV. Se i dati non bastano, dillo.\n\nDATI (CSV, durata in minuti):\n${dataCsv()}\n\nLISTA DA FARE DI OGGI:\n${td}\n\nIMPEGNI PERSONALI (non lavorativi, NON contarli nelle ore):\n${events.slice().sort(vSort).map(v=>`- ${v.date}${vEnd(v)>v.date?' → '+vEnd(v):''} ${v.allDay?'(tutto il giorno)':v.start+'–'+v.end}: ${v.title}${v.place?' @ '+v.place:''}${v.note?' ('+v.note+')':''}`).join('\n')||'(nessuno)'}`;
+  const system=`Sei un assistente che analizza il registro ore di lavoro di un freelance/professionista${finKey&&aiCfg.fin!==false?' e il suo bilancio personale':''}. Oggi è ${todayStr()}. Rispondi in italiano, in modo conciso, con numeri precisi (ore e minuti). Calcola con attenzione partendo dai dati CSV. Se i dati non bastano, dillo.\n\nDATI (CSV, durata in minuti):\n${dataCsv()}\n\nLISTA DA FARE DI OGGI:\n${td}\n\nIMPEGNI PERSONALI (non lavorativi, NON contarli nelle ore):\n${events.slice().sort(vSort).map(v=>`- ${v.date}${vEnd(v)>v.date?' → '+vEnd(v):''} ${v.allDay?'(tutto il giorno)':v.start+'–'+v.end}: ${v.title}${v.place?' @ '+v.place:''}${v.note?' ('+v.note+')':''}`).join('\n')||'(nessuno)'}`+finForAI();
   try{const txt=await callAI(system,chatHist);wait.textContent=txt;chatHist.push({role:'assistant',content:txt})}
   catch(err){wait.textContent='Errore: '+err.message;chatHist.pop()}
 };
@@ -1664,12 +1821,13 @@ async function download(name,text,type){
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
 }
 $('exportCsv').onclick=()=>{closeMenu();download(`registro-ore-${todayStr()}.csv`,'﻿'+dataCsv(),'text/csv')};
-$('exportJson').onclick=()=>{closeMenu();download(`registro-ore-backup-${todayStr()}.json`,JSON.stringify({entries,todos,goals,events,notes,colors},null,2),'application/json')};
+$('exportJson').onclick=()=>{closeMenu();download(`registro-ore-backup-${todayStr()}.json`,JSON.stringify({entries,todos,goals,events,notes,colors,fin:finStore},null,2),'application/json')};
 $('importFile').onchange=async ev=>{
   closeMenu();const f=ev.target.files[0];if(!f)return;const txt=await f.text();let imp=[];
   try{
     if(/\.json$/i.test(f.name)||txt.trim().startsWith('{')||txt.trim().startsWith('[')){const o=JSON.parse(txt);imp=Array.isArray(o)?o:(o.entries||[]);
       if(Array.isArray(o.todos)){const tids=new Set(todos.map(t=>t.id));todos.push(...o.todos.filter(t=>t.id&&!tids.has(t.id)));saveT()}
+      if(o.fin&&o.fin.meta&&!finStore.meta){finStore=o.fin;store(FKEY,finStore)}
       if(Array.isArray(o.notes)){const nids=new Set(notes.map(n=>n.id));notes.push(...o.notes.filter(n=>n.id&&!nids.has(n.id)));saveN()}
       if(Array.isArray(o.events)){const vids=new Set(events.map(v=>v.id));events.push(...o.events.filter(v=>v.id&&!vids.has(v.id)));saveV()}
       if(Array.isArray(o.goals)){const gids=new Set(goals.map(g=>g.id));goals.push(...o.goals.filter(g=>g.id&&!gids.has(g.id)));saveG()}
@@ -1732,15 +1890,15 @@ function mergeList(a,b,tb){const m=new Map();[...a,...b].forEach(x=>{if(!x||!x.i
 function mergeGoals(a,b,tb){const all=[...a,...b];return mergeList(a,b,tb).map(g=>{if(g.kind!=='text')return g;const d={};
   all.filter(x=>x.id===g.id).forEach(x=>Object.entries(x.days||{}).forEach(([k,v])=>{if(!(k in d)||Math.abs(v)>Math.abs(d[k]))d[k]=v}));
   const keys=Object.keys(d).sort();return{...g,days:keys.reduce((o,k)=>(o[k]=d[k],o),{})}})}
-function localData(){flushNote();return{entries,todos,goals,events,notes,tomb,colors,colorsU}}
+function localData(){flushNote();return{entries,todos,goals,events,notes,fin:finStore,tomb,colors,colorsU}}
 function mergeAll(L,R){
-  const tb={e:maxMerge(L.tomb.e,R.tomb?.e),t:maxMerge(L.tomb.t,R.tomb?.t),g:maxMerge(L.tomb.g,R.tomb?.g),v:maxMerge(L.tomb.v,R.tomb?.v),n:maxMerge(L.tomb.n,R.tomb?.n)};
+  const tb={e:maxMerge(L.tomb.e,R.tomb?.e),t:maxMerge(L.tomb.t,R.tomb?.t),g:maxMerge(L.tomb.g,R.tomb?.g),v:maxMerge(L.tomb.v,R.tomb?.v),n:maxMerge(L.tomb.n,R.tomb?.n),f:maxMerge(L.tomb.f,R.tomb?.f)};
   const rNewer=(R.colorsU||0)>(L.colorsU||0),nc=rNewer?(R.colors||{}):L.colors,oc=rNewer?L.colors:(R.colors||{}),col={};
   ['client','tag','type'].forEach(k=>col[k]={...(oc[k]||{}),...(nc[k]||{})});
-  return{entries:mergeList(L.entries,R.entries||[],tb.e),todos:mergeList(L.todos,R.todos||[],tb.t),goals:mergeGoals(L.goals||[],R.goals||[],tb.g),events:mergeList(L.events||[],R.events||[],tb.v),notes:mergeList(L.notes||[],R.notes||[],tb.n),tomb:tb,colors:col,colorsU:Math.max(L.colorsU||0,R.colorsU||0)};
+  return{entries:mergeList(L.entries,R.entries||[],tb.e),todos:mergeList(L.todos,R.todos||[],tb.t),goals:mergeGoals(L.goals||[],R.goals||[],tb.g),events:mergeList(L.events||[],R.events||[],tb.v),notes:mergeList(L.notes||[],R.notes||[],tb.n),fin:mergeFin(L.fin,R.fin,tb.f),tomb:tb,colors:col,colorsU:Math.max(L.colorsU||0,R.colorsU||0)};
 }
 function applyData(d){
-  entries=d.entries;todos=d.todos;goals=d.goals||[];events=d.events||[];notes=d.notes||[];tomb=d.tomb;tomb.g=tomb.g||{};tomb.v=tomb.v||{};tomb.n=tomb.n||{};colors=d.colors;colorsU=d.colorsU;['client','tag','type'].forEach(k=>colors[k]=colors[k]||{});
+  entries=d.entries;todos=d.todos;goals=d.goals||[];events=d.events||[];notes=d.notes||[];applyFin(d.fin);tomb=d.tomb;tomb.f=tomb.f||{};tomb.g=tomb.g||{};tomb.v=tomb.v||{};tomb.n=tomb.n||{};colors=d.colors;colorsU=d.colorsU;['client','tag','type'].forEach(k=>colors[k]=colors[k]||{});
   sigE=new Map(entries.map(e=>[e.id,sigOf(e)]));sigT=new Map(todos.map(t=>[t.id,sigOf(t)]));sigG=new Map(goals.map(g=>[g.id,sigOf(g)]));sigV=new Map(events.map(v=>[v.id,sigOf(v)]));sigN=new Map(notes.map(n=>[n.id,sigOf(n)]));
   store(KEY,entries);store(TKEY,todos);store('registroOre.goals',goals);store('registroOre.events',events);store('registroOre.notes',notes);store('registroOre.tomb',tomb);store(CKEY,colors);store('registroOre.colorsU',colorsU);
 }
@@ -1832,7 +1990,7 @@ $('miInstall').onclick=async()=>{
   <p class="muted" style="margin-top:12px">I dati restano salvati su ogni dispositivo separatamente: per portarli da uno all'altro usa <b>Backup completo</b> e poi <b>Importa</b>.</p>`;
   openModal('Installa come app',h);
 };
-const APP_VERSION=22;
+const APP_VERSION=24;
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
   const hadSW=!!navigator.serviceWorker.controller;let reloaded=false;
   navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{reg.update();
@@ -1848,6 +2006,309 @@ $('miUpdate').onclick=forceUpdate;$('appVer').textContent='Versione '+APP_VERSIO
 if(location.search.includes('v='))history.replaceState(null,'',location.pathname);
 
 /* ================= Avvio ================= */
+/* ================= Bilancio ================= */
+const te=new TextEncoder(),tdc=new TextDecoder();
+async function fDerive(pass,salt){const km=await crypto.subtle.importKey('raw',te.encode(pass),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt:unb64(salt),iterations:310000,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function fEnc(o,key){const iv=crypto.getRandomValues(new Uint8Array(12));const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key||finKey,te.encode(JSON.stringify(o)));return{iv:b64(iv),ct:b64(ct)}}
+async function fDec(r,key){const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(r.iv)},key||finKey,unb64(r.ct));return JSON.parse(tdc.decode(pt))}
+/* protezione v2: una chiave dati casuale (DEK) cifra le voci; la DEK è custodita due volte,
+   con la password e con il codice di recupero. Cambiare password non richiede di ricifrare le voci. */
+const RC_AB='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function newRecCode(){const r=crypto.getRandomValues(new Uint8Array(20));let x='';r.forEach(v=>x+=RC_AB[v&31]);return x.match(/.{5}/g).join('-')}
+const normRC=c=>String(c||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+const newSalt=()=>b64(crypto.getRandomValues(new Uint8Array(16)));
+async function wrapDek(dek,kek){const raw=await crypto.subtle.exportKey('raw',dek),iv=crypto.getRandomValues(new Uint8Array(12));return{iv:b64(iv),ct:b64(await crypto.subtle.encrypt({name:'AES-GCM',iv},kek,raw))}}
+async function unwrapDek(w,kek,ext){const raw=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(w.iv)},kek,unb64(w.ct));return crypto.subtle.importKey('raw',raw,'AES-GCM',!!ext,['encrypt','decrypt'])}
+const genDek=()=>crypto.subtle.generateKey({name:'AES-GCM',length:256},true,['encrypt','decrypt']);
+async function toNX(k){if(!k.extractable)return k;return crypto.subtle.importKey('raw',await crypto.subtle.exportKey('raw',k),'AES-GCM',false,['encrypt','decrypt'])}
+async function checkKey(k){try{return(await fDec(finStore.meta.check,k))==='ok'}catch(e){return false}}
+/* apre con la password: restituisce la DEK, {legacy:chiave} per i bilanci creati con la v23, oppure null */
+async function openWithPass(p,ext){const m=finStore.meta;
+  if(m.v===2){try{const k=await unwrapDek(m.wp,await fDerive(p,m.salt),ext);return await checkKey(k)?k:null}catch(e){return null}}
+  const k=await fDerive(p,m.salt);return await checkKey(k)?{legacy:k}:null}
+async function openWithCode(c){const m=finStore.meta;if(m.v!==2||!m.wr)return null;
+  try{const k=await unwrapDek(m.wr,await fDerive(normRC(c),m.rsalt),true);return await checkKey(k)?k:null}catch(e){return null}}
+/* "Ricordami": la chiave (non esportabile) resta in IndexedDB su questo dispositivo finché non premi Blocca */
+const idbOpen=()=>new Promise((res,rej)=>{const r=indexedDB.open('registroOre',1);r.onupgradeneeded=()=>r.result.createObjectStore('k');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+async function idbSet(k,v){try{const d=await idbOpen();await new Promise((res,rej)=>{const t=d.transaction('k','readwrite');if(v==null)t.objectStore('k').delete(k);else t.objectStore('k').put(v,k);t.oncomplete=res;t.onerror=()=>rej(t.error)})}catch(e){}}
+async function idbGet(k){try{const d=await idbOpen();return await new Promise(res=>{const r=d.transaction('k').objectStore('k').get(k);r.onsuccess=()=>res(r.result||null);r.onerror=()=>res(null)})}catch(e){return null}}
+let finRemember=false;
+async function rememberKey(on){finRemember=!!on;if(on&&finKey)await idbSet('fin',{key:await toNX(finKey),salt:finStore.meta.salt});else await idbSet('fin',null)}
+/* vince la password più recente (gen), a parità quella creata per prima */
+function mergeFin(a,b,tb){a=a||{};b=b||{};const ma=a.meta,mb=b.meta;
+  const meta=!ma?mb:!mb?ma:((mb.gen||0)>(ma.gen||0)||((mb.gen||0)===(ma.gen||0)&&mb.c<ma.c))?mb:ma;
+  return{meta:meta||null,items:mergeList(a.items||[],b.items||[],tb||{})}}
+function applyFin(d){const old=finStore.meta;finStore=d&&typeof d==='object'?{meta:d.meta||null,items:d.items||[]}:{meta:null,items:[]};store(FKEY,finStore);
+  if(finKey){if(!finStore.meta||!old||finStore.meta.salt!==old.salt){finLock('La password del bilancio è stata cambiata su un altro dispositivo: inserisci quella nuova.')}else finLoad().then(()=>{if(document.body.dataset.area==='fin')renderFin()})}
+  else if(document.body.dataset.tab==='flock')showLock()}
+async function finLoad(){const out=[];finBad=0;for(const r of finStore.items){try{const o=await fDec(r);o.id=r.id;out.push(o)}catch(e){finBad++}}
+  fin=out;sigF=new Map(fin.map(o=>[o.id,JSON.stringify(o)]))}
+let fChain=Promise.resolve();
+function saveF(){const snap=fin.map(o=>({...o})),key=finKey;if(!key)return fChain;
+  fChain=fChain.then(async()=>{const now=Date.now(),seen=new Set(),map=new Map(finStore.items.map(r=>[r.id,r]));
+    for(const o of snap){seen.add(o.id);const sg=JSON.stringify(o);if(sigF.get(o.id)!==sg||!map.has(o.id)){map.set(o.id,{id:o.id,u:now,...await fEnc(o,key)});sigF.set(o.id,sg)}}
+    for(const id of [...sigF.keys()])if(!seen.has(id)){map.delete(id);sigF.delete(id);tomb.f[id]=now}
+    finStore.items=[...map.values()];store(FKEY,finStore);store('registroOre.tomb',tomb);scheduleSync()}).catch(e=>toast('Errore nel salvataggio cifrato: '+e.message));
+  return fChain}
+/* blocco automatico (se non hai scelto "Ricordami"): dopo 5 minuti senza tocchi o 1 minuto con l'app in background */
+let finIdle=null,finHid=0;
+function armLock(){clearTimeout(finIdle);if(finKey&&!finRemember)finIdle=setTimeout(()=>finLock(),5*60e3)}
+['pointerdown','keydown'].forEach(ev=>addEventListener(ev,()=>{if(finKey)armLock()},{passive:true}));
+document.addEventListener('visibilitychange',()=>{if(document.hidden)finHid=Date.now();else if(finKey&&!finRemember&&finHid&&Date.now()-finHid>60e3)finLock()});
+function finLock(msg){finKey=null;fin=[];sigF=new Map();clearTimeout(finIdle);rememberKey(false);
+  if(!$('modal').classList.contains('hidden')&&$('modalBody').querySelector('[data-fin]'))closeModal();
+  if(document.body.dataset.area==='fin'){showLock(msg);showTab('flock')}renderAiFin()}
+let flMode='unlock';
+function showLock(msg,mode){const has=!!finStore.meta;flMode=!has?'create':mode||'unlock';const rec=flMode==='rec';
+  $('flTitle').textContent=rec?'Recupera il bilancio':has?'Bilancio protetto':'Proteggi il tuo bilancio';
+  $('flText').textContent=rec?'Inserisci il codice di recupero e scegli una nuova password.':has?'Inserisci la password per vedere e modificare il bilancio. I dati sono cifrati su questo dispositivo e nella sincronizzazione.'
+    :'Scegli una password: servirà ogni volta che apri il Bilancio, anche sugli altri dispositivi. Riceverai anche un codice di recupero, da usare se la dimentichi.';
+  $('flCode').classList.toggle('hidden',!rec);$('flCode').required=rec;$('flCode').value='';
+  $('flPass').placeholder=rec?'Nuova password':'Password del bilancio';$('flPass').autocomplete=flMode==='unlock'?'current-password':'new-password';
+  $('flPass2').classList.toggle('hidden',flMode==='unlock');$('flPass2').required=flMode!=='unlock';
+  $('flGo').textContent=rec?'Imposta la nuova password':has?'Sblocca':'Crea e apri il bilancio';$('flErr').textContent=msg||'';$('flPass').value='';$('flPass2').value='';
+  $('flForgot').classList.toggle('hidden',!has||finStore.meta.v!==2);$('flForgot').textContent=rec?'‹ Torna alla password':'Password dimenticata? Usa il codice di recupero';
+  $('flWarn').classList.toggle('hidden',has&&!rec);
+  $('flWarn').innerHTML=rec?'Il codice di recupero è quello che hai salvato quando hai creato il bilancio (ad esempio nella tua email). Dopo il recupero, sugli altri dispositivi servirà la nuova password.'
+    :'<b>Ricordami</b> tiene il bilancio aperto su questo dispositivo finché non premi Blocca: usalo solo su dispositivi personali protetti da codice o Face ID.'+(sync.token?'':'<br><br>Se hai già creato il bilancio su un altro dispositivo, collega prima la sincronizzazione dal menu ⋯ e poi torna qui.');
+  if(!isMobile())setTimeout(()=>(rec?$('flCode'):$('flPass')).focus(),50)}
+$('flForgot').onclick=()=>showLock('',flMode==='rec'?'unlock':'rec');
+async function finOpened(key,remember){finKey=key;await finLoad();await rememberKey(remember);armLock();renderAiFin();
+  if(finBad)toast(`${finBad} voci non leggibili: sono state create con un'altra password`)}
+$('flForm').onsubmit=async ev=>{ev.preventDefault();const p=$('flPass').value,rem=$('flRem').checked;$('flErr').textContent='';
+  if(p.length<8){$('flErr').textContent='La password deve avere almeno 8 caratteri.';return}
+  if(flMode!=='unlock'&&p!==$('flPass2').value){$('flErr').textContent='Le due password non coincidono.';return}
+  $('flGo').disabled=true;const lbl=$('flGo').textContent;$('flGo').textContent='Un momento…';let code=null,intro='';
+  try{
+    if(!finStore.meta&&sync.token&&sync.gist){await syncNow();if(finStore.meta){showLock('Il bilancio esiste già su un altro dispositivo: inserisci la sua password.');return}}
+    if(flMode==='create'){
+      const dek=await genDek();code=newRecCode();const salt=newSalt(),rsalt=newSalt();
+      finStore.meta={v:2,salt,wp:await wrapDek(dek,await fDerive(p,salt)),rsalt,wr:await wrapDek(dek,await fDerive(normRC(code),rsalt)),check:await fEnc('ok',dek),c:Date.now(),gen:1};
+      store(FKEY,finStore);finKey=dek;fin=[{id:'cfg',t:'cfg',start:fMonthStr(new Date()),saldo:null,saldoD:'',nota:''}];sigF=new Map();await saveF();
+      await rememberKey(rem);armLock();renderAiFin();intro='Bilancio creato. Conserva questo codice: ti serve se dimentichi la password.';
+    }else if(flMode==='rec'){
+      const dek=await openWithCode($('flCode').value);
+      if(!dek){$('flErr').textContent='Codice di recupero non valido.';return}
+      const m=finStore.meta,salt=newSalt();finStore.meta={...m,salt,wp:await wrapDek(dek,await fDerive(p,salt)),gen:(m.gen||1)+1};store(FKEY,finStore);scheduleSync();
+      await finOpened(dek,rem);toast('Nuova password impostata');
+    }else{
+      const k=await openWithPass(p,false);
+      if(!k){$('flErr').textContent='Password non corretta.';$('flPass').select();return}
+      if(k.legacy){/* migrazione dalla v23: nuova chiave dati + codice di recupero, voci ricifrate */
+        finKey=k.legacy;await finLoad();await fChain;const dek=await genDek();code=newRecCode();const salt=newSalt(),rsalt=newSalt(),now=Date.now(),items=[];
+        for(const o of fin)items.push({id:o.id,u:now,...await fEnc(o,dek)});
+        finStore={meta:{v:2,salt,wp:await wrapDek(dek,await fDerive(p,salt)),rsalt,wr:await wrapDek(dek,await fDerive(normRC(code),rsalt)),check:await fEnc('ok',dek),c:finStore.meta.c||now,gen:(finStore.meta.gen||1)+1},items:finStore.items.filter(r=>!fin.some(o=>o.id===r.id)).concat(items)};
+        store(FKEY,finStore);scheduleSync();await finOpened(dek,rem);intro='Ho aggiornato la protezione del bilancio e creato il tuo codice di recupero: conservalo, ti serve se dimentichi la password.';
+      }else await finOpened(k,rem);
+    }
+    showTab(lastTab.fin||'fmese');if(code)showRecovery(code,intro);
+  }catch(e){$('flErr').textContent='Errore: '+e.message}
+  finally{$('flGo').disabled=false;if(!finKey)$('flGo').textContent=lbl}};
+/* mostra il codice di recupero con le opzioni per conservarlo */
+function showRecovery(code,intro){
+  const mail=load('registroOre.recMail','');
+  openModal('Codice di recupero',`<div class="grid" data-fin>
+    <p class="full lead" style="margin:0">${esc(intro||'Ecco il nuovo codice di recupero. Quello precedente non funziona più.')}</p>
+    <div class="full rc-code" id="rcCode">${esc(code)}</div>
+    <label class="full">La tua email<input type="email" id="rcMail" placeholder="nome@esempio.it" autocomplete="email" inputmode="email"></label>
+    <div class="row full" style="gap:8px;flex-wrap:wrap"><button type="button" class="btn primary" id="rcSend">✉️ Invia alla mia email</button><button type="button" class="btn" id="rcCopy">Copia</button><button type="button" class="btn" id="rcFile">Salva come file</button></div>
+    <p class="full muted" style="margin:0;font-size:13px">Chi ha il codice può aprire il bilancio solo se ha anche i tuoi dati, che sono solo sui tuoi dispositivi e nella sincronizzazione. Non condividerlo con nessuno. Per usarlo: nella schermata del Bilancio tocca "Password dimenticata?".</p>
+    <label class="full fl-rem" style="justify-content:flex-start"><input type="checkbox" id="rcOk"><span class="chk-ui" aria-hidden="true">✓</span><span>Ho conservato il codice in un posto sicuro</span></label>
+    <div class="row full btns"><button type="button" class="btn primary" id="rcDone" disabled>Fatto</button></div></div>`);
+  $('rcMail').value=mail;
+  const body=`Codice di recupero del Bilancio – Registro Ore\n\n${code}\n\nUsalo solo se dimentichi la password: apri l'app, vai su Bilancio e tocca "Password dimenticata?".\nNon condividere questo codice.\n\n${location.origin+location.pathname}`;
+  $('rcSend').onclick=()=>{const m=$('rcMail').value.trim();if(m)store('registroOre.recMail',m);location.href=`mailto:${encodeURIComponent(m)}?subject=${encodeURIComponent('Codice di recupero – Bilancio Registro Ore')}&body=${encodeURIComponent(body)}`;$('rcOk').checked=true;$('rcDone').disabled=false};
+  $('rcCopy').onclick=async()=>{try{await navigator.clipboard.writeText(code);toast('Codice copiato')}catch(e){const r=document.createRange();r.selectNodeContents($('rcCode'));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);toast('Codice selezionato: copialo')}};
+  $('rcFile').onclick=()=>download('codice-recupero-bilancio.txt',body,'text/plain');
+  $('rcOk').onchange=()=>$('rcDone').disabled=!$('rcOk').checked;$('rcDone').onclick=closeModal}
+/* chiede la password attuale; restituisce la DEK esportabile o null */
+function askPass(title,okLabel,extra,cb){
+  openModal(title,`<form id="apForm" class="grid" data-fin autocomplete="off">
+    <input type="text" name="username" autocomplete="username" value="Bilancio" style="display:none" readonly>
+    <label class="full">Password attuale<input type="password" id="ap0" autocomplete="current-password" required></label>${extra||''}
+    <div class="row full btns"><button class="btn primary" id="apGo">${okLabel}</button></div><p class="fl-err full" id="apErr"></p></form>`);
+  $('apForm').onsubmit=async ev=>{ev.preventDefault();const e=$('apErr');e.textContent='';$('apGo').disabled=true;
+    try{const k=await openWithPass($('ap0').value,true);if(!k||k.legacy){e.textContent=k?'Blocca e riapri il bilancio una volta per aggiornarne la protezione.':'La password attuale non è corretta.';return}await cb(k,e)}
+    catch(x){e.textContent='Errore: '+x.message}finally{const b=$('apGo');if(b)b.disabled=false}};
+  if(!isMobile())setTimeout(()=>$('ap0').focus(),50)}
+$('miFinLock').onclick=()=>{closeMenu();finLock();toast('Bilancio bloccato')};
+$('miFinPass').onclick=()=>{closeMenu();if(!finKey){toast('Sblocca prima il bilancio');return}
+  askPass('Cambia password del bilancio','Cambia password',`<label class="full">Nuova password<input type="password" id="ap1" autocomplete="new-password" minlength="8" required></label>
+    <label class="full">Ripeti la nuova password<input type="password" id="ap2" autocomplete="new-password" required></label>
+    <p class="full muted" style="margin:0;font-size:13px">Il codice di recupero resta valido. Sugli altri dispositivi ti verrà chiesta la nuova password.</p>`,
+    async(dek,e)=>{if($('ap1').value.length<8){e.textContent='Usa almeno 8 caratteri.';return}if($('ap1').value!==$('ap2').value){e.textContent='Le nuove password non coincidono.';return}
+      const m=finStore.meta,salt=newSalt();finStore.meta={...m,salt,wp:await wrapDek(dek,await fDerive($('ap1').value,salt)),gen:(m.gen||1)+1};store(FKEY,finStore);
+      if(finRemember)await rememberKey(true);scheduleSync();closeModal();toast('Password cambiata')})};
+$('miFinRec').onclick=()=>{closeMenu();if(!finKey){toast('Sblocca prima il bilancio');return}
+  askPass('Nuovo codice di recupero','Crea nuovo codice','<p class="full muted" style="margin:0;font-size:13px">Il codice attuale smetterà di funzionare.</p>',
+    async dek=>{const code=newRecCode(),m=finStore.meta,rsalt=newSalt();finStore.meta={...m,rsalt,wr:await wrapDek(dek,await fDerive(normRC(code),rsalt)),gen:(m.gen||1)+1};store(FKEY,finStore);scheduleSync();showRecovery(code)})};
+/* all'avvio: se hai scelto "Ricordami", riapre il bilancio senza password */
+(async()=>{const r=await idbGet('fin');if(!r||!finStore.meta)return;
+  if(r.salt!==finStore.meta.salt||!(await checkKey(r.key))){idbSet('fin',null);return}
+  finKey=r.key;finRemember=true;await finLoad();renderAiFin();if(document.body.dataset.tab==='flock')showTab(lastTab.fin||'fmese')})();
+/* dati del bilancio per l'assistente (solo se sbloccato e consentito) */
+function finForAI(){if(!finKey||aiCfg.fin===false)return '';const q=x=>`"${String(x??'').replace(/"/g,'""')}"`,c=fin.find(o=>o.t==='cfg')||{};
+  const v=fin.filter(o=>o.t==='voce').sort((a,b)=>a.m.localeCompare(b.m)),cr=fin.filter(o=>o.t==='cred');
+  return `\n\nBILANCIO PERSONALE (euro). "effettiva" = già pagata/ricevuta, "prevista" = non ancora. Il risparmio di un mese = entrate effettive − spese effettive.\nmese,tipo,descrizione,importo,stato,categoria\n${v.map(o=>[o.m,o.k==='out'?'spesa':'entrata',o.name,o.amt,o.st==='act'?'effettiva':'prevista',o.cat||''].map(q).join(',')).join('\n')||'(nessuna voce)'}`
+    +`\n\nPAGAMENTI DA RICEVERE:\n${cr.map(o=>`- ${o.name}: ${o.amt} €${o.from?' da '+o.from:''}${o.due?' entro il '+o.due:''}${o.got?' (ricevuto a '+o.got+')':' (in attesa)'}`).join('\n')||'(nessuno)'}`
+    +`\n\nSALDO DEL CONTO: ${c.saldo==null?'non indicato':c.saldo+' € (aggiornato il '+(c.saldoD||'?')+')'}. Il periodo di risparmio parte da: ${c.start||'inizio anno'}.`}
+/* ---- dati e formati ---- */
+const eur=n=>{n=Math.round((n||0)*100)/100;const[i,d]=Math.abs(n).toFixed(2).split('.');return (n<0?'−':'')+i.replace(/\B(?=(\d{3})+(?!\d))/g,'.')+','+d+' €'};
+const eurS=n=>(n>0?'+':'')+eur(n);
+function parseAmt(v){v=String(v||'').trim().replace(/[€\s]/g,'');if(!v)return NaN;
+  if(v.includes(','))v=v.replace(/\./g,'').replace(',','.');else if(/^\d{1,3}(\.\d{3})+$/.test(v))v=v.replace(/\./g,'');return Math.round(parseFloat(v)*100)/100}
+const fMonthStr=d=>d.getFullYear()+'-'+pad(d.getMonth()+1);
+const mParse=m=>{const[y,mo]=m.split('-').map(Number);return new Date(y,mo-1,1)};
+const mAdd=(m,n)=>{const d=mParse(m);return fMonthStr(new Date(d.getFullYear(),d.getMonth()+n,1))};
+const mLabel=(m,o)=>cap(mParse(m).toLocaleDateString('it-IT',o||{month:'long'}));
+const fCfg=()=>{let c=fin.find(o=>o.t==='cfg');if(!c){c={id:'cfg',t:'cfg',start:fMonthStr(new Date()),saldo:null,saldoD:'',nota:''};fin.push(c)}return c};
+const fVoci=m=>fin.filter(o=>o.t==='voce'&&o.m===m);
+function fTot(m){const v=fVoci(m),s=(k,st)=>v.filter(o=>o.k===k&&(!st||o.st===st)).reduce((a,o)=>a+(o.amt||0),0);
+  const r={outA:s('out','act'),outC:s('out','com'),inA:s('in','act'),inC:s('in','com')};r.ris=r.inA-r.outA;r.risP=r.inA+r.inC-r.outA-r.outC;return r}
+let fMonth=fMonthStr(new Date()),fYear=new Date().getFullYear();
+function renderFin(){if(!finKey)return;const t=document.body.dataset.tab;if(t==='fmese')renderFMese();else if(t==='fanno')renderFAnno();else if(t==='fcred')renderFCred()}
+
+/* ---- Mese ---- */
+function fItem(o){const com=o.st==='com',lbl=o.k==='out'?(com?'Da pagare':'Pagata'):(com?'Prevista':'Ricevuta');
+  return `<div class="ri ${com?'com':''}"><button class="chk f-chk ${o.k} ${com?'':'on'}" onclick="fToggle('${o.id}')" title="${com?'Segna come '+(o.k==='out'?'pagata':'ricevuta'):'Segna come '+(o.k==='out'?'da pagare':'prevista')}" aria-label="${lbl}">✓</button>
+    <div class="ri-m" onclick="openVoce('${o.id}')"><div class="ri-t">${esc(o.name)}</div><div class="ri-s">${com?`<span class="f-tag ${o.k}">${lbl}</span>`:''}${esc(o.cat||'')}${o.cred?(o.cat?' · ':'')+'da ricevere':''}</div></div>
+    <div class="ri-v" onclick="openVoce('${o.id}')">${eur(o.amt)}</div></div>`}
+function renderFMese(){
+  const m=fMonth,cur=fMonthStr(new Date()),t=fTot(m),v=fVoci(m).sort((a,b)=>(a.st===b.st?0:a.st==='com'?1:-1)||(b.amt-a.amt));
+  $('fmTitle').textContent=mLabel(m);$('fmYear').textContent=String(mParse(m).getFullYear());$('fmPick').value=m;
+  const off=(mParse(m)-mParse(cur));$('fmToday').classList.toggle('hidden',m===cur);$('fmToday').textContent=off>0?'‹ Oggi':'Oggi ›';
+  $('fmNum').textContent=eurS(t.ris);$('fmNum').classList.toggle('neg',t.ris<0);
+  $('fmSub').innerHTML=`risparmio · entrate ${eur(t.inA)} · spese ${eur(t.outA)}`+(t.outC||t.inC?`<br>previsto a fine mese: <b style="color:var(--hero-ink)">${eurS(t.risP)}</b>`:'');
+  $('fmOut').innerHTML=v.filter(o=>o.k==='out').map(fItem).join('');$('fmIn').innerHTML=v.filter(o=>o.k==='in').map(fItem).join('');
+  $('fmOutT').textContent=t.outA||t.outC?eur(t.outA)+(t.outC?' + '+eur(t.outC)+' da pagare':''):'';
+  $('fmInT').textContent=t.inA||t.inC?eur(t.inA)+(t.inC?' + '+eur(t.inC)+' previste':''):'';
+  const prev=fVoci(mAdd(m,-1));$('fmCopy').classList.toggle('hidden',!prev.length||prev.every(p=>v.some(x=>x.k===p.k&&x.name===p.name)));
+}
+function fShift(n){const el=$('tab-fmese');el.classList.remove('slL','slR');void el.offsetWidth;el.classList.add(n>0?'slL':'slR');fMonth=mAdd(fMonth,n);renderFMese()}
+$('tab-fmese').addEventListener('animationend',()=>$('tab-fmese').classList.remove('slL','slR'));
+$('fmPrev').onclick=()=>fShift(-1);$('fmNext').onclick=()=>fShift(1);
+$('fmToday').onclick=()=>{const c=fMonthStr(new Date());if(fMonth===c)return;const el=$('tab-fmese');el.classList.remove('slL','slR');void el.offsetWidth;el.classList.add(fMonth>c?'slR':'slL');fMonth=c;renderFMese()};
+$('fmPick').oninput=()=>{if($('fmPick').value){fMonth=$('fmPick').value;renderFMese()}};
+{let sx=null,sy=null;const el=$('tab-fmese');el.style.touchAction='pan-y';
+  el.addEventListener('touchstart',e=>{if(e.target.closest('input,textarea,select')){sx=null;return}sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+  el.addEventListener('touchend',e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.6)fShift(dx<0?1:-1)},{passive:true});
+  addEventListener('keydown',e=>{if(document.body.dataset.tab!=='fmese'||!$('modal').classList.contains('hidden')||e.target.closest('input,textarea,select'))return;if(e.key==='ArrowLeft')fShift(-1);else if(e.key==='ArrowRight')fShift(1)})}
+function fToggle(id){const o=fin.find(x=>x.id===id);if(!o)return;o.st=o.st==='com'?'act':'com';saveF();renderFin();
+  toast(o.st==='act'?(o.k==='out'?'Segnata come pagata':'Segnata come ricevuta'):(o.k==='out'?'Segnata da pagare':'Segnata come prevista'))}
+function openVoce(id,pre){pre=pre||{};const o=id?fin.find(x=>x.id===id):{k:pre.k||'out',name:'',amt:'',m:pre.m||fMonth,st:'act',cat:''};if(!o)return;let k=o.k,st=o.st;
+  const names=uniq(fin.filter(x=>x.t==='voce').map(x=>x.name)),cats=uniq(fin.filter(x=>x.t==='voce'&&x.cat).map(x=>x.cat));
+  openModal(id?'Modifica voce':'Nuova voce',`<form id="fvForm" class="grid" data-fin autocomplete="off" novalidate>
+    <div class="full seg" id="fvK" style="width:fit-content"><button type="button" data-v="out">Spesa</button><button type="button" data-v="in">Entrata</button></div>
+    <label class="full">Descrizione<input id="fv_name" list="dl_fname" placeholder="es. affitto + spese" required></label>
+    <label>Importo (€)<input id="fv_amt" inputmode="decimal" placeholder="0,00" required></label>
+    <label>Mese<input type="month" id="fv_m" required></label>
+    <div class="full seg" id="fvS" style="width:fit-content"><button type="button" data-v="act"></button><button type="button" data-v="com"></button></div>
+    <label class="full">Categoria<input id="fv_cat" list="dl_fcat" placeholder="facoltativa, es. Casa, Auto, Lavoro"></label>
+    <datalist id="dl_fname">${names.map(n=>`<option value="${esc(n)}">`).join('')}</datalist><datalist id="dl_fcat">${cats.map(n=>`<option value="${esc(n)}">`).join('')}</datalist>
+    <div class="row full btns" style="flex-wrap:nowrap"><button class="btn primary">${id?'Salva':'Aggiungi'}</button>${id?'<button type="button" class="btn danger" id="fvDel">Elimina</button>':''}</div></form>`);
+  const upd=()=>{document.querySelectorAll('#fvK button').forEach(b=>b.classList.toggle('active',b.dataset.v===k));document.querySelectorAll('#fvS button').forEach(b=>b.classList.toggle('active',b.dataset.v===st));
+    const b=document.querySelectorAll('#fvS button');b[0].textContent=k==='out'?'Pagata':'Ricevuta';b[1].textContent=k==='out'?'Da pagare':'Prevista'};
+  document.querySelectorAll('#fvK button').forEach(b=>b.onclick=()=>{k=b.dataset.v;upd()});document.querySelectorAll('#fvS button').forEach(b=>b.onclick=()=>{st=b.dataset.v;upd()});upd();
+  $('fv_name').value=o.name||'';$('fv_amt').value=o.amt!==''&&o.amt!=null?String(o.amt).replace('.',','):'';$('fv_m').value=o.m;$('fv_cat').value=o.cat||'';
+  $('fv_name').addEventListener('change',()=>{if(id)return;const last=fin.filter(x=>x.t==='voce'&&x.name===$('fv_name').value.trim()).sort((a,b)=>b.m.localeCompare(a.m))[0];
+    if(last){if(!$('fv_amt').value)$('fv_amt').value=String(last.amt).replace('.',',');if(!$('fv_cat').value)$('fv_cat').value=last.cat||'';k=last.k;upd()}});
+  $('fvForm').onsubmit=ev=>{ev.preventDefault();const a=parseAmt($('fv_amt').value);
+    $('fv_amt').setCustomValidity(isNaN(a)||a<0?'Scrivi un importo, es. 418,33':'');if(!$('fvForm').reportValidity())return;
+    const nv={t:'voce',k,name:$('fv_name').value.trim(),amt:a,m:$('fv_m').value,st,cat:$('fv_cat').value.trim()};if(!nv.cat)delete nv.cat;
+    if(id){Object.assign(o,nv);if(!nv.cat)delete o.cat}else fin.push({id:uid(),...nv});fMonth=nv.m;saveF();closeModal();renderFin();toast(id?'Voce salvata':'Voce aggiunta')};
+  if(id)$('fvDel').onclick=()=>{if(!confirm('Eliminare questa voce?'))return;fin=fin.filter(x=>x!==o);saveF();closeModal();renderFin();toast('Voce eliminata')};
+  if(!id&&!isMobile())setTimeout(()=>$('fv_name').focus(),50)}
+$('fmAdd').onclick=()=>openVoce(null,{m:fMonth});
+$('fmCopy').onclick=()=>{const m=fMonth,cur=fVoci(m),src=fVoci(mAdd(m,-1)).filter(p=>!cur.some(x=>x.k===p.k&&x.name===p.name)&&!p.cred);
+  if(!src.length){toast('Niente da copiare');return}src.forEach(p=>{const n={id:uid(),t:'voce',k:p.k,name:p.name,amt:p.amt,m,st:'com'};if(p.cat)n.cat=p.cat;fin.push(n)});
+  saveF();renderFMese();toast(`Copiate ${src.length} voci come previste: spuntale quando sono pagate o ricevute`)};
+
+/* ---- Anno ---- */
+function renderFAnno(){
+  const y=fYear,c=fCfg(),cy=new Date().getFullYear(),cur=fMonthStr(new Date());
+  const st=c.start&&c.start>`${y}-01`?c.start:`${y}-01`,months=[...Array(12)].map((_,i)=>`${y}-${pad(i+1)}`),inP=m=>m>=st&&(c.start||'')<=`${y}-12`;
+  $('fyTitle').textContent=String(y);$('fyToday').classList.toggle('hidden',y===cy);$('fyToday').textContent=y>cy?'‹ Oggi':'Oggi ›';
+  const rows=months.map(m=>({m,...fTot(m),on:inP(m)})),P=rows.filter(r=>r.on),sum=k=>P.reduce((a,r)=>a+r[k],0);
+  const ris=sum('ris'),risP=sum('risP');
+  $('fyNum').textContent=eurS(ris);$('fyNum').classList.toggle('neg',ris<0);
+  const per=P.length?(P.length===12?'tutto il '+y:`${mParse(P[0].m).toLocaleDateString('it-IT',{month:'short'}).replace('.','')} – dic ${y}`):'nessun mese nel periodo';
+  $('fySub').innerHTML=`risparmio ${per} · entrate ${eur(sum('inA'))} · spese ${eur(sum('outA'))}`+(risP!==ris?`<br>con le voci previste: <b style="color:var(--hero-ink)">${eurS(risP)}</b>`:'');
+  $('fyStart').textContent='Conteggio da '+(c.start?mLabel(c.start,{month:'long',year:'numeric'}):'inizio anno');
+  $('fySaldo').innerHTML=`<div class="k">Saldo del conto</div><div class="v">${c.saldo==null?'—':eur(c.saldo)}</div><div class="s">${c.saldoD?'aggiornato il '+fmtShort(c.saldoD):'tocca per inserirlo'}</div>`;
+  const open=fin.filter(o=>o.t==='cred'&&!o.got),ot=open.reduce((a,o)=>a+(o.amt||0),0);
+  $('fyCred').innerHTML=`<div class="k">Da ricevere</div><div class="v">${eur(ot)}</div><div class="s">${open.length?open.length+(open.length===1?' pagamento in attesa':' pagamenti in attesa'):'nessun pagamento in attesa'}</div>`;
+  const num=n=>eur(n).replace(' €',''),sg=n=>(n>0?'+':'')+num(n);
+  const cell=(a,p)=>`${a||!p?(a?num(a):'—'):'—'}${p?`<small>+${num(p)} prev.</small>`:''}`;
+  $('fyTable').innerHTML=`<table class="ftab"><thead><tr><th>Mese</th><th>Spese €</th><th>Entrate €</th><th>Risparmio €</th></tr></thead><tbody>${rows.map(r=>`<tr class="m ${r.on?'':'off'} ${r.m===cur?'cur':''}" onclick="fGoMonth('${r.m}')"><td>${mLabel(r.m,{month:'short'}).replace('.','')}</td><td>${cell(r.outA,r.outC)}</td><td>${cell(r.inA,r.inC)}</td><td class="${r.ris>0?'pos':r.ris<0?'neg':''}">${r.outA||r.inA?sg(r.ris):'—'}${r.risP!==r.ris?`<small>${sg(r.risP)} prev.</small>`:''}</td></tr>`).join('')}</tbody>
+    <tfoot><tr><td>Periodo</td><td>${num(sum('outA'))}</td><td>${num(sum('inA'))}</td><td class="${ris>0?'pos':ris<0?'neg':''}">${sg(ris)}</td></tr></tfoot></table>`;
+  const mx=Math.max(1,...rows.map(r=>Math.max(r.inA,r.outA)));
+  $('fyChart').innerHTML=`<div class="fbars">${rows.map(r=>`<div class="${r.on?'':'off'}" onclick="fGoMonth('${r.m}')" title="${mLabel(r.m)}: entrate ${eur(r.inA)}, spese ${eur(r.outA)}"><div class="b"><i style="height:${r.inA/mx*100}%;background:var(--en)"></i><i style="height:${r.outA/mx*100}%;background:var(--sp)"></i></div><span>${mLabel(r.m,{month:'narrow'})}</span></div>`).join('')}</div>
+    <div class="f-legend"><span><i style="background:var(--en)"></i>Entrate</span><span><i style="background:var(--sp)"></i>Spese</span></div>`;
+  if(document.activeElement!==$('fyNote'))$('fyNote').value=c.nota||'';
+}
+function fGoMonth(m){fMonth=m;showTab('fmese')}
+$('fyPrev').onclick=()=>{fYear--;renderFAnno()};$('fyNext').onclick=()=>{fYear++;renderFAnno()};$('fyToday').onclick=()=>{fYear=new Date().getFullYear();renderFAnno()};
+let fNoteT=null;$('fyNote').addEventListener('input',()=>{clearTimeout(fNoteT);fNoteT=setTimeout(()=>{if(!finKey)return;fCfg().nota=$('fyNote').value;saveF()},500)});
+$('fyNote').addEventListener('blur',()=>{clearTimeout(fNoteT);if(finKey&&fCfg().nota!==$('fyNote').value){fCfg().nota=$('fyNote').value;saveF()}});
+$('fySaldo').onclick=()=>{const c=fCfg();openModal('Saldo del conto',`<form id="fsForm" class="grid" data-fin autocomplete="off" novalidate>
+    <label>Saldo (€)<input id="fs_v" inputmode="decimal" placeholder="0,00" required></label><label>Aggiornato il<input type="date" id="fs_d" required></label>
+    <div class="row full btns"><button class="btn primary">Salva</button></div></form>`);
+  $('fs_v').value=c.saldo==null?'':String(c.saldo).replace('.',',');$('fs_d').value=todayStr();
+  $('fsForm').onsubmit=ev=>{ev.preventDefault();const a=parseAmt($('fs_v').value);$('fs_v').setCustomValidity(isNaN(a)?'Scrivi un importo':'');if(!$('fsForm').reportValidity())return;
+    c.saldo=a;c.saldoD=$('fs_d').value;saveF();closeModal();renderFin();toast('Saldo aggiornato')};if(!isMobile())setTimeout(()=>$('fs_v').select(),50)};
+$('fyCred').onclick=()=>showTab('fcred');
+$('fyStart').onclick=()=>{const c=fCfg();openModal('Periodo del risparmio',`<form id="fstForm" class="grid" data-fin><label class="full">Conta il risparmio a partire da<input type="month" id="fst_m"></label>
+    <p class="full muted" style="margin:0;font-size:13px">Come "Risparmio giu – dic" nel tuo foglio: i mesi prima di questa data restano visibili ma non entrano nel totale.</p>
+    <div class="row full btns"><button class="btn primary">Salva</button><button type="button" class="btn" id="fstAll">Da inizio anno</button></div></form>`);
+  $('fst_m').value=c.start||'';$('fstForm').onsubmit=ev=>{ev.preventDefault();c.start=$('fst_m').value||'';saveF();closeModal();renderFin()};$('fstAll').onclick=()=>{c.start='';saveF();closeModal();renderFin()}};
+['fySaldo','fyCred'].forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter')$(id).click()}));
+
+/* ---- Da ricevere ---- */
+function renderFCred(){
+  const all=fin.filter(o=>o.t==='cred'),open=all.filter(o=>!o.got).sort((a,b)=>(a.due||'9').localeCompare(b.due||'9')),got=all.filter(o=>o.got).sort((a,b)=>b.got.localeCompare(a.got));
+  const tot=open.reduce((a,o)=>a+(o.amt||0),0),t=todayStr();
+  $('fcNum').textContent=eur(tot);$('fcSub').textContent=open.length?`${open.length} ${open.length===1?'pagamento':'pagamenti'} in attesa${open.some(o=>o.due&&o.due<t)?' · alcuni in ritardo':''}`:'nessun pagamento in attesa';
+  $('fcOpenT').textContent=open.length?String(open.length):'';$('fcGotT').textContent=got.length?String(got.length):'';
+  $('fcOpen').innerHTML=open.map(o=>`<div class="ri"><div class="ri-m" onclick="openCred('${o.id}')"><div class="ri-t">${esc(o.name)}</div><div class="ri-s">${[o.from?'da '+esc(o.from):'',o.due?(o.due<t?'<b style="color:var(--danger)">scaduto il '+fmtShort(o.due)+'</b>':'entro il '+fmtShort(o.due)):'',esc(o.note||'')].filter(Boolean).join(' · ')||'senza scadenza'}</div></div>
+    <div class="ri-v" style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${eur(o.amt)}<button class="f-row-btn" onclick="gotCred('${o.id}')">Ricevuto</button></div></div>`).join('');
+  $('fcGot').innerHTML=got.map(o=>`<div class="ri done" onclick="openCred('${o.id}')"><div class="ri-m"><div class="ri-t">${esc(o.name)}</div><div class="ri-s">ricevuto · ${esc(mLabel(o.got,{month:'long',year:'numeric'}))}${o.from?' · da '+esc(o.from):''}</div></div><div class="ri-v">${eur(o.amt)}</div></div>`).join('');
+}
+function openCred(id){const o=id?fin.find(x=>x.id===id):{name:'',amt:'',from:'',due:'',note:''};if(!o)return;
+  openModal(id?'Pagamento da ricevere':'Nuovo pagamento da ricevere',`<form id="fcForm" class="grid" data-fin autocomplete="off" novalidate>
+    <label class="full">Cosa<input id="fc_name" placeholder="es. Fattura progetto logo" required></label>
+    <label>Importo (€)<input id="fc_amt" inputmode="decimal" placeholder="0,00" required></label>
+    <label>Entro il<input type="date" id="fc_due"></label>
+    <label class="full">Da chi<input id="fc_from" list="dl_client" placeholder="facoltativo"></label>
+    <label class="full">Nota<input id="fc_note" placeholder="facoltativa"></label>
+    ${o.got?`<p class="full muted" style="margin:0;font-size:13px">Ricevuto a ${esc(mLabel(o.got,{month:'long',year:'numeric'}))}: è già tra le entrate di quel mese.</p>`:''}
+    <div class="row full btns" style="flex-wrap:nowrap"><button class="btn primary">${id?'Salva':'Aggiungi'}</button>${id&&!o.got?'<button type="button" class="btn" id="fcGotB">Ricevuto</button>':''}${id?'<button type="button" class="btn danger" id="fcDel">Elimina</button>':''}</div></form>`);
+  $('fc_name').value=o.name||'';$('fc_amt').value=o.amt!==''&&o.amt!=null?String(o.amt).replace('.',','):'';$('fc_due').value=o.due||'';$('fc_from').value=o.from||'';$('fc_note').value=o.note||'';
+  $('fcForm').onsubmit=ev=>{ev.preventDefault();const a=parseAmt($('fc_amt').value);$('fc_amt').setCustomValidity(isNaN(a)||a<0?'Scrivi un importo':'');if(!$('fcForm').reportValidity())return;
+    const nv={t:'cred',name:$('fc_name').value.trim(),amt:a,due:$('fc_due').value,from:$('fc_from').value.trim(),note:$('fc_note').value.trim()};
+    if(id){Object.assign(o,nv);const v=o.voce&&fin.find(x=>x.id===o.voce);if(v){v.name=nv.name;v.amt=nv.amt}}else fin.push({id:uid(),...nv,got:''});saveF();closeModal();renderFin();toast('Salvato')};
+  if(id&&!o.got)$('fcGotB').onclick=()=>{closeModal();gotCred(id)};
+  if(id)$('fcDel').onclick=()=>{if(!confirm(o.got?'Eliminare il promemoria? L\'entrata registrata nel mese resta.':'Eliminare questo pagamento da ricevere?'))return;fin=fin.filter(x=>x!==o);saveF();closeModal();renderFin();toast('Eliminato')};
+  if(!id&&!isMobile())setTimeout(()=>$('fc_name').focus(),50)}
+function gotCred(id){const o=fin.find(x=>x.id===id);if(!o)return;
+  openModal('Pagamento ricevuto',`<form id="fgForm" class="grid" data-fin autocomplete="off" novalidate><p class="full lead" style="margin:0"><b>${esc(o.name)}</b> diventa un'entrata nel mese che scegli.</p>
+    <label>Importo ricevuto (€)<input id="fg_amt" inputmode="decimal" required></label><label>Mese<input type="month" id="fg_m" required></label>
+    <div class="row full btns"><button class="btn primary">✓ Registra entrata</button></div></form>`);
+  $('fg_amt').value=String(o.amt).replace('.',',');$('fg_m').value=fMonthStr(new Date());
+  $('fgForm').onsubmit=ev=>{ev.preventDefault();const a=parseAmt($('fg_amt').value);$('fg_amt').setCustomValidity(isNaN(a)?'Scrivi un importo':'');if(!$('fgForm').reportValidity())return;
+    const v={id:uid(),t:'voce',k:'in',name:o.name,amt:a,m:$('fg_m').value,st:'act',cred:o.id};fin.push(v);o.got=v.m;o.voce=v.id;o.amt=a;saveF();closeModal();renderFin();toast('Registrata tra le entrate di '+mLabel(v.m))}}
+$('fcAdd').onclick=()=>openCred(null);
+
+/* ---- esporta ---- */
+$('miFinCsv').onclick=()=>{closeMenu();if(!finKey){toast('Sblocca prima il bilancio');return}
+  const q=x=>`"${String(x??'').replace(/"/g,'""')}"`,rows=fin.filter(o=>o.t==='voce').sort((a,b)=>a.m.localeCompare(b.m));
+  const csv='mese,tipo,descrizione,importo,stato,categoria\n'+rows.map(o=>[o.m,o.k==='out'?'spesa':'entrata',o.name,String(o.amt).replace('.',','),o.st==='act'?(o.k==='out'?'pagata':'ricevuta'):(o.k==='out'?'da pagare':'prevista'),o.cat||''].map(q).join(',')).join('\n')
+    +'\n\nda ricevere,descrizione,importo,da chi,entro il,ricevuto\n'+fin.filter(o=>o.t==='cred').map(o=>['',o.name,String(o.amt).replace('.',','),o.from,o.due,o.got].map(q).join(',')).join('\n');
+  download(`bilancio-${todayStr()}.csv`,'﻿'+csv,'text/csv')};
+
+/* ---- cambio area ---- */
+document.querySelectorAll('#areaSw button').forEach(b=>b.onclick=()=>showTab(b.dataset.area==='fin'?lastTab.fin:lastTab.agenda));
+
 /* ================= Note ================= */
 let noteId=null,noteTimer=null;
 const nTitle=n=>(n.text||'').trim().split('\n')[0].trim()||'Nuova nota';
