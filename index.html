@@ -2016,7 +2016,7 @@ $('miInstall').onclick=async()=>{
   <p class="muted" style="margin-top:12px">I dati restano salvati su ogni dispositivo separatamente: per portarli da uno all'altro usa <b>Backup completo</b> e poi <b>Importa</b>.</p>`;
   openModal('Installa come app',h);
 };
-const APP_VERSION=25;
+const APP_VERSION=27;
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
   const hadSW=!!navigator.serviceWorker.controller;let reloaded=false;
   navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{reg.update();
@@ -2328,7 +2328,7 @@ function gotCred(id){const o=fin.find(x=>x.id===id);if(!o)return;
 $('fcAdd').onclick=()=>openCred(null);
 
 /* ---- spese per categoria ---- */
-const CAT_COL={'Casa e utenze':'#3d7cc9','Spesa alimentare':'#4f9d45','Ristoranti e bar':'#e8833a','Trasporti':'#7b5ea7','Carburante':'#b5643c','Viaggi':'#16a085','Abbonamenti e digitale':'#cf4872','Salute e benessere':'#2bb3c0','Shopping':'#e3b53f','Contanti':'#6b8e23','Commissioni':'#8a8f98','Bonifici inviati':'#283b8a','Altro':'#a0a7a4','Senza categoria':'#c3c9c6'};
+const CAT_COL={'Casa e utenze':'#3d7cc9','Assicurazioni':'#5d6d7e','Spesa alimentare':'#4f9d45','Ristoranti e bar':'#e8833a','Trasporti':'#7b5ea7','Carburante':'#b5643c','Viaggi':'#16a085','Abbonamenti e digitale':'#cf4872','Salute e benessere':'#2bb3c0','Shopping':'#e3b53f','Contanti':'#6b8e23','Commissioni':'#8a8f98','Bonifici inviati':'#283b8a','Altro':'#a0a7a4','Senza categoria':'#c3c9c6'};
 const catColor=c=>CAT_COL[c]||PAL[hash(c)%PAL.length];
 function catBars(list,tot){return list.map(([c,v])=>`<div class="cbar"><div class="n"><i style="background:${catColor(c)}"></i>${esc(c)}</div><div class="v">${eur(v)}<small>${tot?Math.round(v/tot*100):0}%</small></div><div class="t"><i style="width:${tot?Math.max(1,v/tot*100):0}%;background:${catColor(c)}"></i></div></div>`).join('')}
 function catTotals(months){const by={};fin.filter(o=>o.t==='voce'&&o.k==='out'&&o.st==='act'&&months.includes(o.m)).forEach(o=>{const c=o.cat||'Senza categoria';by[c]=(by[c]||0)+o.amt});
@@ -2341,36 +2341,53 @@ function renderCats(wrap,el,tl,months){const{l,tot}=catTotals(months);$(wrap).cl
    ("Revolut · Spesa alimentare"), oppure importate una per una. I movimenti già importati vengono saltati. */
 const FCATS=[
  ['Spesa alimentare',/esselunga|conad|\bcoop\b|carrefour|\blidl|eurospin|\bpam\b|ipercoop|iper |\baldi\b|penny|despar|famila|tigros|bennet|naturasi|\bcrai\b|\bsigma\b|supermerc|market|alimentari|unes|\bmd\b|in'?s mercato/i],
- ['Ristoranti e bar',/\bbar\b|caff|cafe|ristor|pizzer|trattor|osteria|sushi|mc ?donald|burger|starbucks|deliveroo|glovo|just ?eat|\bkfc\b|poke|gelat|\bpub\b|bistr|panific|pasticc|ramen|kebab|piadin|food|cucina|enoteca|birrer|brew/i],
+ ['Ristoranti e bar',/\bbar\b|caff|cafe|kafe|caf[eè]'?|ristor|pizzer|trattor|osteria|sushi|mc ?donald|burger|starbucks|deliveroo|glovo|just ?eat|\bkfc\b|poke|gelat|\bpub\b|bistr|panific|pasticc|ramen|kebab|piadin|food|cucina|enoteca|birrer|brew/i],
  ['Abbonamenti e digitale',/netflix|spotify|disney|apple\.com|icloud|google|youtube|prime ?video|amazon ?prime|\bdazn|adobe|openai|chatgpt|anthropic|claude\.ai|microsoft|canva|figma|notion|dropbox|patreon|audible|playstation|xbox|steam|nintendo|github|linkedin|duolingo|now ?tv/i],
  ['Trasporti',/trenitalia|\bitalo\b|\batm\b|atac|\buber\b|free ?now|taxi|telepass|autostrad|parchegg|parking|enjoy|share ?now|\blime\b|\bbird\b|\bdott\b|\btier\b|flixbus|metro|\btper|\bgtt\b|trenord|mooney|easypark|bus\b/i],
  ['Carburante',/\beni\b|\bq8|tamoil|\besso\b|\bshell\b|\bagip|totalerg|\bip\b|benzin|carbur|repsol|enilive/i],
  ['Viaggi',/booking|airbnb|hotel|expedia|ryanair|easyjet|wizz|vueling|ita airways|lufthansa|trivago|hostel|volotea|aeroport|airport/i],
  ['Casa e utenze',/\benel\b|\bhera\b|\ba2a\b|\biren\b|edison|\bacea\b|\btim\b|vodafone|windtre|\bwind\b|iliad|fastweb|\bsky\b|ho\.? ?mobile|very ?mobile|kena|condomin|affitto|\bikea|leroy|brico|obi\b/i],
- ['Salute e benessere',/farmac|pharm|ospedal|medic|dentist|clinic|ottic|parafarm|palestra|\bgym|fitness|mcfit|virgin active|piscina|parrucch|barbier|estetic|sanitar|analisi/i],
+ ['Assicurazioni',/assicuraz|insurance|vittoria ass|generali|unipol|allianz|\baxa\b|zurich|reale mutua|cattolica ass|genertel|linear|prima\.it|verti\b/i],
+ ['Salute e benessere',/farmac|pharm|ospedal|medic|dentist|clinic|ottic|optic|parafarm|palestra|\bgym|fitness|mcfit|virgin active|piscina|parrucch|barbier|estetic|sanitar|analisi/i],
  ['Shopping',/amazon|amzn|zalando|decathlon|h ?& ?m\b|\bzara\b|mediaworld|unieuro|\bebay|aliexpress|shein|apple store|primark|uniqlo|euronics|vinted|\btemu\b|\bovs\b|sephora|douglas|feltrinelli|mondadori|libreria|nike|adidas|foot ?locker|tiger/i]];
 const impKey=d=>String(d||'').toLowerCase().replace(/\d{3,}/g,'').replace(/[*#]+/g,' ').replace(/\s+/g,' ').trim();
 function guessCat(r){const rules=fCfg().rules||{};if(rules[r.key])return rules[r.key];
   if(/ATM|PRELIEVO/i.test(r.type))return 'Contanti';if(/FEE|COMMISS|TARIFF/i.test(r.type))return 'Commissioni';
   for(const[c,re]of FCATS)if(re.test(r.desc))return c;
-  if(/TRANSFER|BONIFICO|TRASFERIMENTO/i.test(r.type))return r.amt<0?'Bonifici inviati':'Bonifici ricevuti';return 'Altro'}
-function parseCSV(t){t=t.replace(/^﻿/,'');const first=t.split(/\r?\n/)[0]||'';const d=[',',';','\t'].sort((a,b)=>first.split(b).length-first.split(a).length)[0];
+  if(/TRANSFER|BONIFICO|TRASFERIMENTO/i.test(r.type)||/^(to|a|da|from|payment from|bonifico|trasferimento)\s/i.test(r.desc))return r.amt<0?'Bonifici inviati':'Bonifici ricevuti';return 'Altro'}
+function parseCSV(t){t=t.replace(/^﻿/,'');const ls=t.split(/\r?\n/).slice(0,40).join('\n');
+  const d=[',',';','\t'].sort((a,b)=>ls.split(b).length-ls.split(a).length)[0];
   const rows=[];let row=[],cur='',q=false;for(let i=0;i<t.length;i++){const c=t[i];
     if(q){if(c==='"'){if(t[i+1]==='"'){cur+='"';i++}else q=false}else cur+=c}
     else if(c==='"')q=true;else if(c===d){row.push(cur);cur=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;row.push(cur);rows.push(row);row=[];cur=''}else cur+=c}
-  if(cur||row.length){row.push(cur);rows.push(row)}return rows.filter(r=>r.some(x=>x.trim()))}
-function numAmt(v){v=String(v||'').trim().replace(/[€\s ]/g,'').replace('−','-');if(!v)return NaN;
+  if(cur||row.length){row.push(cur);rows.push(row)}return rows}
+function numAmt(v){v=String(v||'').trim().replace(/[€$£\s ]|EUR|USD|GBP|CHF/g,'').replace('−','-');if(!v)return NaN;
   const lc=v.lastIndexOf(','),ld=v.lastIndexOf('.');if(lc>-1&&ld>-1){v=lc>ld?v.replace(/\./g,'').replace(',','.'):v.replace(/,/g,'')}else if(lc>-1)v=v.replace(',','.');return parseFloat(v)}
+const MESI={gen:1,feb:2,mar:3,apr:4,mag:5,giu:6,lug:7,ago:8,set:9,ott:10,nov:11,dic:12,jan:1,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,dec:12};
 function isoDate(v){v=String(v||'').trim();let m=v.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return`${m[1]}-${m[2]}-${m[3]}`;
-  m=v.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})/);if(m){const y=m[3].length===2?'20'+m[3]:m[3];return`${y}-${pad(+m[2])}-${pad(+m[1])}`}return ''}
+  m=v.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})/);if(m){const y=m[3].length===2?'20'+m[3]:m[3];return`${y}-${pad(+m[2])}-${pad(+m[1])}`}
+  m=v.match(/^(\d{1,2})\s+([a-zà-ù]{3})[a-zà-ù.]*\s+(\d{4})/i);if(m&&MESI[m[2].toLowerCase()])return`${m[3]}-${pad(MESI[m[2].toLowerCase()])}-${pad(+m[1])}`;return ''}
+/* legge l'estratto conto Revolut: cerca la riga di intestazione dei movimenti ovunque nel file
+   (anche dopo il riepilogo del conto e per più conti/valute), con importo unico oppure colonne Uscite/Entrate */
 function parseRevolut(text){const rows=parseCSV(text);if(rows.length<2)throw new Error('il file è vuoto o non è un CSV');
-  const h=rows[0].map(x=>x.trim().toLowerCase()),col=(...n)=>h.findIndex(x=>n.some(k=>x===k||x.startsWith(k)));
-  const ci={type:col('type','tipo'),start:col('started date','data di inizio','start'),done:col('completed date','data di completamento','data completamento','completed'),desc:col('description','descrizione'),
-    amt:col('amount','importo'),fee:col('fee','commissione','costo','tariffa'),cur:col('currency','valuta'),state:col('state','stato'),bal:col('balance','saldo'),prod:col('product','prodotto')};
-  if(ci.amt<0||ci.desc<0||(ci.start<0&&ci.done<0))throw new Error('non riconosco le colonne: serve l\'estratto conto CSV di Revolut (con Data, Descrizione, Importo)');
-  return rows.slice(1).map(r=>{const g=i=>i>=0?(r[i]||'').trim():'';const date=isoDate(g(ci.done))||isoDate(g(ci.start));const fee=numAmt(g(ci.fee))||0,a=numAmt(g(ci.amt));
-    const o={date,m:date.slice(0,7),desc:g(ci.desc)||'(senza descrizione)',type:g(ci.type).toUpperCase(),state:g(ci.state).toUpperCase(),cur:g(ci.cur).toUpperCase()||'EUR',prod:g(ci.prod),amt:Math.round(((isNaN(a)?0:a)-Math.abs(fee))*100)/100};
-    o.key=impKey(o.desc);o.h=(hash([g(ci.start),g(ci.done),o.desc,g(ci.amt),g(ci.fee),g(ci.bal)].join('|'))).toString(36)+'.'+o.date.replace(/-/g,'');return o}).filter(o=>o.date&&o.amt)}
+  const out=[];let map=null,secCur='EUR';
+  const find=(h,...n)=>h.findIndex(x=>n.some(k=>x===k||x.startsWith(k)));
+  for(const r of rows){const cells=r.map(x=>(x||'').trim()),low=cells.map(x=>x.toLowerCase()),first=cells.find(Boolean)||'';
+    const cm=first.match(/\((EUR|USD|GBP|CHF|PLN|SEK|NOK|DKK|CZK|HUF|RON|JPY|AUD|CAD)\)/);if(cm&&cells.filter(Boolean).length<=2){secCur=cm[1];map=null;continue}
+    const di=find(low,'description','descrizione','dettagli','causale','beneficiario'),dt=find(low,'completed date','data di completamento','data completamento','started date','data di inizio','data','date');
+    const ai=find(low,'amount','importo','denaro','ammontare','valore'),ui=find(low,'uscite','addebiti','money out','paid out','debit','addebito'),ei=find(low,'entrate','accrediti','money in','paid in','credit','accredito');
+    if(di>-1&&dt>-1&&(ai>-1||ui>-1||ei>-1)){map={type:find(low,'type','tipo','categoria','category'),start:find(low,'started date','data di inizio'),done:find(low,'completed date','data di completamento','data completamento'),date:dt,desc:di,amt:ai,out:ui,inn:ei,
+      fee:find(low,'fee','commissione','costi','costo','tariffa'),cur:find(low,'currency','valuta'),state:find(low,'state','stato'),bal:find(low,'balance','saldo')};continue}
+    if(!map)continue;const g=i=>i>=0?(cells[i]||''):'';
+    const date=isoDate(g(map.done))||isoDate(g(map.start))||isoDate(g(map.date));if(!date)continue;
+    let a;if(map.amt>-1)a=numAmt(g(map.amt));else{const o=numAmt(g(map.out)),n=numAmt(g(map.inn));a=(isNaN(n)?0:Math.abs(n))-(isNaN(o)?0:Math.abs(o))}
+    if(isNaN(a)||!a)continue;const fee=numAmt(g(map.fee))||0,raw=g(map.amt>-1?map.amt:(map.out>-1?map.out:map.inn));
+    const sym=/\$/.test(raw)?'USD':/£/.test(raw)?'GBP':/€/.test(raw)?'EUR':'';
+    const o={date,m:date.slice(0,7),desc:g(map.desc)||'(senza descrizione)',type:g(map.type).toUpperCase(),state:g(map.state).toUpperCase(),cur:(g(map.cur).toUpperCase()||sym||secCur),amt:Math.round((a-Math.abs(fee))*100)/100};
+    o.key=impKey(o.desc);o.h=hash([g(map.start),g(map.done),g(map.date),o.desc,raw,g(map.out),g(map.inn),g(map.fee),g(map.bal)].join('|')).toString(36)+'.'+date.replace(/-/g,'');out.push(o)}
+  if(!out.length){if(/riepilog|summary/i.test(text.slice(0,400)))throw new Error('questo è il riepilogo del conto (saldi e interessi), non l\'elenco dei movimenti. Su Revolut esporta l\'"Estratto conto" in formato Excel/CSV.');
+    throw new Error('non trovo l\'elenco dei movimenti: serve l\'estratto conto con le colonne Data, Descrizione e Importo')}
+  return out}
 let impState=null;
 function openImport(){if(!finKey){toast('Sblocca prima il bilancio');return}
   openModal('Importa movimenti Revolut',`<div class="grid" data-fin>
@@ -2380,7 +2397,7 @@ function openImport(){if(!finKey){toast('Sblocca prima il bilancio');return}
     <p class="full fl-err" id="impErr"></p></div>`);
   $('impFile').onchange=async ev=>{const fl=ev.target.files[0];if(!fl)return;try{const rows=parseRevolut(await fl.text());if(!rows.length)throw new Error('nessun movimento trovato');
     impState={rows,mode:'cat',exTop:true,exEx:true,inc:true,ov:{},all:false};renderImport()}catch(e){$('impErr').textContent='Non riesco a leggere il file: '+e.message}}}
-const isTop=r=>/TOPUP|TOP-UP|RICARICA/i.test(r.type),isEx=r=>/EXCHANGE|CAMBIO/i.test(r.type),isRef=r=>/REFUND|RIMBORSO|STORNO/i.test(r.type)||(r.amt>0&&/CARD/i.test(r.type));
+const isTop=r=>/TOPUP|TOP-UP|RICARICA/i.test(r.type)||/^(top-?up|ricarica)\b/i.test(r.desc),isEx=r=>/EXCHANGE|CAMBIO/i.test(r.type)||/^(exchanged|cambiat|cambio valuta|convertit)/i.test(r.desc),isRef=r=>r.amt>0&&(/REFUND|RIMBORSO|STORNO/i.test(r.type)||/CARD|ESERCENTE|MERCHANT/i.test(r.type)||/^(rimborso|refund|storno)\b/i.test(r.desc));
 function impSel(){const st=impState,done=new Set((fin.find(o=>o.t==='imp')||{}).h||[]);const out={ok:[],dup:0,skip:0,cur:0};
   st.rows.forEach(r=>{if(done.has(r.h)){out.dup++;return}if(r.state&&!/COMPLETED|COMPLETAT|ESEGUIT/.test(r.state)){out.skip++;return}if(r.cur!=='EUR'){out.cur++;return}
     if((st.exTop&&isTop(r))||(st.exEx&&isEx(r))){out.skip++;return}if(r.amt>0&&!isRef(r)&&!st.inc){out.skip++;return}out.ok.push(r)});return out}
