@@ -36,6 +36,10 @@ nav button svg{width:17px;height:17px;flex:none}
 nav button.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
 .spacer{flex:1}
 .menu{position:absolute;right:16px;top:calc(100% + 4px);background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.18);padding:6px;min-width:240px;display:flex;flex-direction:column;z-index:30}
+.ic{width:17px;height:17px;flex:none;vertical-align:-3px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ic-lg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.btn .ic{margin-right:5px}.btn.icon-only .ic{margin:0}
+.mi .ic{color:var(--muted)}
 .mi{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;padding:10px 12px;border-radius:8px;font:inherit;color:var(--text);cursor:pointer}
 .mi:hover{background:var(--bg)}
 label.mi{flex-direction:row;font-size:inherit}
@@ -379,6 +383,13 @@ label.donechk{flex-direction:row;align-items:center;gap:10px;align-self:end;padd
 .g-cell:hover{outline:2px solid color-mix(in srgb,var(--text) 30%,transparent)}
 
 #goalList .ri-v{font-size:15px}
+.v-ic .ic{width:15px;height:15px}
+.src-b{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:4px;font-size:10px;font-weight:800;margin-right:5px;vertical-align:1px;background:color-mix(in srgb,var(--c,#4285f4) 22%,transparent);color:var(--text)}
+.un-b{font-size:11px;font-weight:700;color:#b26a00;background:color-mix(in srgb,#f5a623 20%,transparent);border-radius:999px;padding:1px 7px;margin-left:6px}
+.pers-h{display:flex;justify-content:space-between;align-items:center}
+.pers-h .icon-only{padding:6px 9px}
+#tmP{margin-top:4px}
+.seg3{width:fit-content}
 /* eventi da Google Calendar: colore pieno chiaro, sola lettura */
 .ev.gev{background:color-mix(in srgb,var(--c) 18%,var(--card))!important;border-left:3px solid var(--c)}
 .ev.gev b{color:color-mix(in srgb,var(--c) 70%,var(--text))}
@@ -606,7 +617,7 @@ main .sec.fold>span:first-child{display:inline-flex;align-items:center;gap:6px}
 </head>
 <body data-tab="registro">
 <header>
-  <div class="area-sw" id="areaSw" role="tablist" aria-label="Area"><button data-area="agenda" class="on">Agenda</button><button data-area="fin">🔒 Bilancio</button></div>
+  <div class="area-sw" id="areaSw" role="tablist" aria-label="Area"><button data-area="agenda" class="on">Agenda</button><button data-area="fin"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Bilancio</button></div>
   <nav id="nav">
     <button class="na" data-tab="registro" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Registro</span></button>
     <button class="na" data-tab="riepilogo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 21h18M6 17v-6M12 17V5M18 17v-9"/></svg><span>Riepilogo</span></button>
@@ -622,22 +633,22 @@ main .sec.fold>span:first-child{display:inline-flex;align-items:center;gap:6px}
   <button class="btn hidden" id="syncBtn" aria-label="Sincronizzazione"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 8.5a4 4 0 0 1-.5 9.5z"/></svg></button>
   <button class="btn" id="menuBtn" title="Menu" aria-label="Menu">⋯</button>
   <div class="menu hidden" id="menu">
-    <button class="mi nf" id="miFinLock">🔒 Blocca il bilancio</button>
-    <button class="mi nf" id="miFinPass">🔑 Cambia password del bilancio</button>
-    <button class="mi nf" id="miFinRec">🧩 Nuovo codice di recupero</button>
-    <button class="mi nf" id="miFinImp">⬆︎ Importa movimenti Revolut (CSV)</button>
-    <button class="mi nf" id="miFinCsv">⬇︎ Esporta bilancio (CSV)</button>
+    <button class="mi nf" id="miFinLock"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Blocca il bilancio</button>
+    <button class="mi nf" id="miFinPass"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/></svg> Cambia password del bilancio</button>
+    <button class="mi nf" id="miFinRec"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg> Nuovo codice di recupero</button>
+    <button class="mi nf" id="miFinImp"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg> Importa movimenti Revolut (CSV)</button>
+    <button class="mi nf" id="miFinCsv"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 20h16"/></svg> Esporta bilancio (CSV)</button>
     <div class="mi-sep nf"></div>
-    <button class="mi" id="miSync">🔄 Sincronizzazione tra dispositivi</button>
-    <button class="mi na" id="miGcal">📅 Calendari Google</button>
-    <button class="mi na" id="miManage">🎨 Clienti, attività e colori</button>
-    <button class="mi" id="miInstall">📲 Installa come app</button>
+    <button class="mi" id="miSync"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14-4.5L4 9M4 4v5h5M4 13a8 8 0 0 0 14 4.5L20 15M20 20v-5h-5"/></svg> Sincronizzazione tra dispositivi</button>
+    <button class="mi na" id="miGcal"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg> Calendari Google</button>
+    <button class="mi na" id="miManage"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.6-.9 1.2-1.8-.5-1-.1-2.2 1.2-2.2H17a4 4 0 0 0 4-4c0-5.5-4-10-9-10z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></svg> Clienti, tipi e colori</button>
+    <button class="mi" id="miInstall"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg> Installa come app</button>
     <div class="mi-sep"></div>
-    <button class="mi" id="exportCsv">⬇︎ Esporta CSV (Excel)</button>
-    <button class="mi" id="exportJson">💾 Backup completo (JSON)</button>
+    <button class="mi" id="exportCsv"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 20h16"/></svg> Esporta CSV (Excel)</button>
+    <button class="mi" id="exportJson"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/></svg> Backup completo (JSON)</button>
     <div class="mi-sep"></div>
-    <button class="mi" id="miUpdate">⟳ Aggiorna l'app<span class="muted" id="appVer" style="margin-left:auto;font-size:12px"></span></button>
-    <label class="mi">📂 Importa backup o CSV<input type="file" id="importFile" accept=".json,.csv,application/json,text/csv" hidden></label>
+    <button class="mi" id="miUpdate"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7L20 8.6M20 4v4.6h-4.6"/></svg> Aggiorna l'app<span class="muted" id="appVer" style="margin-left:auto;font-size:12px"></span></button>
+    <label class="mi"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Importa backup o CSV<input type="file" id="importFile" accept=".json,.csv,application/json,text/csv" hidden></label>
   </div>
 </header>
 
@@ -664,8 +675,8 @@ main .sec.fold>span:first-child{display:inline-flex;align-items:center;gap:6px}
   <div class="card list" id="impList" style="padding:4px 0"></div></div>
   <div class="sec fold" data-fold="todo"><span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>Da fare</span><span class="sec-r"><button class="link hidden" id="todoCarry"></button> <span id="todoCount"></span></span></div>
   <div class="card list" id="todoList" style="padding:4px 0" data-empty="Niente in lista. Aggiungi un'attività con ＋."></div>
-  <div class="sec fold" data-fold="done"><span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>Svolte</span><span class="sec-r" id="dayCount"></span></div>
-  <div class="card list" id="dayDone" style="padding:4px 0" data-empty="Nessuna attività registrata."></div>
+  <div class="sec fold" data-fold="done"><span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>Concluse</span><span class="sec-r" id="dayCount"></span></div>
+  <div class="card list" id="dayDone" style="padding:4px 0" data-empty="Nessuna attività conclusa."></div>
   <div class="sec fold" data-fold="goal"><span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>Obiettivi</span><span class="sec-r"><button class="link" id="goalAdd">+ Obiettivo</button></span></div>
   <div class="card list" id="goalList" style="padding:4px 0" data-empty="Nessun obiettivo. Premi ＋ e scegli Obiettivo: ad esempio &quot;Cercare un nuovo lavoro&quot; entro una data."></div>
   <datalist id="dl_client"></datalist><datalist id="dl_type"></datalist>
@@ -678,13 +689,18 @@ main .sec.fold>span:first-child{display:inline-flex;align-items:center;gap:6px}
     <div class="sum-nav"><button class="icon-btn2" id="sPrev" aria-label="Periodo precedente">‹</button><span id="sLabel"></span><button class="icon-btn2" id="sNext" aria-label="Periodo successivo">›</button></div>
   </div>
   <div class="sum-bar">
-    <div class="seg" id="sBy"><button data-v="client">Clienti</button><button data-v="type">Attività</button></div>
+    <div class="seg" id="sBy"><button data-v="client">Clienti</button><button data-v="type">Tipi</button><button data-v="src">Fonte</button></div>
     <div class="filt-wrap"><button class="pill" id="sAll">Tutti i dati</button><select id="sFilt" aria-label="Filtra"></select></div>
   </div>
   <div class="sum-total"><div class="sum-line"><div class="sum-big" id="sTot">0h 00m</div><button class="info-btn" id="sInfo" aria-label="Riepilogo a parole" title="Riepilogo a parole">i</button></div><div class="sum-sub" id="sSub"></div></div>
   <div id="tm" class="tm"></div>
   <p class="muted sum-hint" id="sHint">Tocca un riquadro per vedere cosa contiene.</p>
 
+  <div id="sUnW" class="hidden"><div class="sec"><span>Da classificare</span><span class="sec-r" id="sUnN"></span></div>
+    <p class="muted" style="margin:-2px 4px 8px;font-size:13px">Eventi di Google Calendar di lavoro senza cliente: sono già nel totale, assegnali per vederli nel cliente giusto.</p>
+    <div class="card list" id="sUn" style="padding:4px 0"></div></div>
+  <div id="sPersW" class="hidden"><div class="sec pers-h"><span>Tempo personale</span><span class="sec-r"><span id="sPersT"></span> <button class="btn small icon-only" id="sPersEye" title="Mostra o nascondi"></button></span></div>
+    <div id="sPersBody"><div class="sum-sub" id="sPersSub" style="margin:0 4px 8px"></div><div id="tmP" class="tm"></div></div></div>
   <div id="sGoalsW" class="hidden"><div class="sec"><span>Obiettivi</span><span class="sec-r" id="sGoalsSub"></span></div><div class="card list" id="sGoals" style="padding:4px 0"></div></div>
   <div class="sec"><span>Dati</span></div>
   <div class="card">
@@ -692,7 +708,7 @@ main .sec.fold>span:first-child{display:inline-flex;align-items:center;gap:6px}
     <div class="tablewrap"><table id="r_pivot"></table></div>
   </div>
   <div class="card">
-    <h2>Durata media per attività</h2>
+    <h2>Durata media per tipo</h2>
     <div class="list avg" id="r_avg"></div>
   </div>
 
@@ -717,7 +733,7 @@ main .sec.fold>span:first-child{display:inline-flex;align-items:center;gap:6px}
   <div class="card" style="padding:12px"><div id="calBody"></div></div>
   <div class="sum-bar" style="align-items:flex-start">
     <div id="calLegend" style="flex:1;min-width:0"></div>
-    <div class="row" style="gap:6px"><select id="calBy" aria-label="Colora per"><option value="client">Colori per cliente</option><option value="type">Colori per attività</option></select><button class="btn small" id="calColors" title="Modifica colori">🎨</button><button class="btn small" id="calFit" title="Adatta la giornata allo schermo"></button><button class="btn small" id="calGoogle" title="Calendari Google"><span class="gst" id="calGst"></span>Google</button></div>
+    <div class="row" style="gap:6px"><select id="calBy" aria-label="Colora per"><option value="client">Colori per cliente</option><option value="type">Colori per attività</option></select><button class="btn small" id="calColors" title="Modifica colori" aria-label="Modifica colori"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.6-.9 1.2-1.8-.5-1-.1-2.2 1.2-2.2H17a4 4 0 0 0 4-4c0-5.5-4-10-9-10z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></svg></button><button class="btn small" id="calFit" title="Adatta la giornata allo schermo"></button><button class="btn small" id="calGoogle" title="Calendari Google"><span class="gst" id="calGst"></span>Google</button></div>
   </div>
   <p class="muted" style="font-size:12px;margin:2px 4px 0" id="calHint">Trascina sulla griglia dall'ora di inizio a quella di fine per aggiungere un'attività. Sul telefono tieni premuto, poi trascina.</p>
 </section>
@@ -726,7 +742,7 @@ main .sec.fold>span:first-child{display:inline-flex;align-items:center;gap:6px}
 <!-- BILANCIO (dati cifrati) -->
 <section id="tab-flock" class="hidden">
   <div class="card lockc">
-    <div class="lock-ic" aria-hidden="true">🔒</div>
+    <div class="lock-ic" aria-hidden="true"><svg class="ic-lg" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
     <h2 id="flTitle">Bilancio protetto</h2>
     <p class="muted" id="flText" style="margin:0"></p>
     <form id="flForm" autocomplete="on">
@@ -763,7 +779,7 @@ main .sec.fold>span:first-child{display:inline-flex;align-items:center;gap:6px}
   <div class="card list" id="fmIn" style="padding:4px 0" data-empty="Nessuna entrata in questo mese."></div>
   <div id="fmCatW" class="hidden"><div class="sec fold" data-fold="fcat"><span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>Spese per categoria</span><span class="sec-r" id="fmCatT"></span></div>
   <div class="card" id="fmCat"></div></div>
-  <div class="row" style="justify-content:center;gap:8px;margin-top:6px;flex-wrap:wrap"><button class="btn small" id="fmCopy">↻ Copia voci dal mese precedente</button><button class="btn small" id="fmImp">⬆︎ Importa da Revolut</button></div>
+  <div class="row" style="justify-content:center;gap:8px;margin-top:6px;flex-wrap:wrap"><button class="btn small" id="fmCopy"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7L20 8.6M20 4v4.6h-4.6"/></svg>Copia voci dal mese precedente</button><button class="btn small" id="fmImp"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg>Importa da Revolut</button></div>
 </section>
 <section id="tab-fanno" class="hidden">
   <div class="hero fin-hero">
@@ -853,7 +869,7 @@ main .sec.fold>span:first-child{display:inline-flex;align-items:center;gap:6px}
     <form id="chatForm" class="row" style="margin-top:10px">
       <input id="chatInput" placeholder="Scrivi una domanda…" style="flex:1;min-width:180px">
       <button class="btn primary">Invia</button>
-      <button class="btn" type="button" id="chatReset" title="Nuova conversazione">↺</button>
+      <button class="btn" type="button" id="chatReset" title="Nuova conversazione" aria-label="Nuova conversazione"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.7L4 8.6M4 4v4.6h4.6"/></svg></button>
     </form>
     <p class="muted" id="aiFinSt" style="font-size:12.5px;margin:8px 2px 0"></p>
     <details style="margin-top:12px" id="aiDetails">
@@ -937,7 +953,7 @@ const nowTime=()=>{const d=new Date();return `${pad(d.getHours())}:${pad(d.getMi
 const toMin=t=>{if(typeof t!=='string'||!/^\d{1,2}:\d{2}/.test(t))return null;const[h,m]=t.split(':').map(Number);return h*60+m};
 /* voce valida: data AAAA-MM-GG e orario di inizio (le voci senza orario arrivano da import di file diversi) */
 const validE=e=>!!e&&/^\d{4}-\d{2}-\d{2}$/.test(e.date||'')&&toMin(e.start)!=null&&(!e.end||toMin(e.end)!=null);
-function durMin(e){const s=toMin(e.start),f=toMin(e.end);if(s==null||f==null)return 0;let d=f-s;if(d<0)d+=1440;return d}
+function durMin(e){if(e.dur!=null)return e.dur;const s=toMin(e.start),f=toMin(e.end);if(s==null||f==null)return 0;let d=f-s;if(d<0)d+=1440;return d}
 const fmtH=m=>{m=Math.round(m);return `${Math.floor(m/60)}h ${pad(m%60)}m`};
 const fmtDec=m=>(m/60).toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmtDate=d=>{const[y,m,g]=d.split('-');return `${g}/${m}/${y}`};
@@ -972,7 +988,8 @@ function pickColor(k,n){const used={};Object.values(colors[k]).forEach(v=>used[v
   for(let i=0;i<PAL.length;i++){const c=PAL[(st+i)%PAL.length],u=used[c]||0;if(u<bc){bc=u;best=c}}return best}
 const peekColor=(k,n)=>n?(colors[k][n]||pickColor(k,n)):'#b8c2bf';
 function colorOf(k,n){
-  if(!n||n==='(senza tag)')return '#8a8a85';
+  if(!n||n==='(senza tag)'||n==='Senza cliente'||n==='Senza tipo'||n==='—')return '#8a8a85';
+  if(k==='src')return SRCC[n]||'#8a8a85';if(!colors[k])colors[k]={};
   if(colors[k][n])return colors[k][n];
   const best=pickColor(k,n);colors[k][n]=best;if(!colorDirty){colorDirty=true;setTimeout(()=>{colorDirty=false;saveC()},800)}
   return best;
@@ -1015,9 +1032,10 @@ function fieldsHTML(p){return `
   <label>Tipo di attività<input id="${p}type" list="dl_type" placeholder="es. Grafica" required></label>
   <label>Inizio<div class="timewrap"><input type="time" id="${p}start" required><button type="button" class="btn" data-now="${p}start">Ora</button></div></label>
   <label>Fine<div class="timewrap"><input type="time" id="${p}end"><button type="button" class="btn" data-now="${p}end">Ora</button></div></label>
-  <label class="full">Note<input id="${p}note" placeholder="Descrizione facoltativa"></label>${goalField(p+'goal','')}`}
-function readFields(p){const v={date:$(p+'date').value,client:$(p+'client').value.trim(),type:$(p+'type').value.trim(),start:$(p+'start').value,end:$(p+'end').value,note:$(p+'note').value.trim()};if($(p+'goal'))v.goal=$(p+'goal').value;if($(p+'tags'))v.tags=splitTags($(p+'tags').value);return v}
-function fillFields(p,e){e=e||{};$(p+'date').value=e.date||todayStr();$(p+'client').value=e.client||'';$(p+'type').value=e.type||'';if($(p+'tags'))$(p+'tags').value=tagsOf(e).join(', ');$(p+'start').value=e.start||'';$(p+'end').value=e.end||'';$(p+'note').value=e.note||'';if($(p+'goal')){if(e.goal&&![...$(p+'goal').options].some(o=>o.value===e.goal))$(p+'goal').innerHTML=goalOpts(e.goal);$(p+'goal').value=e.goal||''}}
+  <label class="full">Note<input id="${p}note" placeholder="Descrizione facoltativa"></label>
+  <label>Ambito<select id="${p}area"><option value="lav">Lavoro</option><option value="per">Personale</option></select></label>${goalField(p+'goal','')}`}
+function readFields(p){const v={date:$(p+'date').value,client:$(p+'client').value.trim(),type:$(p+'type').value.trim(),start:$(p+'start').value,end:$(p+'end').value,note:$(p+'note').value.trim()};if($(p+'goal'))v.goal=$(p+'goal').value;if($(p+'area'))v.area=$(p+'area').value;if($(p+'tags'))v.tags=splitTags($(p+'tags').value);return v}
+function fillFields(p,e){e=e||{};$(p+'date').value=e.date||todayStr();$(p+'client').value=e.client||'';$(p+'type').value=e.type||'';if($(p+'tags'))$(p+'tags').value=tagsOf(e).join(', ');$(p+'start').value=e.start||'';$(p+'end').value=e.end||'';$(p+'note').value=e.note||'';if($(p+'area'))$(p+'area').value=e.area||'lav';if($(p+'goal')){if(e.goal&&![...$(p+'goal').options].some(o=>o.value===e.goal))$(p+'goal').innerHTML=goalOpts(e.goal);$(p+'goal').value=e.goal||''}}
 function renderTagPick(p){
   const el=$(p+'tagpick');if(!el)return;const cur=splitTags($(p+'tags').value);
   el.innerHTML=uniq([...allTags(),...cur]).map(t=>{const c=colorOf('tag',t);return `<span class="tag ${cur.includes(t)?'on':''}" data-t="${esc(t)}" style="background:${c}22;color:${c}"><i style="background:${c}"></i><span style="color:var(--text)">${esc(t)}</span></span>`}).join('');
@@ -1058,7 +1076,7 @@ function openAdd(pre={}){
     <label class="qm-time">Fine<input type="time" id="q_end"></label>
     <div class="full muted" id="q_dur" style="font-size:13px"></div>
     ${goalField('q_goal',pre.goal||'')}
-    <div class="row full btns" style="flex-wrap:nowrap"><button type="button" class="btn" id="qList">Aggiungi alla lista</button><button type="button" class="btn primary" id="qStart">▶ Inizia attività</button></div></form>`);
+    <div class="row full btns" style="flex-wrap:nowrap"><button type="button" class="btn" id="qList">Aggiungi alla lista</button><button type="button" class="btn primary" id="qStart"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z" fill="currentColor" stroke="none"/></svg>Inizia attività</button></div></form>`);
   $('q_date').value=pre.date||$('t_date').value||todayStr();
   if(pre.note)$('q_note').value=pre.note;if(pre.client)$('q_client').value=pre.client;if(pre.type)$('q_type').value=pre.type;
   const e=toMin(nowTime());$('q_start').value=pre.start||minToT(Math.max(0,e-60));$('q_end').value=pre.end||minToT(e);
@@ -1098,11 +1116,12 @@ function openEntry(id,prefill){
   const e=id?entries.find(x=>x.id===id):prefill;if(id&&!e)return;modalId=id||null;modalPrefill=id?null:(prefill||null);
   openModal(id?'Modifica attività':'Nuova attività',`<form id="mForm" class="grid" autocomplete="off">${fieldsHTML('m_')}
     <div class="row full" style="margin-top:4px"><button class="btn primary">${id?'Salva':'Aggiungi'}</button>
-    ${id?`<button type="button" class="btn" onclick="resumeEntry('${id}')">▶ Riprendi ora</button><button type="button" class="btn danger" onclick="delEntry('${id}')">Elimina</button>`:''}
+    ${id?`<button type="button" class="btn" onclick="resumeEntry('${id}')"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z" fill="currentColor" stroke="none"/></svg>Riprendi ora</button><button type="button" class="btn danger" onclick="delEntry('${id}')">Elimina</button>`:''}
     <span class="muted" id="m_dur"></span></div></form>`);
   fillFields('m_',e);renderTagPick('m_');updPreview('m_');
   $('mForm').onsubmit=ev=>{ev.preventDefault();const v=readFields('m_');
-    if(!v.goal)delete v.goal;
+    if(!v.goal)delete v.goal;if(v.area!=='per')delete v.area;
+    if(modalId){const x0=entries.find(x=>x.id===modalId);if(x0&&v.area===undefined)delete x0.area}
     if(modalId){const x=entries.find(x=>x.id===modalId);Object.assign(x,v);if(!v.goal&&$('m_goal'))delete x.goal}else{v.id=uid();if(modalPrefill&&modalPrefill.todo)v.todo=modalPrefill.todo;entries.push(v)}
     save();closeModal();renderAll();toast(modalId?'Modifiche salvate':'Attività aggiunta')};
 }
@@ -1115,7 +1134,7 @@ function delEntry(id){if(!confirm('Eliminare questa voce?'))return;entries=entri
 let listLimit=30;
 function renderLists(){
   const fill=(id,vals)=>$(id).innerHTML=vals.map(v=>`<option value="${esc(v)}">`).join('');
-  fill('dl_client',uniq([...entries.map(e=>e.client),...todos.map(t=>t.client)]));fill('dl_type',uniq(entries.map(e=>e.type)));
+  fill('dl_client',uniq([...entries.map(e=>e.client),...todos.map(t=>t.client),...events.map(v=>v.client),...Object.values((typeof gcal!=='undefined'&&gcal.meta)||{}).map(m=>m.client)].filter(Boolean)));fill('dl_type',uniq([...entries.map(e=>e.type),...todos.map(t=>t.type),...events.map(v=>v.type),...Object.values((typeof gcal!=='undefined'&&gcal.meta)||{}).map(m=>m.type),'Call','Riunione'].filter(Boolean)));
 }
 function dayLabel(d){const t=todayStr();if(d===t)return'Oggi';if(d===dStr(addDays(new Date(),-1)))return'Ieri';
   const x=parseD(d);return x.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:x.getFullYear()===new Date().getFullYear()?undefined:'numeric'})}
@@ -1126,6 +1145,11 @@ function itemHtml(e){
   return `<div class="ri" onclick="openEntry('${e.id}')">${avHtml(e.client)}<div class="ri-m"><div class="ri-t">${esc(e.note||e.type)}</div>
   <div class="ri-s">${gTag(e.goal)}${esc(e.client)}${e.note?' · '+esc(e.type):''} · ${e.start}–${e.end||'in corso'}</div></div>
   <div class="ri-v">${e.end?fmtH(durMin(e)):`<button class="btn small primary" onclick="event.stopPropagation();stopEntry('${e.id}')">Stop</button>`}</div></div>`}
+/* evento con orario già concluso e di lavoro: sta tra le "Concluse" (o è coperto da un'attività registrata), non tra gli impegni */
+function doneWork(v){if(v.allDay||v.to)return false;const x=v.end==='24:00'?1440:toMin(v.end),now=todayStr();if(x==null||v.date>now||(v.date===now&&x>toMin(nowTime())))return false;
+  const c=v.g?gClass(v):{area:v.area||'per',skip:!!v.skip};return !c.skip&&c.area==='lav'}
+function evItemHtml(x){return `<div class="ri" onclick="openEv('${x.ev}')"><span class="av" style="background:${x.color||'#4285f4'}24;color:${x.color||'#4285f4'}">${x.src==='gcal'?'G':esc(initials(x.client||x.note))}</span><div class="ri-m"><div class="ri-t">${esc(x.note)}${x.un?'<span class="un-b">da classificare</span>':''}</div>
+  <div class="ri-s">${esc([x.client,x.type].filter(Boolean).join(' · ')||(x.src==='gcal'?'Google Calendar':'Impegno'))} · ${esc(x.start)}–${esc(x.end)}</div></div><div class="ri-v">${fmtH(x.dur)}</div></div>`}
 function renderEntries(){
   const q=$('search').value.toLowerCase(),[f,t]=sRange(sPer,sRef);
   const list=entries.filter(e=>e.date>=f&&e.date<=t&&filtMatch(e,sFilt)&&(!q||[e.client,e.type,e.note,...tagsOf(e)].join(' ').toLowerCase().includes(q)))
@@ -1154,7 +1178,7 @@ setInterval(()=>{const run=entries.filter(e=>!e.end&&validE(e)),shown=[...docume
   document.querySelectorAll('[data-run]').forEach(el=>{const e=entries.find(x=>x.id===el.dataset.run);if(e&&!e.end)el.textContent=fmtClock(elapsed(e))})},1000);
 setInterval(()=>{if(document.visibilityState==='visible'){if(linkGoals()){goalSaved();saveV();save();saveT();renderAll()}else renderTodos()}},60000);
 
-/* ================= Oggi: da fare + svolte ================= */
+/* ================= Oggi: da fare + concluse ================= */
 $('t_date').value=todayStr();
 function renderTodos(){
   const d=$('t_date').value||todayStr();const list=todos.filter(t=>t.date===d).sort((a,b)=>a.done-b.done);
@@ -1168,15 +1192,16 @@ function renderTodos(){
     <button class="chk ${t.done?'on':''}" onclick="toggleTodo('${t.id}')" aria-label="${t.done?'Segna da fare':'Completa'}">✓</button>
     <div class="ri-m" onclick="editTodo('${t.id}')"><div class="ri-t">${esc(t.text)}</div><div class="ri-s">${gTag(t.goal)}${esc([t.client,t.type].filter(Boolean).join(' · ')||'Tocca per aggiungere cliente e tipo')}</div></div>
     ${spent[t.id]?`<div class="ri-v" style="font-weight:600;color:var(--muted);font-size:14px">${fmtH(spent[t.id])}</div>`:''}
-    ${running.has(t.id)?'<span class="live" title="In corso"></span>':t.done?'':`<button class="play" title="Avvia il tempo" aria-label="Avvia" onclick="startTodo('${t.id}')">▶</button>`}</div>`).join('');
+    ${running.has(t.id)?'<span class="live" title="In corso"></span>':t.done?'':`<button class="play" title="Avvia il tempo" aria-label="Avvia" onclick="startTodo('${t.id}')"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z" fill="currentColor" stroke="none"/></svg></button>`}</div>`).join('');
   const open=list.filter(t=>!t.done).length;$('todoCount').textContent=list.length?`${list.length-open}/${list.length}`:'';
   const prev=dStr(addDays(parseD(d),-1)),carry=todos.filter(t=>t.date===prev&&!t.done).length;
   $('todoCarry').textContent=carry?`Riporta ${carry} da ieri ·`:'';$('todoCarry').classList.toggle('hidden',!carry);
-  const ev=entries.filter(e=>e.date===d&&validE(e)).sort((a,b)=>b.start.localeCompare(a.start));
-  const tot=ev.reduce((s,e)=>s+(e.end?durMin(e):Math.floor(elapsed(e)/60)),0);
-  $('dayDone').innerHTML=ev.map(itemHtml).join('');
+  const ev0=entries.filter(e=>e.date===d&&validE(e)&&areaOf(e)==='lav'),xt=tItems(d,d).filter(x=>x.ev&&areaOf(x)==='lav');
+  const ev=[...ev0,...xt].sort((a,b)=>b.start.localeCompare(a.start));
+  const tot=ev.reduce((s,e)=>s+(e.ev||e.end?durMin(e):Math.floor(elapsed(e)/60)),0);
+  $('dayDone').innerHTML=ev.map(e=>e.ev?evItemHtml(e):itemHtml(e)).join('');
   $('dayTotal').textContent=fmtH(tot);
-  $('daySub').textContent=`lavorate · ${ev.length} ${ev.length===1?'attività':'attività'}${open?` · ${open} da fare`:''}`;
+  $('daySub').textContent=`lavorate · ${ev.length} ${ev.length===1?'attività':'attività'}${xt.length?` (${xt.length} da calendario)`:''}${open?` · ${open} da fare`:''}`;
   $('dayCount').textContent=ev.length?String(ev.length):'';
   renderQLink();renderGoals();renderEvents();
 }
@@ -1199,7 +1224,7 @@ function completeTodo(id){const t=todos.find(x=>x.id===id);renderTodos();
     <div class="row full" style="margin-top:4px"><button class="btn primary">✓ Salva e completa</button><button type="button" class="btn" id="cNoTime">Completa senza tempo</button><span class="muted" id="m_dur"></span></div></form>`);
   fillFields('m_',{date:t.date,client:t.client,type:t.type,tags:t.tags||[],start:minToT(startM),end:minToT(endM),note:t.text,goal:t.goal});
   $('m_end').required=true;renderTagPick('m_');updPreview('m_');
-  $('cForm').onsubmit=ev=>{ev.preventDefault();const v=readFields('m_');v.id=uid();v.todo=id;if(!v.goal)delete v.goal;else setGoal(t,v.goal);if(v.goal&&v.date===t.date)v.gm=v.goal+'|'+v.date;entries.push(v);
+  $('cForm').onsubmit=ev=>{ev.preventDefault();const v=readFields('m_');if(v.area!=='per')delete v.area;v.id=uid();v.todo=id;if(!v.goal)delete v.goal;else setGoal(t,v.goal);if(v.goal&&v.date===t.date)v.gm=v.goal+'|'+v.date;entries.push(v);
     t.done=true;if(!t.client)t.client=v.client;if(!t.type)t.type=v.type;saveT();save();closeModal();renderAll();toast('Completata · '+fmtH(durMin(v)))};
   $('cNoTime').onclick=()=>{t.done=true;saveT();closeModal();renderTodos();toast('Completata senza tempo')};
 }
@@ -1210,7 +1235,7 @@ function editTodo(id){const t=todos.find(x=>x.id===id);if(!t)return;
     <label>Giorno<input type="date" id="n_date" required></label>
     <label style="flex-direction:row;align-items:center;gap:8px;color:var(--text);font-size:14px;align-self:center"><input type="checkbox" id="n_done" style="width:18px;height:18px">Completata</label>
     ${goalField('n_goal',t.goal||'')}
-    <div class="row full"><button class="btn primary">Salva</button><button type="button" class="btn" onclick="closeModal();startTodo('${id}')">▶ Avvia</button><button type="button" class="btn danger" onclick="delTodo('${id}');closeModal()">Elimina</button></div></form>`);
+    <div class="row full"><button class="btn primary">Salva</button><button type="button" class="btn" onclick="closeModal();startTodo('${id}')"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z" fill="currentColor" stroke="none"/></svg>Avvia</button><button type="button" class="btn danger" onclick="delTodo('${id}');closeModal()">Elimina</button></div></form>`);
   $('n_text').value=t.text;$('n_client').value=t.client||'';$('n_type').value=t.type||'';$('n_date').value=t.date;$('n_done').checked=!!t.done;
   $('tdForm').onsubmit=ev=>{ev.preventDefault();t.text=$('n_text').value.trim();t.client=$('n_client').value.trim();t.type=$('n_type').value.trim();t.date=$('n_date').value;if($('n_goal')){setGoal(t,$('n_goal').value);entries.filter(e=>e.todo===t.id).forEach(e=>setGoal(e,t.goal));save()}const becomingDone=!t.done&&$('n_done').checked;if(!becomingDone)t.done=$('n_done').checked;saveT();closeModal();renderTodos();renderLists();
     if(becomingDone)toggleTodo(id);else toast('Salvato')};
@@ -1354,8 +1379,11 @@ function editEvent(id,pre){
     <label class="v-time">Fine<input type="time" id="v_end"></label>
     <label class="full">Luogo<input id="v_place" placeholder="facoltativo"></label>
     <label class="full">Nota<input id="v_note" placeholder="facoltativa"></label>
+    <div class="full seg seg3" id="vArea"><button type="button" data-v="per">Personale</button><button type="button" data-v="lav">Lavoro</button></div>
+    <label>Cliente<input id="v_client" list="dl_client" placeholder="facoltativo"></label>
+    <label>Tipo<input id="v_type" list="dl_type" placeholder="es. Call, Medico, Viaggio"></label>
     ${goalField('v_goal',v.goal||'').replace("Quando la completi, l'obiettivo viene spuntato da solo per quel giorno.","Nei giorni dell'impegno l'obiettivo viene spuntato da solo.")}
-    <p class="full muted" style="margin:0;font-size:13px">Gli impegni compaiono nel calendario ma non contano nelle ore di lavoro.</p>
+    <p class="full muted" style="margin:0;font-size:13px">Quando è concluso, un impegno con orario conta nel Riepilogo: tra le ore di lavoro se è "Lavoro", altrimenti nel tempo personale.</p>
     <div class="row full btns" style="flex-wrap:nowrap"><button class="btn primary">Salva</button>${id?'<button type="button" class="btn danger" id="vDel">Elimina</button>':''}</div></form>`);
   const now=toMin(nowTime()),r=Math.min(1380,Math.ceil(now/60)*60);
   $('v_title').value=v.title||'';$('v_date').value=v.date;$('v_to').value=vEnd(v);$('v_all').checked=!!v.allDay;
@@ -1363,23 +1391,27 @@ function editEvent(id,pre){
   $('v_col').value=id?vColor(v):PAL[(6+events.length)%PAL.length];
   const upd=()=>document.querySelectorAll('#vForm .v-time').forEach(x=>x.classList.toggle('hidden',$('v_all').checked));
   $('v_all').onchange=upd;upd();
+  let varea=v.area||(v.client?'lav':'per');const updA=()=>document.querySelectorAll('#vArea button').forEach(b=>b.classList.toggle('active',b.dataset.v===varea));
+  document.querySelectorAll('#vArea button').forEach(b=>b.onclick=()=>{varea=b.dataset.v;updA()});updA();$('v_client').value=v.client||'';$('v_type').value=v.type||'';
+  $('v_client').addEventListener('input',()=>{if($('v_client').value.trim()&&varea==='per'){varea='lav';updA()}});
   $('v_date').addEventListener('change',()=>{if(!$('v_to').value||$('v_to').value<$('v_date').value)$('v_to').value=$('v_date').value});
   $('vForm').onsubmit=ev=>{ev.preventDefault();const f=$('vForm'),all=$('v_all').checked,d=$('v_date').value,to=$('v_to').value||d;
     $('v_title').required=$('v_date').required=true;$('v_start').required=$('v_end').required=!all;
     $('v_to').setCustomValidity(to<d?'La fine deve venire dopo l\'inizio':'');
     $('v_end').setCustomValidity(!all&&to===d&&$('v_end').value&&$('v_end').value<=$('v_start').value?'La fine deve venire dopo l\'inizio':'');
     if(!f.reportValidity())return;
-    const nv={title:$('v_title').value.trim(),date:d,to:to>d?to:'',allDay:all,start:all?'':$('v_start').value,end:all?'':$('v_end').value,place:$('v_place').value.trim(),note:$('v_note').value.trim(),color:$('v_col').value};
+    const nv={title:$('v_title').value.trim(),date:d,to:to>d?to:'',allDay:all,start:all?'':$('v_start').value,end:all?'':$('v_end').value,place:$('v_place').value.trim(),note:$('v_note').value.trim(),color:$('v_col').value,area:varea,client:$('v_client').value.trim(),type:$('v_type').value.trim()};
+    if(!nv.client)delete nv.client;if(!nv.type)delete nv.type;
     const gsel=$('v_goal')?$('v_goal').value:(v.goal||'');
-    let saved;if(id){Object.assign(v,nv);setGoal(v,gsel);saved=v}else{saved={id:uid(),...nv};setGoal(saved,gsel);events.push(saved)}
+    let saved;if(id){Object.assign(v,nv);if(!nv.client)delete v.client;if(!nv.type)delete v.type;setGoal(v,gsel);saved=v}else{saved={id:uid(),...nv};setGoal(saved,gsel);events.push(saved)}
     saveV();closeModal();renderAll();toast('Impegno salvato');if(typeof gPush==='function'&&(saved.gid||gcal.push))gPush(saved)};
   if(id)$('vDel').onclick=()=>{events=events.filter(x=>x.id!==id);saveV();closeModal();renderAll();toast('Impegno eliminato');if(v.gid)gDel(v)};
   if(!id&&!isMobile())setTimeout(()=>$('v_title')&&$('v_title').focus(),50);
 }
 function renderEvents(){
-  const el=$('impList');if(!el)return;const d=$('t_date').value||todayStr(),list=calEv().filter(v=>vOn(v,d)).sort(vSort);
+  const el=$('impList');if(!el)return;const d=$('t_date').value||todayStr(),list=calEv().filter(v=>vOn(v,d)&&!doneWork(v)).sort(vSort);
   $('impWrap').classList.toggle('hidden',!list.length);$('impCount').textContent=list.length>1?String(list.length):'';
-  el.innerHTML=list.map(v=>`<div class="ri" onclick="openEv('${v.id}')"><span class="v-ic" style="--c:${vColor(v)}" aria-hidden="true">${v.g?'G':v.allDay||vBar(v)?'◷':'•'}</span><div class="ri-m"><div class="ri-t">${esc(v.title)}</div><div class="ri-s">${gTag(v.goal)}${esc(vTime(v))}${v.place?' · '+esc(v.place):''}${v.note?' · '+esc(v.note):''}</div></div></div>`).join('');
+  el.innerHTML=list.map(v=>`<div class="ri" onclick="openEv('${v.id}')"><span class="v-ic" style="--c:${vColor(v)}" aria-hidden="true">${v.g?'G':v.allDay||vBar(v)?'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>':'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>'}</span><div class="ri-m"><div class="ri-t">${esc(v.title)}</div><div class="ri-s">${gTag(v.goal)}${esc(vTime(v))}${v.place?' · '+esc(v.place):''}${v.note?' · '+esc(v.note):''}</div></div></div>`).join('');
 }
 $('goalAdd').onclick=()=>openCreate('goal',{date:$('t_date').value||todayStr()});
 
@@ -1467,7 +1499,7 @@ function autoRecap(){
 }
 /* stato del riepilogo */
 let sPer=load('registroOre.sPer','month'),sBy=load('registroOre.sBy','client'),sRef=new Date(),sFilt='';
-if(!['day','week','month','year'].includes(sPer))sPer='month';if(!['client','type'].includes(sBy))sBy='client';
+if(!['day','week','month','year'].includes(sPer))sPer='month';if(!['client','type','src'].includes(sBy))sBy='client';
 function sRange(per,ref){
   if(per==='day'){const d=dStr(ref);return[d,d]}
   if(per==='week'){const m=monday(ref);return[dStr(m),dStr(addDays(m,6))]}
@@ -1481,12 +1513,40 @@ function sLabelOf(per,ref){
   if(per==='month')return cap(ref.toLocaleDateString('it-IT',{month:'long',year:'numeric'}));
   return String(ref.getFullYear());
 }
-const filtMatch=(e,f)=>{if(!f)return true;const[k,...r]=f.split(':');const v=r.join(':');return k==='tag'?tagsOf(e).includes(v):e[k]===v};
-function filtered(range){const[f,t]=range||sRange(sPer,sRef);return entries.filter(e=>e.end&&e.date>=f&&e.date<=t&&filtMatch(e,sFilt))}
-function groupKeys(e,g){if(g==='tag'){const t=tagsOf(e);return t.length?t:['(senza tag)']}return[e[g]||'—']}
+/* ================= Tempo unificato =================
+   Attività registrate, impegni dell'app ed eventi Google conclusi hanno gli stessi campi:
+   ambito (lavoro/personale), cliente e tipo. Dove un evento si sovrappone a un'attività registrata,
+   quella fascia conta una volta sola (vince l'attività). */
+const SRCN={reg:'Registrate',gcal:'Google Calendar',imp:'Impegni'},SRCC={Registrate:'#1f9e89','Google Calendar':'#4285f4',Impegni:'#7b5ea7'};
+const normT=t=>String(t||'').toLowerCase().replace(/\d+/g,' ').replace(/[^a-zà-ÿ&\s]/g,' ').replace(/\s+/g,' ').trim();
+const gKey=v=>v.gid+'|'+v.date+'T'+(v.start||'');
+function gClass(v){const meta=(gcal.meta||{})[gKey(v)],ck=v.src+'|'+v.cal,c=gcal.cals[ck]||{};
+  if(meta)return{area:meta.area||'lav',client:meta.client||'',type:meta.type||'',skip:!!meta.skip,how:'manual'};
+  const nt=normT(v.title),rule=(gcal.rules||[]).find(r=>r.w&&(nt===r.w||nt.includes(r.w)));
+  if(rule)return{area:rule.area||'lav',client:rule.client||'',type:rule.type||'',skip:!!rule.skip,how:'rule'};
+  let area=c.area||(/holiday|#contacts|#weeknum|addressbook/.test(v.cal)?'skip':/@(gmail|googlemail)\.com$/.test(v.cal)?'per':c.own&&/@/.test(v.cal)&&!/group\.calendar/.test(v.cal)?'lav':'per');
+  if(area==='skip')return{area:'per',skip:true,how:'auto'};
+  const cl=uniq(entries.map(e=>e.client)).filter(x=>x&&x.length>=3).sort((a,b)=>b.length-a.length).find(x=>nt.includes(normT(x))&&normT(x));
+  const type=/\b(call|chiamata|videochiamata|meet|zoom|teams|hangout)\b/.test(nt)?'Call':/\b(riunione|meeting|incontro|sync|standup)\b/.test(nt)?'Riunione':'';
+  if(cl)area='lav';return{area,client:cl||'',type,skip:false,how:'auto',un:area==='lav'&&!cl}}
+function tItems(f,t){const out=[],nowS=todayStr(),nowM=toMin(nowTime()),busy={};
+  entries.forEach(e=>{if(!validE(e)||!e.end)return;if(e.date>=f&&e.date<=t)out.push(e);const s=toMin(e.start),x=toMin(e.end);(busy[e.date]=busy[e.date]||[]).push([s,x>s?x:1440])});
+  const ov=(d,s,x)=>{const L=(busy[d]||[]).map(([a,b])=>[Math.max(a,s),Math.min(b,x)]).filter(([a,b])=>b>a).sort((p,q)=>p[0]-q[0]);let tot=0,cur=-1;
+    L.forEach(([a,b])=>{if(a>=cur){tot+=b-a;cur=b}else if(b>cur){tot+=b-cur;cur=b}});return tot};
+  (typeof calEv==='function'?calEv():events).forEach(v=>{if(v.allDay||v.to||v.date<f||v.date>t)return;const s=toMin(v.start),x=v.end==='24:00'?1440:toMin(v.end);if(s==null||x==null||x<=s)return;
+    if(v.date>nowS||(v.date===nowS&&x>nowM))return;
+    const cls=v.g?gClass(v):{area:v.area||'per',client:v.client||'',type:v.type||'',skip:!!v.skip,how:'manual'};if(cls.skip)return;
+    const dur=x-s-ov(v.date,s,x);if(dur<=0)return;
+    out.push({id:'t_'+v.id,ev:v.id,date:v.date,start:v.start,end:v.end==='24:00'?'24:00':v.end,dur,client:cls.client||'',type:cls.type||'',area:cls.area||'lav',src:v.g?'gcal':'imp',note:v.title,tags:[],un:!!cls.un,color:v.color})});
+  return out}
+const areaOf=x=>x.area||'lav';
+const NOK={client:'Senza cliente',type:'Senza tipo'};
+function groupKeys(e,g){if(g==='tag'){const t=tagsOf(e);return t.length?t:['(senza tag)']}if(g==='src')return[SRCN[e.src||'reg']];return[e[g]||NOK[g]||'—']}
+const filtMatch=(e,f)=>{if(!f)return true;const[k,...r]=f.split(':');const v=r.join(':');return k==='tag'?tagsOf(e).includes(v):groupKeys(e,k).includes(v)};
+function filtered(range){const[f,t]=range||sRange(sPer,sRef);return tItems(f,t).filter(e=>areaOf(e)==='lav'&&filtMatch(e,sFilt))}
 const sumObj=o=>Object.values(o).reduce((a,b)=>a+b,0);
 const dotHtml=(g,k)=>`<i class="dot" style="background:${colorOf(g,k)};margin-right:6px"></i>`;
-const KIND={client:'Clienti',type:'Attività',tag:'Tag'},KIND1={client:'cliente',type:'attività',tag:'tag'};
+const KIND={client:'Clienti',type:'Tipi',tag:'Tag',src:'Fonte'},KIND1={client:'cliente',type:'tipo',tag:'tag',src:'fonte'};
 function txtOn(hex){const h=hex.replace('#','');const [r,g,b]=[0,2,4].map(i=>parseInt(h.substr(i,2),16)/255).map(c=>c<=.03928?c/12.92:((c+.055)/1.055)**2.4);
   return .2126*r+.7152*g+.0722*b>.45?'#16201d':'#ffffff'}
 /* treemap: l'area di ogni riquadro è proporzionale alle ore (algoritmo squarified) */
@@ -1528,6 +1588,23 @@ function drawTiles(){
   box.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>drill(b.dataset.k));
 }
 let tmRT;addEventListener('resize',()=>{clearTimeout(tmRT);tmRT=setTimeout(drawTiles,120)});
+/* tempo personale: grafico separato, si può nascondere */
+let sPersHide=load('registroOre.sPersHide',false);
+function renderPersonal(){const[f,t]=sRange(sPer,sRef),l=tItems(f,t).filter(x=>areaOf(x)==='per'),tot=l.reduce((a,x)=>a+durMin(x),0);
+  $('sPersW').classList.toggle('hidden',!l.length);if(!l.length)return;
+  $('sPersT').textContent=fmtH(tot);$('sPersBody').classList.toggle('hidden',sPersHide);
+  $('sPersEye').innerHTML=sPersHide?'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>':'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18M10.6 5.1A10.5 10.5 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';$('sPersEye').title=sPersHide?'Mostra il tempo personale':'Nascondi il tempo personale';
+  if(sPersHide)return;const m={};l.forEach(x=>{const k=x.type||x.note||'Altro';m[k]=(m[k]||0)+durMin(x)});
+  const items=Object.entries(m).map(([k,v])=>({k,v})).sort((a,b)=>b.v-a.v),keep=items.filter((x,i)=>i<8&&x.v/tot>=.03),rest=items.filter(x=>!keep.includes(x));
+  if(rest.length)keep.push({k:rest.length===1?rest[0].k:`Altri ${rest.length}`,v:rest.reduce((a,x)=>a+x.v,0),other:rest.length>1});
+  $('sPersSub').textContent=`${l.length} ${l.length===1?'impegno':'impegni'} conclusi · non entrano nelle ore di lavoro`;
+  const box=$('tmP'),W=box.clientWidth||340,H=Math.round(W<520?Math.min(W*.6,280):Math.max(180,Math.min(W*.3,260))),G=6;box.style.height=H+'px';
+  box.innerHTML=squarify(keep,W+G,H+G).map(t=>{const w=t.w-G,h=t.h-G,bg=t.other?'':PAL[hash(t.k)%PAL.length],fg=t.other?'':txtOn(bg),fs=Math.max(11,Math.min(26,Math.sqrt(w*h)/7,w/8)),pct=Math.round(t.v/tot*100);
+    return `<div class="tile${t.other?' other':''}" title="${esc(t.k)} · ${fmtH(t.v)} · ${pct}%" style="cursor:default;left:${t.x}px;top:${t.y}px;width:${w}px;height:${h}px;${t.other?'':`background:${bg};color:${fg};opacity:.85;`}padding:${Math.min(14,Math.max(7,Math.min(w,h)/7))}px">${w>=48&&h>=28?`<span class="tl-n" style="font-size:${fs}px">${esc(t.k)}</span>`:''}${w>=60&&h>=48?`<span class="tl-r"><span class="tl-h" style="font-size:${Math.max(11,fs*.7)}px">${fmtH(t.v)}</span> <span class="tl-p">${pct}%</span></span>`:''}</div>`}).join('')}
+$('sPersEye').onclick=()=>{sPersHide=!sPersHide;store('registroOre.sPersHide',sPersHide);renderPersonal()};
+function renderUnclass(){const[f,t]=sRange(sPer,sRef),l=tItems(f,t).filter(x=>x.un).sort((a,b)=>(b.date+b.start).localeCompare(a.date+a.start));
+  $('sUnW').classList.toggle('hidden',!l.length);if(!l.length)return;$('sUnN').textContent=String(l.length);
+  $('sUn').innerHTML=l.slice(0,12).map(x=>`<div class="ri" onclick="openEv('${x.ev}')"><span class="src-b" style="--c:${x.color||'#4285f4'}">G</span><div class="ri-m"><div class="ri-t">${esc(x.note)}</div><div class="ri-s">${esc(fmtShort(x.date))} · ${esc(x.start)}–${esc(x.end)}${x.type?' · '+esc(x.type):''}</div></div><div class="ri-v">${fmtH(x.dur)}</div></div>`).join('')+(l.length>12?`<p class="muted" style="padding:6px 16px;margin:0">…e altri ${l.length-12}</p>`:'')}
 function renderSumGoals(){
   const[f,t]=sRange(sPer,sRef),tg=goals.filter(g=>isText(g)&&g.to>=f&&g.from<=t),hg=[];
   const hgx=[];$('sGoalsW').classList.toggle('hidden',!tg.length);if(!tg.length)return;
@@ -1562,7 +1639,7 @@ function renderSummary(){
   $('sTot').textContent=fmtH(tot);
   $('sSub').innerHTML=(sFilt?`<b>${esc(sFilt.split(':').slice(1).join(':'))}</b> · `:'')+(sPer!=='day'&&days?`${days} ${days===1?'giorno':'giorni'} · media ${fmtH(tot/days)} al giorno · `:'')+
     (prevTot||tot?`${diff>=0?'+':'−'}${fmtH(Math.abs(diff))} rispetto ${prevName}`:'');
-  renderTiles(list,tot);renderSumGoals();
+  renderTiles(list,tot);renderSumGoals();renderPersonal();renderUnclass();
   /* dati: tabella per sotto-periodo */
   const g=sBy,p={day:'day',week:'day',month:'week',year:'month'}[sPer];
   const periods=uniq(list.map(e=>periodKey(e.date,p))),map={};
@@ -1682,7 +1759,7 @@ function loadAiUI(){
 $('aiProv').oninput=()=>{aiCfg.prov=$('aiProv').value;storeAi();loadAiUI();$('aiTestOut').textContent=''};
 $('aiTest').onclick=testAI;
 $('aiFin').checked=aiCfg.fin!==false;$('aiFin').onchange=()=>{aiCfg.fin=$('aiFin').checked;storeAi();renderAiFin()};
-function renderAiFin(){const el=$('aiFinSt');if(!el)return;el.textContent=aiCfg.fin===false?'Bilancio escluso dall\'assistente (Impostazioni AI).':finKey?'🔓 Bilancio sbloccato: l\'assistente può usarlo per rispondere.':'🔒 Bilancio bloccato: l\'assistente non lo vede.'}
+function renderAiFin(){const el=$('aiFinSt');if(!el)return;el.innerHTML=aiCfg.fin===false?'Bilancio escluso dall\'assistente (Impostazioni AI).':finKey?'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg> Bilancio sbloccato: l\'assistente può usarlo per rispondere.':'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Bilancio bloccato: l\'assistente non lo vede.'}
 ['apiKey','apiModel','apiUrl'].forEach(id=>$(id).addEventListener('input',()=>{const s=aiCfg.p[aiCfg.prov]||{},d=PROV[aiCfg.prov];
   aiCfg.p[aiCfg.prov]={...s,key:$('apiKey').value.trim(),model:$('apiModel').value.trim(),url:$('apiUrl').value.trim(),auto:id==='apiModel'?'':(s.auto||'')};storeAi();
   $('aiStatus').textContent=$('aiProv').selectedOptions[0].text+(d.key&&!$('apiKey').value.trim()&&aiCfg.prov!=='custom'?' · chiave mancante':'');
@@ -1732,7 +1809,7 @@ $('chatForm').onsubmit=async ev=>{
   ev.preventDefault();const q=$('chatInput').value.trim();if(!q)return;$('chatInput').value='';addMsg(q,'u');
   chatHist.push({role:'user',content:q});const wait=addMsg('Sto analizzando i dati…','a');
   const td=todos.filter(t=>t.date===todayStr()).map(t=>`- [${t.done?'x':' '}] ${t.text}${t.client?' ('+t.client+')':''}`).join('\n')||'(vuota)';
-  const system=`Sei un assistente che analizza il registro ore di lavoro di un freelance/professionista${finKey&&aiCfg.fin!==false?' e il suo bilancio personale':''}. Oggi è ${todayStr()}. Rispondi in italiano, in modo conciso, con numeri precisi (ore e minuti). Calcola con attenzione partendo dai dati CSV. Se i dati non bastano, dillo.\n\nDATI (CSV, durata in minuti):\n${dataCsv()}\n\nLISTA DA FARE DI OGGI:\n${td}\n\nIMPEGNI PERSONALI (non lavorativi, NON contarli nelle ore):\n${events.slice().sort(vSort).map(v=>`- ${v.date}${vEnd(v)>v.date?' → '+vEnd(v):''} ${v.allDay?'(tutto il giorno)':v.start+'–'+v.end}: ${v.title}${v.place?' @ '+v.place:''}${v.note?' ('+v.note+')':''}`).join('\n')||'(nessuno)'}`+(gcal.url?`\n\nEVENTI DI GOOGLE CALENDAR (prossimi 30 giorni):\n${calEv().filter(v=>v.g&&v.date>=todayStr()&&v.date<=dStr(addDays(new Date(),30))).sort(vSort).map(v=>`- ${v.date}${v.to?' → '+v.to:''} ${v.allDay?'(tutto il giorno)':v.start+'–'+v.end}: ${v.title}${v.place?' @ '+v.place:''}`).join('\n')||'(nessuno)'}`:'')+finForAI();
+  const system=`Sei un assistente che analizza il registro ore di lavoro di un freelance/professionista${finKey&&aiCfg.fin!==false?' e il suo bilancio personale':''}. Oggi è ${todayStr()}. Rispondi in italiano, in modo conciso, con numeri precisi (ore e minuti). Calcola con attenzione partendo dai dati CSV. Se i dati non bastano, dillo.\n\nDATI (CSV, durata in minuti):\n${dataCsv()}\n\nLISTA DA FARE DI OGGI:\n${td}\n\nIMPEGNI PERSONALI (non lavorativi, NON contarli nelle ore):\n${events.slice().sort(vSort).map(v=>`- ${v.date}${vEnd(v)>v.date?' → '+vEnd(v):''} ${v.allDay?'(tutto il giorno)':v.start+'–'+v.end}: ${v.title}${v.place?' @ '+v.place:''}${v.note?' ('+v.note+')':''}`).join('\n')||'(nessuno)'}`+(gLinked()?`\n\nEVENTI DI GOOGLE CALENDAR (prossimi 30 giorni):\n${calEv().filter(v=>v.g&&v.date>=todayStr()&&v.date<=dStr(addDays(new Date(),30))).sort(vSort).map(v=>`- ${v.date}${v.to?' → '+v.to:''} ${v.allDay?'(tutto il giorno)':v.start+'–'+v.end}: ${v.title}${v.place?' @ '+v.place:''}`).join('\n')||'(nessuno)'}`:'')+finForAI();
   try{const txt=await callAI(system,chatHist);wait.textContent=txt;chatHist.push({role:'assistant',content:txt})}
   catch(err){wait.textContent='Errore: '+err.message;chatHist.pop()}
 };
@@ -1918,7 +1995,7 @@ document.querySelectorAll('#calViews button').forEach(b=>b.onclick=()=>{calView=
 function calShift(n){const d=calDate;if(calView==='day')calDate=addDays(d,n);else if(calView==='week')calDate=addDays(d,7*n);else if(calView==='month')calDate=new Date(d.getFullYear(),d.getMonth()+n,1);else calDate=new Date(d.getFullYear()+n,0,1);renderCalendar()}
 $('calPrev').onclick=()=>calShift(-1);$('calNext').onclick=()=>calShift(1);$('calTitle').onclick=()=>{calDate=new Date();renderCalendar()};
 $('calColors').onclick=()=>openManage(calBy);
-function updCalFit(){const b=$('calFit');if(!b)return;b.textContent=calCompact?'↕︎ Giornata intera':'↕︎ Orari normali';b.classList.toggle('hidden',!['day','week'].includes(calView))}
+function updCalFit(){const b=$('calFit');if(!b)return;b.innerHTML=(calCompact?'Giornata intera':'Orari normali').replace(/^/,'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4"/></svg>');b.classList.toggle('hidden',!['day','week'].includes(calView))}
 $('calFit').onclick=()=>{calCompact=!calCompact;store('registroOre.calCompact',calCompact);renderCalendar();toast(calCompact?'Giornata intera nello schermo: le ore vuote si stringono':'Orari a altezza fissa')};
 let calRT;addEventListener('resize',()=>{clearTimeout(calRT);calRT=setTimeout(()=>{if(document.body.dataset.tab==='calendario'&&['day','week'].includes(calView))renderCalendar()},150)});
 $('calAdd').onclick=()=>openCreate('act',{date:['day','week'].includes(calView)&&dStr(calDate)>=dStr(monday(calDate))?dStr(calDate):todayStr()});
@@ -1927,51 +2004,86 @@ let tx=null,ty=null;
 $('calBody').addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
 $('calBody').addEventListener('touchend',e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;tx=null;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.5)calShift(dx<0?1:-1)},{passive:true});
 
-/* ================= Calendari Google (tramite un tuo Google Apps Script, gratuito) =================
-   Lo script gira sul tuo account Google e risponde solo a chi conosce il suo indirizzo e il codice segreto.
-   Gli eventi Google si vedono nel calendario (sola lettura); gli impegni creati qui possono essere copiati su Google. */
-let gcal=Object.assign({url:'',token:'',cals:{},push:'',u:0},load('registroOre.gcal',{})),gcache=Object.assign({at:0,events:[]},load('registroOre.gcache',{})),gBusy=false,gErr='';
+/* ================= Calendari Google (uno o più account, tramite un Google Apps Script per account, gratuito) =================
+   Ogni account Google ha il suo piccolo script: gli account restano separati (personale e lavoro non si uniscono).
+   Gli eventi Google si vedono nel calendario (sola lettura); gli impegni creati qui possono essere copiati su un calendario a scelta. */
+let gcal=Object.assign({sources:[],cals:{},push:'',u:0},load('registroOre.gcal',{})),gcache=Object.assign({at:0,events:[]},load('registroOre.gcache',{})),gBusy=false,gErr='',gErrs={};
+function gMigrate(){/* dalla v32-33: un solo account (url/token) → elenco di account */
+  if(!Array.isArray(gcal.sources))gcal.sources=[];
+  if(gcal.url&&!gcal.sources.length){const sid='s1';gcal.sources=[{id:sid,name:'Account Google',url:gcal.url,token:gcal.token,calsAt:gcal.calsAt||0}];
+    const c={};Object.entries(gcal.cals||{}).forEach(([k,v])=>c[k.includes('|')?k:sid+'|'+k]=v);gcal.cals=c;if(gcal.push&&!gcal.push.includes('|'))gcal.push=sid+'|'+gcal.push;
+    (gcache.events||[]).forEach(e=>{if(!e.src)e.src=sid})}
+  delete gcal.url;delete gcal.token;delete gcal.calsAt}
+gMigrate();
 const storeG=()=>{gcal.u=Date.now();store('registroOre.gcal',gcal);scheduleSync()};
 const gTz=()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){return 'Europe/Rome'}};
+const gSrc=id=>gcal.sources.find(x=>x.id===id)||gcal.sources[0];
+const gLinked=()=>gcal.sources.length>0;
+const newTok=()=>[...crypto.getRandomValues(new Uint8Array(18))].map(b=>'abcdefghijkmnpqrstuvwxyz23456789'[b&31]).join('');
 let gNormCache=null,gNormKey='';
-function calEv(){const key=gcache.at+'|'+gcal.u+'|'+events.length;if(!gcal.url)return events;
+function calEv(){if(!gLinked())return events;const key=gcache.at+'|'+gcal.u+'|'+events.length+'|'+events.map(v=>v.gid||'').join('');
   if(gNormKey!==key){gNormKey=key;const mine=new Set(events.map(v=>v.gid).filter(Boolean));
-    gNormCache=(gcache.events||[]).filter(x=>gcal.cals[x.cal]?.on!==false&&!mine.has(x.id)).map((x,i)=>{const c=gcal.cals[x.cal]||{};
-      if(x.allDay){const to=dStr(addDays(parseD(x.e),-1));return{id:'g'+i,g:1,gid:x.id,cal:x.cal,calName:c.name||'',title:x.title||'(senza titolo)',date:x.s,to:to>x.s?to:'',allDay:true,start:'',end:'',place:x.loc||'',note:x.desc||'',color:c.color||'#4285f4'}}
+    gNormCache=(gcache.events||[]).filter(x=>gcal.cals[x.src+'|'+x.cal]?.on!==false&&!mine.has(x.id)).map((x,i)=>{const c=gcal.cals[x.src+'|'+x.cal]||{},src=gSrc(x.src)||{};
+      const base={id:'g'+i,g:1,gid:x.id,cal:x.cal,src:x.src,calName:(c.name||'')+(gcal.sources.length>1?' · '+(src.name||''):''),title:x.title||'(senza titolo)',place:x.loc||'',note:x.desc||'',color:c.color||'#4285f4'};
+      if(x.allDay){const to=dStr(addDays(parseD(x.e),-1));return{...base,date:x.s,to:to>x.s?to:'',allDay:true,start:'',end:''}}
       let d=x.s.slice(0,10),de=x.e.slice(0,10),st=x.s.slice(11,16),en=x.e.slice(11,16);
       if(de>d&&en==='00:00'&&dStr(addDays(parseD(d),1))===de){de=d;en='24:00'}
-      return{id:'g'+i,g:1,gid:x.id,cal:x.cal,calName:c.name||'',title:x.title||'(senza titolo)',date:d,to:de>d?de:'',allDay:false,start:st,end:en,place:x.loc||'',note:x.desc||'',color:c.color||'#4285f4'}})}
+      return{...base,date:d,to:de>d?de:'',allDay:false,start:st,end:en}})}
   return events.concat(gNormCache)}
 function openEv(id){if(String(id).startsWith('g')){const v=calEv().find(x=>x.id===id);if(v)showGEvent(v)}else editEvent(id)}
-function showGEvent(v){const d=parseD(v.date);
-  openModal(v.title,`<div class="grid"><p class="full" style="margin:0"><span class="gst" style="background:${v.color}"></span><b>${esc(v.calName||'Google Calendar')}</b></p>
-    <p class="full lead" style="margin:0">${esc(cap(d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'})))}${v.to?' – '+esc(fmtShort(v.to)):''} · ${esc(v.allDay?'tutto il giorno':v.start+'–'+(v.end==='24:00'?'24:00':v.end))}</p>
-    ${v.place?`<p class="full" style="margin:0">📍 ${esc(v.place)}</p>`:''}${v.note?`<p class="full muted" style="margin:0;white-space:pre-wrap">${esc(v.note)}</p>`:''}
-    <p class="full muted" style="margin:0;font-size:13px">Evento di Google Calendar: si modifica da Google.</p>
-    <div class="row full btns"><a class="btn primary" href="https://calendar.google.com/calendar/r/day/${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}" target="_blank" rel="noopener">Apri Google Calendar</a></div></div>`)}
-async function gCall(params,post){if(!gcal.url)throw new Error('non collegato');
-  let r;try{r=post?await fetch(gcal.url,{method:'POST',body:JSON.stringify({...params,t:gcal.token,tz:gTz()})})
-    :await fetch(gcal.url+(gcal.url.includes('?')?'&':'?')+new URLSearchParams({...params,t:gcal.token,tz:gTz()}),{cache:'no-store'})}
+function showGEvent(v){const d=parseD(v.date),c=gClass(v),timed=!v.allDay&&!v.to;let area=c.skip?'skip':c.area;
+  openModal(v.title,`<form id="geForm" class="grid" autocomplete="off"><p class="full" style="margin:0"><span class="gst" style="background:${v.color}"></span><b>${esc(v.calName||'Google Calendar')}</b></p>
+    <p class="full lead" style="margin:0">${esc(cap(d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'})))}${v.to?' – '+esc(fmtShort(v.to)):''} · ${esc(v.allDay?'tutto il giorno':v.start+'–'+v.end)}</p>
+    ${v.place?`<p class="full" style="margin:0"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg> ${esc(v.place)}</p>`:''}${v.note?`<p class="full muted" style="margin:0;white-space:pre-wrap;max-height:90px;overflow:auto">${esc(v.note)}</p>`:''}
+    ${timed?`<div class="full seg seg3" id="geArea"><button type="button" data-v="lav">Lavoro</button><button type="button" data-v="per">Personale</button><button type="button" data-v="skip">Non conteggiare</button></div>
+    <label class="ge-f">Cliente<input id="ge_client" list="dl_client" placeholder="es. REVIV"></label>
+    <label class="ge-f">Tipo<input id="ge_type" list="dl_type" placeholder="es. Call, Riunione"></label>
+    <label class="full fl-rem" style="justify-content:flex-start"><input type="checkbox" id="ge_rule"><span class="chk-ui">✓</span><span>Usa queste scelte anche per gli altri eventi "${esc(v.title)}"</span></label>
+    <p class="full muted" style="margin:0;font-size:13px">${c.how==='auto'?'Classificato in automatico: correggi se serve.':c.how==='rule'?'Classificato con una tua regola.':'Classificato da te.'} Orari e titolo si modificano da Google.</p>`
+    :`<p class="full muted" style="margin:0;font-size:13px">Gli eventi di tutto il giorno o di più giorni non contano nelle ore.</p>`}
+    <div class="row full btns">${timed?'<button class="btn primary">Salva</button>':''}<a class="btn" href="https://calendar.google.com/calendar/r/day/${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}" target="_blank" rel="noopener">Apri Google Calendar</a></div></form>`);
+  if(!timed)return;
+  const upd=()=>{document.querySelectorAll('#geArea button').forEach(b=>b.classList.toggle('active',b.dataset.v===area));document.querySelectorAll('#geForm .ge-f').forEach(x=>x.classList.toggle('hidden',area==='skip'))};
+  document.querySelectorAll('#geArea button').forEach(b=>b.onclick=()=>{area=b.dataset.v;upd()});upd();
+  $('ge_client').value=c.client||'';$('ge_type').value=c.type||'';$('ge_client').addEventListener('input',()=>{if($('ge_client').value.trim()&&area!=='lav'){area='lav';upd()}});
+  $('geForm').onsubmit=ev=>{ev.preventDefault();const m={area:area==='skip'?'per':area,client:$('ge_client').value.trim(),type:$('ge_type').value.trim(),skip:area==='skip'};
+    gcal.meta=gcal.meta||{};gcal.meta[gKey(v)]=m;
+    if($('ge_rule').checked){const w=normT(v.title);gcal.rules=(gcal.rules||[]).filter(r=>r.w!==w);if(w)gcal.rules.unshift({w,...m})}
+    storeG();gNormKey='';closeModal();renderAll();toast($('ge_rule')&&$('ge_rule').checked?'Salvato anche per gli eventi simili':'Evento classificato')}}
+async function gCall(src,params,post){if(!src||!src.url)throw new Error('account non collegato');
+  let r;try{r=post?await fetch(src.url,{method:'POST',body:JSON.stringify({...params,t:src.token,tz:gTz()})})
+    :await fetch(src.url+(src.url.includes('?')?'&':'?')+new URLSearchParams({...params,t:src.token,tz:gTz()}),{cache:'no-store'})}
   catch(e){throw new Error('Google non raggiungibile (controlla la connessione e che lo script sia distribuito con accesso "Chiunque")')}
   const txt=await r.text();let j;try{j=JSON.parse(txt)}catch(e){throw new Error(/<html/i.test(txt)?'lo script non risponde come app web: ridistribuiscilo con "Esegui come: Me" e "Chi ha accesso: Chiunque"':'risposta non valida')}
   if(j.error)throw new Error(j.error);return j}
-function gStatus(){const el=$('calGst');if(!el)return;el.style.background=!gcal.url?'var(--line)':gErr?'var(--danger)':'#34a853';
-  $('calGoogle').title=!gcal.url?'Collega i calendari Google':gErr?'Google: '+gErr:'Google aggiornato '+(gcache.at?new Date(gcache.at).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}):'')}
-async function gRefresh(force){if(!gcal.url||gBusy)return;if(!force&&Date.now()-gcache.at<10*60e3)return;gBusy=true;
-  try{const from=addDays(new Date(),-62),to=addDays(new Date(),190);
-    const ids=Object.entries(gcal.cals).filter(([,c])=>c.on!==false).map(([id])=>id);if(!ids.length&&Object.keys(gcal.cals).length){gcache={at:Date.now(),events:[]};return}
-    const j=await gCall({a:'events',from:from.toISOString(),to:to.toISOString(),cals:ids.join(',')});
-    gcache={at:Date.now(),events:j.events||[]};store('registroOre.gcache',gcache);gErr='';gNormKey='';renderCalendar();renderEvents()}
-  catch(e){gErr=e.message}finally{gBusy=false;gStatus()}}
+function gStatus(){const el=$('calGst');if(!el)return;el.style.background=!gLinked()?'var(--line)':gErr?'var(--danger)':'#34a853';
+  $('calGoogle').title=!gLinked()?'Collega i calendari Google':gErr?'Google: '+gErr:'Google aggiornato '+(gcache.at?new Date(gcache.at).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}):'')}
+async function gSyncCals(src,force){if(!force&&Date.now()-(src.calsAt||0)<24*3600e3)return false;
+  const j=await gCall(src,{a:'cals'}),seen=new Set();let ch=false;
+  (j.cals||[]).forEach(c=>{const k=src.id+'|'+c.id;seen.add(k);const o=gcal.cals[k];
+    if(!o){gcal.cals[k]={name:c.name,color:c.color,own:c.own,on:true};ch=true;if(src.calsAt)toast('Nuovo calendario Google: '+c.name,4000)}
+    else if(o.name!==c.name||o.color!==c.color||o.own!==c.own){Object.assign(o,{name:c.name,color:c.color,own:c.own});ch=true}});
+  Object.keys(gcal.cals).forEach(k=>{if(k.startsWith(src.id+'|')&&!seen.has(k)){delete gcal.cals[k];ch=true}});src.calsAt=Date.now();return ch}
+async function gRefresh(force){if(!gLinked()||gBusy)return;if(!force&&Date.now()-gcache.at<10*60e3)return;gBusy=true;
+  const from=addDays(new Date(),-62).toISOString(),to=addDays(new Date(),190).toISOString(),all=[];let chg=false;gErrs={};
+  for(const src of gcal.sources){try{if(await gSyncCals(src,force))chg=true;
+      const ids=Object.entries(gcal.cals).filter(([k,c])=>k.startsWith(src.id+'|')&&c.on!==false).map(([k])=>k.slice(src.id.length+1));
+      if(!ids.length){continue}
+      const j=await gCall(src,{a:'events',from,to,cals:ids.join(',')});(j.events||[]).forEach(e=>all.push({...e,src:src.id}))}
+    catch(e){gErrs[src.id]=e.message;(gcache.events||[]).filter(x=>x.src===src.id).forEach(x=>all.push(x))}}
+  if(chg)storeG();else store('registroOre.gcal',gcal);
+  gErr=Object.values(gErrs)[0]||'';gcache={at:Date.now(),events:all};store('registroOre.gcache',gcache);gNormKey='';gBusy=false;gStatus();
+  try{renderCalendar();renderEvents()}catch(e){}}
 /* impegni creati qui → anche su Google (se scelto) */
-async function gPush(v){if(!gcal.url||!gcal.push)return;try{
+async function gPush(v){const tgt=v.gid?(v.gsrc||gcal.sources[0]?.id)+'|'+(v.gcal||''):gcal.push;if(!gLinked()||!tgt||!tgt.includes('|'))return;
+  const[sid,cal]=[tgt.slice(0,tgt.indexOf('|')),tgt.slice(tgt.indexOf('|')+1)],src=gSrc(sid);try{
   const end=v.allDay?dStr(addDays(parseD(vEnd(v)),1)):vEnd(v)+'T'+v.end;
-  const j=await gCall({a:'upsert',cal:v.gcal||gcal.push,id:v.gid||'',title:v.title,allDay:!!v.allDay,start:v.allDay?v.date:v.date+'T'+v.start,end,place:v.place||'',note:v.note||''},true);
-  const o=events.find(x=>x.id===v.id);if(o&&(o.gid!==j.id||!o.gcal)){o.gid=j.id;o.gcal=v.gcal||gcal.push;saveV()}gRefresh(true)}
+  const j=await gCall(src,{a:'upsert',cal,id:v.gid||'',title:v.title,allDay:!!v.allDay,start:v.allDay?v.date:v.date+'T'+v.start,end,place:v.place||'',note:v.note||''},true);
+  const o=events.find(x=>x.id===v.id);if(o&&(o.gid!==j.id||o.gcal!==cal||o.gsrc!==src.id)){o.gid=j.id;o.gcal=cal;o.gsrc=src.id;saveV()}gRefresh(true)}
   catch(e){toast('Non sono riuscito a copiare l\'impegno su Google: '+e.message,6000)}}
-async function gDel(v){if(!gcal.url||!v.gid)return;try{await gCall({a:'delete',cal:v.gcal||gcal.push,id:v.gid},true);gRefresh(true)}catch(e){toast('Non sono riuscito a eliminarlo da Google: '+e.message,6000)}}
-function gScript(){return `// Registro Ore ↔ Google Calendar. Incolla tutto in un nuovo progetto su script.google.com
-const TOKEN = '${gcal.token}';
+async function gDel(v){if(!gLinked()||!v.gid)return;try{await gCall(gSrc(v.gsrc),{a:'delete',cal:v.gcal||'',id:v.gid},true);gRefresh(true)}catch(e){toast('Non sono riuscito a eliminarlo da Google: '+e.message,6000)}}
+function gScript(token){return `// Registro Ore ↔ Google Calendar. Incolla tutto in un nuovo progetto su script.google.com
+const TOKEN = '${token}';
 
 function doGet(e) { return handle((e && e.parameter) || {}); }
 function doPost(e) { let b = {}; try { b = JSON.parse(e.postData.contents); } catch (x) {} return handle(b); }
@@ -2010,38 +2122,59 @@ function out(o) { return ContentService.createTextOutput(JSON.stringify(o)).setM
 // Esegui questa funzione una volta dall'editor per autorizzare l'accesso ai calendari
 function autorizza() { Logger.log(CalendarApp.getAllCalendars().map(c => c.getName()).join(', ')); }
 `}
-function openGcal(){if(!gcal.token){gcal.token=[...crypto.getRandomValues(new Uint8Array(18))].map(b=>'abcdefghijkmnpqrstuvwxyz23456789'[b&31]).join('');store('registroOre.gcal',gcal)}
-  const connected=!!gcal.url,cals=Object.entries(gcal.cals);
+
+function openGcal(mode){
+  if(mode==='add'||!gLinked())return openGcalAdd();
+  const own=Object.entries(gcal.cals).filter(([,c])=>c.own);
   openModal('Calendari Google',`<div class="grid">
-    ${connected?`<div class="full gcal-list" id="gcList">${cals.map(([id,c])=>`<label><input type="checkbox" data-id="${esc(id)}" ${c.on!==false?'checked':''}><i style="background:${esc(c.color||'#4285f4')}"></i><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">${esc(c.name||id)}</span></label>`).join('')||'<p class="muted">Nessun calendario trovato.</p>'}</div>
-      <label class="full">Copia i nuovi impegni anche su<select id="gcPush"><option value="">Non copiare (solo lettura)</option>${cals.filter(([,c])=>c.own).map(([id,c])=>`<option value="${esc(id)}"${gcal.push===id?' selected':''}>${esc(c.name)}</option>`).join('')}</select></label>
-      <p class="full muted" style="margin:0;font-size:13px">${gErr?`<b style="color:var(--danger)">Ultimo errore: ${esc(gErr)}</b><br>`:''}${gcache.at?'Ultimo aggiornamento: '+new Date(gcache.at).toLocaleString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})+' · '+gcache.events.length+' eventi (da 2 mesi fa a 6 mesi avanti).':''}</p>
-      <div class="row full btns" style="flex-wrap:wrap"><button type="button" class="btn primary" id="gcSave">Salva</button><button type="button" class="btn" id="gcNow">↻ Aggiorna ora</button><button type="button" class="btn danger" id="gcOff">Scollega</button></div>`
-    :`<p class="full lead" style="margin:0">Collega i tuoi calendari Google gratis, senza dare password all'app: crei un piccolo "script" sul tuo account Google che mostra qui i tuoi eventi (e, se vuoi, aggiunge su Google gli impegni creati qui). Serve una volta sola, circa 5 minuti, meglio dal Mac.</p>
-      <ol class="full gsteps">
-        <li>Premi <b>Copia lo script</b> qui sotto.</li>
-        <li>Apri <a href="https://script.google.com/home/projects/create" target="_blank" rel="noopener"><b>script.google.com</b></a> con il tuo account Google: si crea un nuovo progetto. Cancella il testo che c'è e <b>incolla</b> lo script, poi salva (💾).</li>
-        <li>In alto scegli la funzione <b>autorizza</b> e premi <b>Esegui</b>: Google ti chiede di autorizzare l'accesso ai calendari. Se compare "App non verificata", tocca <i>Avanzate → Vai al progetto</i> (è il tuo script).</li>
-        <li>Premi <b>Esegui il deployment → Nuovo deployment</b>, tipo <b>App web</b>. Imposta <b>Esegui come: Me</b> e <b>Chi ha accesso: Chiunque</b>, poi <b>Esegui il deployment</b>.</li>
-        <li>Copia l'<b>URL dell'app web</b> (finisce con <code>/exec</code>) e incollalo qui sotto.</li>
-      </ol>
-      <div class="full"><button type="button" class="btn" id="gcCopy">📋 Copia lo script</button></div>
-      <pre class="full gcode" id="gcCode"></pre>
-      <label class="full">URL dell'app web<input id="gcUrl" placeholder="https://script.google.com/macros/s/…/exec" inputmode="url" autocomplete="off" spellcheck="false"></label>
-      <p class="full muted" style="margin:0;font-size:13px">Lo script contiene un codice segreto: chi non lo conosce non può leggere i tuoi eventi. Indirizzo e codice restano nell'app e nella tua sincronizzazione, mai nel repository.</p>
-      <p class="full fl-err" id="gcErr"></p>
-      <div class="row full btns"><button type="button" class="btn primary" id="gcGo">Collega</button></div>`}</div>`);
-  if(!connected){$('gcCode').textContent=gScript();
-    $('gcCopy').onclick=async()=>{try{await navigator.clipboard.writeText(gScript());toast('Script copiato')}catch(e){const r=document.createRange();r.selectNodeContents($('gcCode'));getSelection().removeAllRanges();getSelection().addRange(r);toast('Script selezionato: copialo')}};
-    $('gcGo').onclick=async()=>{const u=$('gcUrl').value.trim();$('gcErr').textContent='';
-      if(!/^https:\/\/script\.google(usercontent)?\.com\/.+/.test(u)){$('gcErr').textContent='Incolla l\'URL dell\'app web (inizia con https://script.google.com/macros/…).';return}
-      $('gcGo').disabled=true;$('gcGo').textContent='Collego…';const old=gcal.url;gcal.url=u;
-      try{const j=await gCall({a:'cals'});gcal.cals={};(j.cals||[]).forEach(c=>gcal.cals[c.id]={name:c.name,color:c.color,own:c.own,on:true});storeG();gErr='';await gRefresh(true);openGcal();toast('Calendari Google collegati')}
-      catch(e){gcal.url=old;$('gcErr').textContent='Non riesco a collegarmi: '+e.message}finally{const b=$('gcGo');if(b){b.disabled=false;b.textContent='Collega'}}}}
-  else{$('gcSave').onclick=()=>{document.querySelectorAll('#gcList input').forEach(i=>{gcal.cals[i.dataset.id].on=i.checked});gcal.push=$('gcPush').value;storeG();gNormKey='';closeModal();gRefresh(true);renderCalendar();toast('Impostazioni Google salvate')};
-    $('gcNow').onclick=async()=>{$('gcNow').disabled=true;await gRefresh(true);openGcal()};
-    $('gcOff').onclick=()=>{if(!confirm('Scollegare i calendari Google? Gli eventi Google spariranno dal calendario (su Google restano).'))return;gcal={url:'',token:'',cals:{},push:'',u:0};storeG();gcache={at:0,events:[]};store('registroOre.gcache',gcache);gNormKey='';closeModal();renderAll();gStatus()}}}
-$('calGoogle').onclick=openGcal;$('miGcal').onclick=()=>{closeMenu();openGcal()};
+    ${gcal.sources.map(src=>{const cs=Object.entries(gcal.cals).filter(([k])=>k.startsWith(src.id+'|')),err=gErrs[src.id],n=(gcache.events||[]).filter(e=>e.src===src.id).length;
+      return `<div class="full card" style="margin:0;padding:12px 14px;background:var(--bg)">
+        <div class="row" style="justify-content:space-between;flex-wrap:nowrap;gap:8px"><input class="gsName" data-s="${src.id}" value="${esc(src.name||'')}" aria-label="Nome dell'account" style="font-weight:700;flex:1;min-width:0;background:transparent;border:0;padding:4px 0;font-size:16px"><button type="button" class="btn small danger gsOff" data-s="${src.id}">Scollega</button></div>
+        <p class="muted" style="margin:2px 0 6px;font-size:12.5px">${err?`<b style="color:var(--danger)">Errore: ${esc(err)}</b>`:`${n} ${n===1?'evento':'eventi'} · tocca il nome per rinominarlo`}</p>
+        <div class="gcal-list">${cs.map(([k,c])=>{const da=c.area||gClass({src:k.split('|')[0],cal:k.slice(k.indexOf('|')+1),title:'',gid:'',date:'',start:''}).skip&&!c.area?'skip':(c.area||gClass({src:k.split('|')[0],cal:k.slice(k.indexOf('|')+1),title:'',gid:'',date:'',start:''}).area);
+          return `<label><input type="checkbox" data-k="${esc(k)}" ${c.on!==false?'checked':''}><i style="background:${esc(c.color||'#4285f4')}"></i><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">${esc(c.name||k)}</span><select class="gcArea" data-k="${esc(k)}" style="width:auto;padding:4px 8px;font-size:13px"><option value="lav"${da==='lav'?' selected':''}>Lavoro</option><option value="per"${da==='per'?' selected':''}>Personale</option><option value="skip"${da==='skip'?' selected':''}>Non contare</option></select></label>`}).join('')||'<p class="muted" style="margin:0">Nessun calendario.</p>'}</div></div>`}).join('')}
+    <div class="full"><button type="button" class="btn" id="gcAdd">＋ Aggiungi un altro account Google</button></div>
+    <label class="full">Copia i nuovi impegni anche su<select id="gcPush"><option value="">Non copiare (solo lettura)</option>${gcal.sources.map(src=>{const l=own.filter(([k])=>k.startsWith(src.id+'|'));return l.length?`<optgroup label="${esc(src.name||'Account')}">${l.map(([k,c])=>`<option value="${esc(k)}"${gcal.push===k?' selected':''}>${esc(c.name)}</option>`).join('')}</optgroup>`:''}).join('')}</select></label>
+    <p class="full muted" style="margin:0;font-size:13px">Per ogni calendario scegli se i suoi eventi conclusi contano come <b>Lavoro</b>, <b>Personale</b> o non contano. Puoi poi correggere il singolo evento toccandolo.<br>${gcache.at?'Ultimo aggiornamento: '+new Date(gcache.at).toLocaleString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})+' · eventi da 2 mesi fa a 6 mesi avanti. ':''}Ogni account resta separato: ha il suo script e i suoi calendari.</p>
+    <div class="row full btns" style="flex-wrap:wrap"><button type="button" class="btn primary" id="gcSave">Salva</button><button type="button" class="btn" id="gcNow"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7L20 8.6M20 4v4.6h-4.6"/></svg>Aggiorna ora</button></div></div>`);
+  const save=()=>{document.querySelectorAll('.gcal-list input').forEach(i=>{if(gcal.cals[i.dataset.k])gcal.cals[i.dataset.k].on=i.checked});
+    document.querySelectorAll('.gcArea').forEach(sl=>{if(gcal.cals[sl.dataset.k])gcal.cals[sl.dataset.k].area=sl.value});
+    document.querySelectorAll('.gsName').forEach(i=>{const s=gSrc(i.dataset.s);if(s&&i.value.trim())s.name=i.value.trim()});gcal.push=$('gcPush').value;storeG();gNormKey=''};
+  $('gcSave').onclick=()=>{save();closeModal();gRefresh(true);renderCalendar();toast('Impostazioni Google salvate')};
+  $('gcNow').onclick=async()=>{save();$('gcNow').disabled=true;$('gcNow').textContent='Aggiorno…';await gRefresh(true);openGcal()};
+  $('gcAdd').onclick=()=>{save();openGcalAdd()};
+  document.querySelectorAll('.gsOff').forEach(b=>b.onclick=()=>{const src=gSrc(b.dataset.s);if(!confirm(`Scollegare "${src.name}"? I suoi eventi spariranno dal calendario (su Google restano).`))return;
+    gcal.sources=gcal.sources.filter(x=>x!==src);Object.keys(gcal.cals).forEach(k=>{if(k.startsWith(src.id+'|'))delete gcal.cals[k]});if(gcal.push.startsWith(src.id+'|'))gcal.push='';
+    gcache.events=(gcache.events||[]).filter(e=>e.src!==src.id);store('registroOre.gcache',gcache);storeG();gNormKey='';renderAll();gStatus();if(gLinked())openGcal();else closeModal()})}
+function openGcalAdd(){if(!gcal.pending){gcal.pending={token:newTok()};store('registroOre.gcal',gcal)}const tok=gcal.pending.token,first=!gLinked();
+  openModal(first?'Collega Google Calendar':'Aggiungi un account Google',`<div class="grid">
+    <p class="full lead" style="margin:0">${first?'Collega i tuoi calendari Google gratis, senza dare password all\'app: crei un piccolo "script" sul tuo account Google che mostra qui i tuoi eventi (e, se vuoi, aggiunge su Google gli impegni creati qui).':'Ogni account ha il suo script: <b>accedi a Google con l\'account da aggiungere</b> (es. quello personale) e ripeti questi passi. Gli account restano separati.'} Circa 5 minuti, meglio dal Mac.</p>
+    <ol class="full gsteps">
+      <li>Premi <b>Copia lo script</b> qui sotto${first?'':' (è un nuovo script, con un suo codice segreto)'}.</li>
+      <li>Apri <a href="https://script.google.com/home/projects/create" target="_blank" rel="noopener"><b>script.google.com</b></a>${first?' con il tuo account Google':', controlla in alto a destra di essere nell\'<b>account giusto</b>'}: si crea un nuovo progetto. Cancella il testo che c'è, <b>incolla</b> lo script e salva (💾).</li>
+      <li>In alto scegli la funzione <b>autorizza</b> e premi <b>Esegui</b>: autorizza l'accesso ai calendari. Se compare "App non verificata", tocca <i>Avanzate → Vai al progetto</i> (è il tuo script).</li>
+      <li><b>Esegui il deployment → Nuovo deployment</b>, tipo <b>App web</b>: <b>Esegui come: Me</b>, <b>Chi ha accesso: Chiunque</b>, poi <b>Esegui il deployment</b>.</li>
+      <li>Copia l'<b>URL dell'app web</b> (finisce con <code>/exec</code>) e incollalo qui sotto.</li>
+    </ol>
+    <div class="full"><button type="button" class="btn" id="gcCopy"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9z"/></svg>Copia lo script</button></div>
+    <pre class="full gcode" id="gcCode"></pre>
+    <label class="full">Nome dell'account<input id="gcName" placeholder="es. Personale, Lavoro" value="${first?'':'Personale'}"></label>
+    <label class="full">URL dell'app web<input id="gcUrl" placeholder="https://script.google.com/macros/s/…/exec" inputmode="url" autocomplete="off" spellcheck="false"></label>
+    <p class="full muted" style="margin:0;font-size:13px">Lo script contiene un codice segreto: chi non lo conosce non può leggere i tuoi eventi. Indirizzo e codice restano nell'app e nella tua sincronizzazione, mai nel repository.</p>
+    <p class="full fl-err" id="gcErr"></p>
+    <div class="row full btns"><button type="button" class="btn primary" id="gcGo">Collega</button>${first?'':'<button type="button" class="btn" id="gcBack">Indietro</button>'}</div></div>`);
+  $('gcCode').textContent=gScript(tok);
+  $('gcCopy').onclick=async()=>{try{await navigator.clipboard.writeText(gScript(tok));toast('Script copiato')}catch(e){const r=document.createRange();r.selectNodeContents($('gcCode'));getSelection().removeAllRanges();getSelection().addRange(r);toast('Script selezionato: copialo')}};
+  if($('gcBack'))$('gcBack').onclick=()=>openGcal();
+  $('gcGo').onclick=async()=>{const u=$('gcUrl').value.trim();$('gcErr').textContent='';
+    if(!/^https:\/\/script\.google(usercontent)?\.com\/.+/.test(u)){$('gcErr').textContent='Incolla l\'URL dell\'app web (inizia con https://script.google.com/macros/…).';return}
+    if(gcal.sources.some(x=>x.url===u)){$('gcErr').textContent='Questo account è già collegato.';return}
+    $('gcGo').disabled=true;$('gcGo').textContent='Collego…';
+    const src={id:'s'+Date.now().toString(36),name:$('gcName').value.trim()||('Account '+(gcal.sources.length+1)),url:u,token:tok,calsAt:0};
+    try{await gSyncCals(src,true);gcal.sources.push(src);delete gcal.pending;storeG();gErr='';await gRefresh(true);openGcal();toast('Account Google collegato: '+src.name)}
+    catch(e){Object.keys(gcal.cals).forEach(k=>{if(k.startsWith(src.id+'|'))delete gcal.cals[k]});$('gcErr').textContent='Non riesco a collegarmi: '+e.message}
+    finally{const b=$('gcGo');if(b){b.disabled=false;b.textContent='Collega'}}}}
+$('calGoogle').onclick=()=>openGcal();$('miGcal').onclick=()=>{closeMenu();openGcal()};
 setInterval(()=>{if(document.visibilityState==='visible')gRefresh(false)},5*60e3);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)gRefresh(false)});
 setTimeout(()=>gRefresh(false),1500);
@@ -2131,7 +2264,7 @@ function mergeAll(L,R){
   return{entries:mergeList(L.entries,R.entries||[],tb.e),todos:mergeList(L.todos,R.todos||[],tb.t),goals:mergeGoals(L.goals||[],R.goals||[],tb.g),events:mergeList(L.events||[],R.events||[],tb.v),notes:mergeList(L.notes||[],R.notes||[],tb.n),fin:mergeFin(L.fin,R.fin,tb.f),gcal:(R.gcal&&(R.gcal.u||0)>((L.gcal&&L.gcal.u)||0))?R.gcal:L.gcal,tomb:tb,colors:col,colorsU:Math.max(L.colorsU||0,R.colorsU||0)};
 }
 function applyData(d){
-  entries=d.entries;todos=d.todos;goals=d.goals||[];events=d.events||[];notes=d.notes||[];applyFin(d.fin);if(d.gcal&&(d.gcal.u||0)!==(gcal.u||0)){const ch=d.gcal.url!==gcal.url;gcal=Object.assign({url:'',token:'',cals:{},push:'',u:0},d.gcal);store('registroOre.gcal',gcal);gNormKey='';if(ch)setTimeout(()=>gRefresh(true),300)}tomb=d.tomb;tomb.f=tomb.f||{};tomb.g=tomb.g||{};tomb.v=tomb.v||{};tomb.n=tomb.n||{};colors=d.colors;colorsU=d.colorsU;['client','tag','type'].forEach(k=>colors[k]=colors[k]||{});
+  entries=d.entries;todos=d.todos;goals=d.goals||[];events=d.events||[];notes=d.notes||[];applyFin(d.fin);if(d.gcal&&(d.gcal.u||0)!==(gcal.u||0)){const before=JSON.stringify((gcal.sources||[]).map(x=>x.url));const pend=gcal.pending;gcal=Object.assign({sources:[],cals:{},push:'',u:0},d.gcal);if(pend&&!gcal.pending)gcal.pending=pend;gMigrate();store('registroOre.gcal',gcal);gNormKey='';if(JSON.stringify(gcal.sources.map(x=>x.url))!==before)setTimeout(()=>gRefresh(true),300)}tomb=d.tomb;tomb.f=tomb.f||{};tomb.g=tomb.g||{};tomb.v=tomb.v||{};tomb.n=tomb.n||{};colors=d.colors;colorsU=d.colorsU;['client','tag','type'].forEach(k=>colors[k]=colors[k]||{});
   sigE=new Map(entries.map(e=>[e.id,sigOf(e)]));sigT=new Map(todos.map(t=>[t.id,sigOf(t)]));sigG=new Map(goals.map(g=>[g.id,sigOf(g)]));sigV=new Map(events.map(v=>[v.id,sigOf(v)]));sigN=new Map(notes.map(n=>[n.id,sigOf(n)]));
   store(KEY,entries);store(TKEY,todos);store('registroOre.goals',goals);store('registroOre.events',events);store('registroOre.notes',notes);store('registroOre.tomb',tomb);store(CKEY,colors);store('registroOre.colorsU',colorsU);
 }
@@ -2172,7 +2305,7 @@ function openSync(){
     const online=location.protocol.startsWith('http');
     openModal('Sincronizzazione',`<div class="okbox"><b>Attiva su questo dispositivo.</b><br><span id="syncStatus">${esc(syncMsg)}</span></div>
       <p class="muted" style="margin-top:8px">Si sincronizza da sola quando apri l'app, quando fai una modifica e ogni minuto. ${sync.pass?'I dati online sono cifrati con la tua password.':'I dati online non sono cifrati.'}</p>
-      <div class="row" style="margin:10px 0"><button class="btn primary" id="sNow">↻ Sincronizza ora</button><button class="btn danger" id="sOff">Scollega questo dispositivo</button></div>
+      <div class="row" style="margin:10px 0"><button class="btn primary" id="sNow"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7L20 8.6M20 4v4.6h-4.6"/></svg>Sincronizza ora</button><button class="btn danger" id="sOff">Scollega questo dispositivo</button></div>
       <h3>Collega un altro dispositivo</h3>
       <p>Sull'altro dispositivo apri l'app → <b>⋯ → Sincronizzazione</b> → incolla questo <b>codice di collegamento</b> (mandatelo ad esempio via email, Note o AirDrop):</p>
       <div class="row" style="flex-wrap:nowrap;margin-top:6px"><input id="sCode" readonly value="${esc(linkCode())}"><button class="btn" id="sCopy">Copia</button></div>
@@ -2223,7 +2356,7 @@ $('miInstall').onclick=async()=>{
   <p class="muted" style="margin-top:12px">I dati restano salvati su ogni dispositivo separatamente: per portarli da uno all'altro usa <b>Backup completo</b> e poi <b>Importa</b>.</p>`;
   openModal('Installa come app',h);
 };
-const APP_VERSION=32;
+const APP_VERSION=35;
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
   const hadSW=!!navigator.serviceWorker.controller;let reloaded=false;
   navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{reg.update();
@@ -2345,7 +2478,7 @@ function showRecovery(code,intro){
     <p class="full lead" style="margin:0">${esc(intro||'Ecco il nuovo codice di recupero. Quello precedente non funziona più.')}</p>
     <div class="full rc-code" id="rcCode">${esc(code)}</div>
     <label class="full">La tua email<input type="email" id="rcMail" placeholder="nome@esempio.it" autocomplete="email" inputmode="email"></label>
-    <div class="row full" style="gap:8px;flex-wrap:wrap"><button type="button" class="btn primary" id="rcSend">✉️ Invia alla mia email</button><button type="button" class="btn" id="rcCopy">Copia</button><button type="button" class="btn" id="rcFile">Salva come file</button></div>
+    <div class="row full" style="gap:8px;flex-wrap:wrap"><button type="button" class="btn primary" id="rcSend"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Invia alla mia email</button><button type="button" class="btn" id="rcCopy">Copia</button><button type="button" class="btn" id="rcFile">Salva come file</button></div>
     <p class="full muted" style="margin:0;font-size:13px">Chi ha il codice può aprire il bilancio solo se ha anche i tuoi dati, che sono solo sui tuoi dispositivi e nella sincronizzazione. Non condividerlo con nessuno. Per usarlo: nella schermata del Bilancio tocca "Password dimenticata?".</p>
     <label class="full fl-rem" style="justify-content:flex-start"><input type="checkbox" id="rcOk"><span class="chk-ui" aria-hidden="true">✓</span><span>Ho conservato il codice in un posto sicuro</span></label>
     <div class="row full btns"><button type="button" class="btn primary" id="rcDone" disabled>Fatto</button></div></div>`);
@@ -2569,7 +2702,7 @@ function renderFObj(){const c=fCfg(),saldo=c.saldo,gs=fin.filter(o=>o.t==='goal'
   $('foNum').textContent=saldo==null?'—':eur(saldo);
   $('foSub').textContent=saldo==null?'inserisci il saldo per vedere i progressi':`aggiornato il ${fmtShort(c.saldoD||todayStr())}${avg!=null?` · risparmio medio ${eurS(Math.round(avg))}/mese`:''}`;
   $('foList').innerHTML=gs.map(g=>{const col=g.color||'#4a86e8',have=saldo||0,pct=g.target>0?Math.min(100,have/g.target*100):0,miss=Math.max(0,g.target-have),done=g.target>0&&have>=g.target;
-    let hint='';if(done)hint='🎉 Obiettivo raggiunto con il saldo attuale.';
+    let hint='';if(done)hint='<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg> Obiettivo raggiunto con il saldo attuale.';
     else{const parts=[];if(g.due){const n=monthsTo(g.due);const dl=parseD(g.due).toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'});parts.push(n>0?`entro il ${dl}: servono <b>${eur(miss/n)}</b> al mese per ${n} ${n===1?'mese':'mesi'}`:`la scadenza del ${dl} è passata`)}
       if(avg&&avg>0){const k=Math.ceil(miss/avg),d=mParse(mAdd(fMonthStr(new Date()),k));parts.push(`al ritmo attuale lo raggiungi verso ${d.toLocaleDateString('it-IT',{month:'long',year:'numeric'})}`)}
       else if(avg!=null)parts.push('negli ultimi mesi il risparmio è stato negativo o nullo');hint=parts.join(' · ')}
@@ -2649,7 +2782,7 @@ let impState=null;
 function openImport(){if(!finKey){toast('Sblocca prima il bilancio');return}
   openModal('Importa movimenti Revolut',`<div class="grid" data-fin>
     <p class="full lead" style="margin:0">Dall'app Revolut: <b>Conto → ⋯ → Estratto conto → Excel (CSV)</b>, scegli il periodo e salva il file. Poi selezionalo qui.</p>
-    <label class="full btn" style="text-align:center;cursor:pointer;flex-direction:row;justify-content:center">📄 Scegli il file CSV<input type="file" id="impFile" accept=".csv,text/csv,text/plain" style="display:none"></label>
+    <label class="full btn" style="text-align:center;cursor:pointer;flex-direction:row;justify-content:center;gap:6px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>Scegli il file CSV<input type="file" id="impFile" accept=".csv,text/csv,text/plain" style="display:none"></label>
     <p class="full muted" style="margin:0;font-size:13px">Il file viene letto solo su questo dispositivo: i movimenti finiscono cifrati nel bilancio, il file non viene caricato da nessuna parte.</p>
     <p class="full fl-err" id="impErr"></p></div>`);
   $('impFile').onchange=async ev=>{const fl=ev.target.files[0];if(!fl)return;try{const rows=parseRevolut(await fl.text());if(!rows.length)throw new Error('nessun movimento trovato');
@@ -2667,7 +2800,7 @@ function renderImport(){const st=impState,{sel,by,ins}=impPlan(),cats=uniq([...F
   const ms=[...new Set(sel.ok.map(r=>r.m))].sort(),sp=sel.ok.filter(r=>r.amt<0||isRef(r));
   const grp={};sp.forEach(r=>{const g=grp[r.key]||(grp[r.key]={key:r.key,desc:r.desc,n:0,tot:0,r});g.n++;g.tot-=r.amt});const gl=Object.values(grp).sort((a,b)=>b.tot-a.tot),show=st.all?gl:gl.slice(0,30);
   const months=ms.map(m=>{const l=Object.entries(by).filter(([k,v])=>k.startsWith(m+'|')&&Math.abs(v)>0.004).map(([k,v])=>[k.split('|')[1],v]).sort((a,b)=>b[1]-a[1]);const inn=ins.filter(r=>r.m===m);
-    return `<b>${mLabel(m,{month:'long',year:'numeric'})}</b>${l.map(([c,v])=>`<div><span>${esc(c)}</span><span>−${eur(v)}</span></div>`).join('')}${inn.map(r=>`<div><span>↘︎ ${esc(r.desc)}</span><span>+${eur(r.amt)}</span></div>`).join('')}`}).join('');
+    return `<b>${mLabel(m,{month:'long',year:'numeric'})}</b>${l.map(([c,v])=>`<div><span>${esc(c)}</span><span>−${eur(v)}</span></div>`).join('')}${inn.map(r=>`<div><span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 7L7 17M7 9v8h8"/></svg> ${esc(r.desc)}</span><span>+${eur(r.amt)}</span></div>`).join('')}`}).join('');
   $('modalBody').innerHTML=`<div class="grid" data-fin>
     <div class="full imp-sum"><b>${sel.ok.length}</b> movimenti da importare${ms.length?` (${mLabel(ms[0],{month:'short',year:'numeric'})} – ${mLabel(ms[ms.length-1],{month:'short',year:'numeric'})})`:''}${sel.dup?` · ${sel.dup} già importati, saltati`:''}${sel.skip?` · ${sel.skip} esclusi`:''}${sel.cur?` · ${sel.cur} in altre valute, saltati`:''}</div>
     <div class="full seg" id="impMode" style="width:fit-content"><button type="button" data-v="cat">Riassunto per categoria</button><button type="button" data-v="one">Ogni movimento</button></div>
@@ -2727,7 +2860,7 @@ function renderNotes(){
   const list=notes.filter(n=>(n.text||'').trim()||n.id===noteId).filter(n=>!q||(n.text||'').toLowerCase().includes(q)).sort((a,b)=>(b.u||0)-(a.u||0));
   const groups=[];const add=(k,n)=>{let g=groups.find(x=>x.k===k);if(!g)groups.push(g={k,items:[]});g.items.push(n)};
   list.filter(n=>n.pin).forEach(n=>add('Fissate',n));list.filter(n=>!n.pin).forEach(n=>add(nGroup(n.u||n.c||0),n));
-  el.innerHTML=groups.length?groups.map(g=>`<div class="sec" style="margin-top:14px"><span>${esc(g.k)}</span><span class="sec-r">${g.items.length}</span></div><div class="card list nt-list" style="padding:4px 0">${g.items.map(n=>`<div class="ri${n.id===noteId?' sel':''}" onclick="openNote('${n.id}')"><div class="ri-m"><div class="ri-t">${n.pin?'<span class="nt-pin">📌</span>':''}${esc(nTitle(n))}</div><div class="ri-s"><b>${esc(nWhen(n.u||n.c||Date.now()))}</b>${esc(nRest(n).slice(0,120))||'Nessun testo aggiuntivo'}</div></div></div>`).join('')}</div>`).join('')
+  el.innerHTML=groups.length?groups.map(g=>`<div class="sec" style="margin-top:14px"><span>${esc(g.k)}</span><span class="sec-r">${g.items.length}</span></div><div class="card list nt-list" style="padding:4px 0">${g.items.map(n=>`<div class="ri${n.id===noteId?' sel':''}" onclick="openNote('${n.id}')"><div class="ri-m"><div class="ri-t">${n.pin?'<span class="nt-pin"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4h6l-1 6 4 4H6l4-4z"/><path d="M12 14v7"/></svg></span>':''}${esc(nTitle(n))}</div><div class="ri-s"><b>${esc(nWhen(n.u||n.c||Date.now()))}</b>${esc(nRest(n).slice(0,120))||'Nessun testo aggiuntivo'}</div></div></div>`).join('')}</div>`).join('')
     :`<div class="card muted" style="text-align:center">${q?'Nessuna nota trovata.':'Nessuna nota. Premi ＋ per scriverne una.'}</div>`;
   $('noteExportAll').classList.toggle('hidden',!notes.some(n=>(n.text||'').trim()));
   const n=notes.find(x=>x.id===noteId);
