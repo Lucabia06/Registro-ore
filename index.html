@@ -149,7 +149,10 @@ li.todo.done .tt{text-decoration:line-through;color:var(--muted)}
 .wk-dh.today span{color:var(--accent);font-weight:600}
 .wk-times div{position:relative;font-size:11px;color:var(--muted)}
 .wk-times span{position:absolute;top:2px;right:6px}
-.wk-col{position:relative;border-left:1px solid var(--line);background-image:linear-gradient(to bottom,var(--line) 1px,transparent 1px);background-size:100% 48px;cursor:copy}
+.wk-col{position:relative;border-left:1px solid var(--line);cursor:copy}
+.wk-col .hl{position:absolute;left:0;right:0;height:1px;background:var(--line);pointer-events:none}
+.wk-col .cz{position:absolute;left:0;right:0;background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--text) 4%,transparent) 0 4px,transparent 4px 8px);pointer-events:none}
+.wk-times .cz-l span{font-size:9.5px;opacity:.75}
 .ev{position:absolute;border-left:3px solid;border-radius:5px;padding:2px 5px;font-size:11.5px;overflow:hidden;cursor:pointer;line-height:1.3;color:var(--text)}
 .ev:hover{z-index:2;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .ev small{color:var(--muted)}
@@ -376,6 +379,20 @@ label.donechk{flex-direction:row;align-items:center;gap:10px;align-self:end;padd
 .g-cell:hover{outline:2px solid color-mix(in srgb,var(--text) 30%,transparent)}
 
 #goalList .ri-v{font-size:15px}
+/* eventi da Google Calendar: colore pieno chiaro, sola lettura */
+.ev.gev{background:color-mix(in srgb,var(--c) 18%,var(--card))!important;border-left:3px solid var(--c)}
+.ev.gev b{color:color-mix(in srgb,var(--c) 70%,var(--text))}
+.v-bar.gev{border-style:solid;background:color-mix(in srgb,var(--c) 22%,var(--card))}
+.chip.gev{border-left:3px solid var(--c);background:color-mix(in srgb,var(--c) 16%,var(--card))!important}
+.dots i.gev{background:var(--c)!important;opacity:.7}
+.g-mark{display:inline-block;font-size:9px;font-weight:800;border-radius:3px;padding:0 3px;margin-right:3px;background:color-mix(in srgb,var(--c) 30%,transparent);color:var(--text);vertical-align:1px}
+.gst{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:0}
+.gcal-list label{display:flex!important;flex-direction:row!important;align-items:center;gap:10px;padding:8px 2px;border-bottom:1px solid var(--line);color:var(--text);font-size:14px}
+.gcal-list label i{width:12px;height:12px;border-radius:4px;flex:none}
+.gcal-list input{width:18px;height:18px}
+.gsteps{margin:0;padding-left:20px;font-size:14px;line-height:1.55}
+.gsteps li{margin-bottom:4px}
+.gcode{font-family:ui-monospace,Menlo,monospace;font-size:11px;max-height:120px;overflow:auto;background:var(--bg);border-radius:10px;padding:8px 10px;white-space:pre;margin:0}
 /* aree: Agenda | Bilancio */
 .area-sw{display:flex;background:var(--card);border-radius:999px;padding:3px;gap:2px;flex:none;box-shadow:0 1px 2px rgba(0,0,0,.05)}
 .area-sw button{border:0;background:none;font:inherit;font-size:14px;font-weight:600;color:var(--muted);padding:7px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}
@@ -612,6 +629,7 @@ main .sec.fold>span:first-child{display:inline-flex;align-items:center;gap:6px}
     <button class="mi nf" id="miFinCsv">⬇︎ Esporta bilancio (CSV)</button>
     <div class="mi-sep nf"></div>
     <button class="mi" id="miSync">🔄 Sincronizzazione tra dispositivi</button>
+    <button class="mi na" id="miGcal">📅 Calendari Google</button>
     <button class="mi na" id="miManage">🎨 Clienti, attività e colori</button>
     <button class="mi" id="miInstall">📲 Installa come app</button>
     <div class="mi-sep"></div>
@@ -699,7 +717,7 @@ main .sec.fold>span:first-child{display:inline-flex;align-items:center;gap:6px}
   <div class="card" style="padding:12px"><div id="calBody"></div></div>
   <div class="sum-bar" style="align-items:flex-start">
     <div id="calLegend" style="flex:1;min-width:0"></div>
-    <div class="row" style="gap:6px"><select id="calBy" aria-label="Colora per"><option value="client">Colori per cliente</option><option value="type">Colori per attività</option></select><button class="btn small" id="calColors" title="Modifica colori">🎨</button></div>
+    <div class="row" style="gap:6px"><select id="calBy" aria-label="Colora per"><option value="client">Colori per cliente</option><option value="type">Colori per attività</option></select><button class="btn small" id="calColors" title="Modifica colori">🎨</button><button class="btn small" id="calFit" title="Adatta la giornata allo schermo"></button><button class="btn small" id="calGoogle" title="Calendari Google"><span class="gst" id="calGst"></span>Google</button></div>
   </div>
   <p class="muted" style="font-size:12px;margin:2px 4px 0" id="calHint">Trascina sulla griglia dall'ora di inizio a quella di fine per aggiungere un'attività. Sul telefono tieni premuto, poi trascina.</p>
 </section>
@@ -1353,15 +1371,15 @@ function editEvent(id,pre){
     if(!f.reportValidity())return;
     const nv={title:$('v_title').value.trim(),date:d,to:to>d?to:'',allDay:all,start:all?'':$('v_start').value,end:all?'':$('v_end').value,place:$('v_place').value.trim(),note:$('v_note').value.trim(),color:$('v_col').value};
     const gsel=$('v_goal')?$('v_goal').value:(v.goal||'');
-    if(id){Object.assign(v,nv);setGoal(v,gsel)}else{const o={id:uid(),...nv};setGoal(o,gsel);events.push(o)}
-    saveV();closeModal();renderAll();toast('Impegno salvato')};
-  if(id)$('vDel').onclick=()=>{events=events.filter(x=>x.id!==id);saveV();closeModal();renderAll();toast('Impegno eliminato')};
+    let saved;if(id){Object.assign(v,nv);setGoal(v,gsel);saved=v}else{saved={id:uid(),...nv};setGoal(saved,gsel);events.push(saved)}
+    saveV();closeModal();renderAll();toast('Impegno salvato');if(typeof gPush==='function'&&(saved.gid||gcal.push))gPush(saved)};
+  if(id)$('vDel').onclick=()=>{events=events.filter(x=>x.id!==id);saveV();closeModal();renderAll();toast('Impegno eliminato');if(v.gid)gDel(v)};
   if(!id&&!isMobile())setTimeout(()=>$('v_title')&&$('v_title').focus(),50);
 }
 function renderEvents(){
-  const el=$('impList');if(!el)return;const d=$('t_date').value||todayStr(),list=events.filter(v=>vOn(v,d)).sort(vSort);
+  const el=$('impList');if(!el)return;const d=$('t_date').value||todayStr(),list=calEv().filter(v=>vOn(v,d)).sort(vSort);
   $('impWrap').classList.toggle('hidden',!list.length);$('impCount').textContent=list.length>1?String(list.length):'';
-  el.innerHTML=list.map(v=>`<div class="ri" onclick="editEvent('${v.id}')"><span class="v-ic" style="--c:${vColor(v)}" aria-hidden="true">${v.allDay||vBar(v)?'◷':'•'}</span><div class="ri-m"><div class="ri-t">${esc(v.title)}</div><div class="ri-s">${gTag(v.goal)}${esc(vTime(v))}${v.place?' · '+esc(v.place):''}${v.note?' · '+esc(v.note):''}</div></div></div>`).join('');
+  el.innerHTML=list.map(v=>`<div class="ri" onclick="openEv('${v.id}')"><span class="v-ic" style="--c:${vColor(v)}" aria-hidden="true">${v.g?'G':v.allDay||vBar(v)?'◷':'•'}</span><div class="ri-m"><div class="ri-t">${esc(v.title)}</div><div class="ri-s">${gTag(v.goal)}${esc(vTime(v))}${v.place?' · '+esc(v.place):''}${v.note?' · '+esc(v.note):''}</div></div></div>`).join('');
 }
 $('goalAdd').onclick=()=>openCreate('goal',{date:$('t_date').value||todayStr()});
 
@@ -1714,7 +1732,7 @@ $('chatForm').onsubmit=async ev=>{
   ev.preventDefault();const q=$('chatInput').value.trim();if(!q)return;$('chatInput').value='';addMsg(q,'u');
   chatHist.push({role:'user',content:q});const wait=addMsg('Sto analizzando i dati…','a');
   const td=todos.filter(t=>t.date===todayStr()).map(t=>`- [${t.done?'x':' '}] ${t.text}${t.client?' ('+t.client+')':''}`).join('\n')||'(vuota)';
-  const system=`Sei un assistente che analizza il registro ore di lavoro di un freelance/professionista${finKey&&aiCfg.fin!==false?' e il suo bilancio personale':''}. Oggi è ${todayStr()}. Rispondi in italiano, in modo conciso, con numeri precisi (ore e minuti). Calcola con attenzione partendo dai dati CSV. Se i dati non bastano, dillo.\n\nDATI (CSV, durata in minuti):\n${dataCsv()}\n\nLISTA DA FARE DI OGGI:\n${td}\n\nIMPEGNI PERSONALI (non lavorativi, NON contarli nelle ore):\n${events.slice().sort(vSort).map(v=>`- ${v.date}${vEnd(v)>v.date?' → '+vEnd(v):''} ${v.allDay?'(tutto il giorno)':v.start+'–'+v.end}: ${v.title}${v.place?' @ '+v.place:''}${v.note?' ('+v.note+')':''}`).join('\n')||'(nessuno)'}`+finForAI();
+  const system=`Sei un assistente che analizza il registro ore di lavoro di un freelance/professionista${finKey&&aiCfg.fin!==false?' e il suo bilancio personale':''}. Oggi è ${todayStr()}. Rispondi in italiano, in modo conciso, con numeri precisi (ore e minuti). Calcola con attenzione partendo dai dati CSV. Se i dati non bastano, dillo.\n\nDATI (CSV, durata in minuti):\n${dataCsv()}\n\nLISTA DA FARE DI OGGI:\n${td}\n\nIMPEGNI PERSONALI (non lavorativi, NON contarli nelle ore):\n${events.slice().sort(vSort).map(v=>`- ${v.date}${vEnd(v)>v.date?' → '+vEnd(v):''} ${v.allDay?'(tutto il giorno)':v.start+'–'+v.end}: ${v.title}${v.place?' @ '+v.place:''}${v.note?' ('+v.note+')':''}`).join('\n')||'(nessuno)'}`+(gcal.url?`\n\nEVENTI DI GOOGLE CALENDAR (prossimi 30 giorni):\n${calEv().filter(v=>v.g&&v.date>=todayStr()&&v.date<=dStr(addDays(new Date(),30))).sort(vSort).map(v=>`- ${v.date}${v.to?' → '+v.to:''} ${v.allDay?'(tutto il giorno)':v.start+'–'+v.end}: ${v.title}${v.place?' @ '+v.place:''}`).join('\n')||'(nessuno)'}`:'')+finForAI();
   try{const txt=await callAI(system,chatHist);wait.textContent=txt;chatHist.push({role:'assistant',content:txt})}
   catch(err){wait.textContent='Errore: '+err.message;chatHist.pop()}
 };
@@ -1725,6 +1743,23 @@ if(!['client','type'].includes(calBy))calBy='client';
 $('calBy').value=calBy;
 $('calBy').oninput=()=>{calBy=$('calBy').value;store('registroOre.calBy',calBy);renderCalendar()};
 const HH=48;
+/* asse orario "compatto": le ore con attività o impegni sono alte, quelle vuote si stringono,
+   così la giornata intera sta nello schermo. calAx mappa minuti ↔ pixel. */
+let calCompact=load('registroOre.calCompact',true),calAx=null;
+function buildAxis(busy,avail){const H=new Array(24);
+  if(!calCompact)H.fill(HH);
+  else{const nb=busy.filter(Boolean).length,E=14;
+    if(!nb)H.fill(Math.max(16,Math.min(HH,Math.floor(avail/24))));
+    else{/* le serie lunghe di ore vuote (es. la notte) diventano una fascia sottile */
+      for(let h=0;h<24;){if(busy[h]){h++;continue}let j=h;while(j<24&&!busy[j])j++;const len=j-h,e=len>=3?Math.max(3,30/len):E;for(let k=h;k<j;k++)H[k]=e;h=j}
+      const used=H.reduce((a,x,i)=>a+(busy[i]?0:x),0),B=Math.max(30,Math.min(84,(avail-used)/nb));for(let h=0;h<24;h++)if(busy[h])H[h]=B}}
+  const Y=[0];for(let h=0;h<24;h++)Y.push(Y[h]+H[h]);return{H,Y,tot:Y[24]}}
+const yOf=m=>{m=Math.max(0,Math.min(1440,m));const h=Math.min(23,Math.floor(m/60));return calAx.Y[h]+(m-h*60)/60*calAx.H[h]};
+const mOf=y=>{y=Math.max(0,Math.min(calAx.tot,y));let h=0;while(h<23&&calAx.Y[h+1]<=y)h++;return h*60+(y-calAx.Y[h])/calAx.H[h]*60};
+function calAvail(){const b=$('calBody');if(!b||!b.offsetParent)return 560;const top=b.getBoundingClientRect().top+window.scrollY-window.scrollY;
+  const head=document.querySelector('#calBody .wk-head'),gw=document.querySelector('#calBody .g-wrap');
+  const used=(head?head.offsetHeight:56)+(gw?gw.offsetHeight:0);const bottom=isMobile()?96:28;
+  return Math.max(360,Math.round(innerHeight-Math.max(0,b.getBoundingClientRect().top)-used-bottom-24))}
 const evKey=e=>calBy==='tag'?(tagsOf(e)[0]||'(senza tag)'):e[calBy];
 const evColor=e=>colorOf(calBy,evKey(e));
 function segments(){
@@ -1751,35 +1786,45 @@ function renderCalendar(){
   const keys=uniq(entries.map(evKey));
   const gLeg=goals.filter(isText).map(g=>`<span class="leg"><i style="background:${gColor(g)};border-radius:2px;width:14px;height:6px"></i>${esc(g.text)}</span>`).join('');
   $('calLegend').innerHTML=(calView==='year'?'<span class="leg">Colore più intenso = più ore lavorate nel giorno · bordo = impegno</span>':keys.map(k=>`<span class="leg"><i style="background:${colorOf(calBy,k)}"></i>${esc(k)}</span>`).join(''))+(gLeg?`<div style="margin-top:6px">${gLeg}</div>`:'');
-  $('calBy').classList.toggle('hidden',calView==='year');
+  $('calBy').classList.toggle('hidden',calView==='year');updCalFit();gStatus();
   if(calView==='day')renderDays(seg,1);else if(calView==='week')renderDays(seg,7);else if(calView==='month')renderMonth(seg);else renderYear(seg);
 }
 function renderDays(seg,n){
   const start=n===7?monday(calDate):addDays(calDate,0),days=[...Array(n)].map((_,i)=>addDays(start,i)),dss=days.map(dStr),today=todayStr();
-  let first=24*60;dss.forEach(ds=>(seg[ds]||[]).forEach(x=>{if(x.s>0)first=Math.min(first,x.s)}));
-  const scrollTo=Math.max(0,Math.min(7*60,first-30))/60*HH;
+  /* elementi a orario di ogni giorno: attività, impegni e eventi Google */
+  const colItems=ds=>[...(seg[ds]||[]),...calEv().filter(v=>v.date===ds&&!vBar(v)).map(v=>{const s=toMin(v.start)||0,f=toMin(v.end);return{s,f:f>s?f:Math.min(1440,s+60),v}})];
+  const busy=new Array(24).fill(false);let first=24*60;
+  dss.forEach(ds=>colItems(ds).forEach(x=>{first=Math.min(first,x.s);for(let h=Math.floor(x.s/60);h<Math.min(24,Math.ceil(x.f/60));h++)busy[h]=true}));
+  if(dss.includes(today))busy[Math.floor(toMin(nowTime())/60)]=true;
+  const avail=renderDays._avail||calAvail();calAx=buildAxis(busy,avail);
+  const fits=calAx.tot<=avail+2,scrollTo=fits?0:Math.max(0,yOf(Math.min(7*60,first-30)));
   const total=dss.reduce((a,ds)=>a+dayTot(seg,ds),0);
   $('calTitle').textContent=n===1?cap(start.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'}))+' · '+fmtH(total)
     :`${start.toLocaleDateString('it-IT',{day:'numeric',month:'short'})} – ${days[6].toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'})} · ${fmtH(total)}`;
   const top=vRowsHtml(dss)+goalRowsHtml(dss);
   let h=`<div class="wk" style="--n:${n}">`+(top?`<div class="g-wrap">${top}</div>`:'')+`<div class="wk-head"><div></div>${days.map((d,i)=>{const t=dayTot(seg,dss[i]);
     return`<div class="wk-dh ${dss[i]===today?'today':''}" onclick="calGo('day','${dss[i]}')"><span>${DOW[(d.getDay()+6)%7]}</span><b>${d.getDate()}</b><small>${t?fmtH(t):'&nbsp;'}</small></div>`}).join('')}</div>`;
-  h+=`<div class="wk-scroll" id="wkScroll"><div class="wk-body" style="height:${24*HH}px"><div class="wk-times">${[...Array(24)].map((_,i)=>`<div style="height:${HH}px"><span>${pad(i)}:00</span></div>`).join('')}</div>`;
+  const A=calAx,lab=[...Array(24)].map((_,i)=>{const hh=A.H[i];if(hh>=20)return`<div style="height:${hh}px"><span>${pad(i)}:00</span></div>`;
+      const runStart=i===0||A.H[i-1]>=20;let j=i;while(j<23&&A.H[j+1]<20)j++;
+      return `<div class="cz-l" style="height:${hh}px">${runStart&&j>i?`<span>${pad(i)}–${pad(j+1)}</span>`:runStart&&A.H[i]>=12?`<span>${pad(i)}</span>`:''}</div>`}).join('');
+  const lines=[...Array(24)].map((_,i)=>A.H[i]>=20||i===0||A.H[i-1]>=20?`<div class="hl" style="top:${A.Y[i]}px"></div>`:'').join('')+[...Array(24)].map((_,i)=>A.H[i]<20?`<div class="cz" style="top:${A.Y[i]}px;height:${A.H[i]}px"></div>`:'').join('');
+  h+=`<div class="wk-scroll" id="wkScroll" style="max-height:${fits?'none':avail+'px'}"><div class="wk-body" style="height:${A.tot}px"><div class="wk-times">${lab}</div>`;
   dss.forEach(ds=>{
-    const vi=events.filter(v=>v.date===ds&&!vBar(v)).map(v=>{const s=toMin(v.start)||0,f=toMin(v.end);return{s,f:f>s?f:Math.min(1440,s+60),v}});
-    const items=[...(seg[ds]||[]),...vi].sort((a,b)=>a.s-b.s||b.f-a.f);layout(items);
-    h+=`<div class="wk-col" data-ds="${ds}">`+items.map(x=>{
-      if(x.v){const v=x.v,top=x.s/60*HH,ht=Math.max((x.f-x.s)/60*HH,16),c=vColor(v);
-        return `<div class="ev imp" onclick="event.stopPropagation();editEvent('${v.id}')" title="${esc(v.title+'\n'+vTime(v)+(v.place?'\n'+v.place:''))}" style="--c:${c};top:${top}px;height:${ht-2}px;left:calc(${x.col/x.cols*100}% + 2px);width:calc(${100/x.cols}% - 4px)"><b>${esc(v.title)}</b>${ht<34?' ':'<br>'}<small>${esc(v.start)}–${esc(v.end)}${v.place&&ht>=50?' · '+esc(v.place):''}</small></div>`}
-      const top=x.s/60*HH,ht=Math.max((x.f-x.s)/60*HH,16),c=evColor(x.e),e=x.e;
+    const items=colItems(ds).sort((a,b)=>a.s-b.s||b.f-a.f);layout(items);
+    h+=`<div class="wk-col" data-ds="${ds}">${lines}`+items.map(x=>{
+      if(x.v){const v=x.v,top=yOf(x.s),ht=Math.max(yOf(x.f)-top,16),c=vColor(v);
+        return `<div class="ev ${v.g?'gev':'imp'}" onclick="event.stopPropagation();openEv('${v.id}')" title="${esc(v.title+'\n'+vTime(v)+(v.place?'\n'+v.place:''))}" style="--c:${c};top:${top}px;height:${ht-2}px;left:calc(${x.col/x.cols*100}% + 2px);width:calc(${100/x.cols}% - 4px)">${v.g?'<span class="g-mark">G</span>':''}<b>${esc(v.title)}</b>${ht<34?' ':'<br>'}<small>${esc(v.start)}–${esc(v.end)}${v.place&&ht>=50?' · '+esc(v.place):''}</small></div>`}
+      const top=yOf(x.s),ht=Math.max(yOf(x.f)-top,16),c=evColor(x.e),e=x.e;
       const tip=`${e.client} · ${e.type}\n${e.start}–${e.end||'in corso'} (${fmtH(x.f-x.s)})${e.note?'\n'+e.note:''}`;
       return `<div class="ev" onclick="event.stopPropagation();openEntry('${e.id}')" title="${esc(tip)}" style="top:${top}px;height:${ht-2}px;left:calc(${x.col/x.cols*100}% + 2px);width:calc(${100/x.cols}% - 4px);background:${c}2e;border-left-color:${c}"><b>${esc(e.client)}</b> · ${esc(e.type)}${ht<34?' ':'<br>'}<small>${minToT(x.s)}–${e.end?minToT(x.f%1440):'in corso'}</small></div>`;
     }).join('');
-    if(ds===today){const nm=toMin(nowTime());h+=`<div class="now" style="top:${nm/60*HH}px"></div>`}
+    if(ds===today){const nm=toMin(nowTime());h+=`<div class="now" style="top:${yOf(nm)}px"></div>`}
     h+='</div>';
   });
   $('calBody').innerHTML=h+'</div></div></div>';
   $('wkScroll').scrollTop=scrollTo;bindSlots();
+  /* seconda passata: misura lo spazio reale (intestazione, righe obiettivi) e ridisegna se serve */
+  if(!renderDays._avail&&calCompact){const a2=calAvail();if(Math.abs(a2-avail)>12){renderDays._avail=a2;try{renderDays(seg,n)}finally{renderDays._avail=0}}}
 }
 /* clic e trascinamento (come in un calendario): su telefono si tiene premuto prima di trascinare */
 let calDragging=false;
@@ -1788,12 +1833,12 @@ function bindSlots(){document.querySelectorAll('.wk-col').forEach(col=>{
   col.addEventListener('contextmenu',e=>e.preventDefault());
   col.addEventListener('pointerdown',ev=>{
     if(ev.target.closest('.ev')||(ev.pointerType==='mouse'&&ev.button!==0))return;
-    const ds=col.dataset.ds,rect=()=>col.getBoundingClientRect(),toM=y=>Math.max(0,Math.min(1440,Math.round((y-rect().top)/HH*4)*15));
-    const m0=Math.min(1425,Math.floor((ev.clientY-rect().top)/HH*4)*15),y0=ev.clientY,mouse=ev.pointerType==='mouse';
+    const ds=col.dataset.ds,rect=()=>col.getBoundingClientRect(),toM=y=>Math.max(0,Math.min(1440,Math.round(mOf(y-rect().top)/15)*15));
+    const m0=Math.min(1425,Math.floor(mOf(ev.clientY-rect().top)/15)*15),y0=ev.clientY,mouse=ev.pointerType==='mouse';
     let active=mouse,moved=false,m1=m0+60,ghost=null,lp=null;
     if(mouse)ev.preventDefault();
     const show=()=>{if(!ghost){ghost=document.createElement('div');ghost.className='ghost';col.appendChild(ghost)}
-      const a=Math.min(m0,m1),b=Math.max(m0,m1);ghost.style.top=a/60*HH+'px';ghost.style.height=Math.max(15,b-a)/60*HH+'px';ghost.textContent=`${minToT(a)}–${minToT(Math.min(b,1439))} · ${fmtH(b-a)}`};
+      const a=Math.min(m0,m1),b=Math.max(m0,m1);ghost.style.top=yOf(a)+'px';ghost.style.height=Math.max(18,yOf(b)-yOf(a))+'px';ghost.textContent=`${minToT(a)}–${minToT(Math.min(b,1439))} · ${fmtH(b-a)}`};
     if(!mouse){col.classList.add('pressing');lp=setTimeout(()=>{active=calDragging=true;col.classList.remove('pressing');show();navigator.vibrate&&navigator.vibrate(10)},350)}
     const end=()=>{clearTimeout(lp);col.classList.remove('pressing');calDragging=false;removeEventListener('pointermove',mv);removeEventListener('pointerup',up);removeEventListener('pointercancel',cancel);ghost&&ghost.remove()};
     const mv=e=>{if(!active){if(Math.abs(e.clientY-y0)>8){end()}return}
@@ -1811,10 +1856,10 @@ function slotClick(ev,ds){
 }
 /* barre degli impegni di tutto il giorno o di più giorni, sopra la griglia */
 function vRowsHtml(dss){
-  const n=dss.length,a=dss[0],b=dss[n-1],list=events.filter(v=>vBar(v)&&vEnd(v)>=a&&v.date<=b).sort(vSort);if(!list.length)return '';
+  const n=dss.length,a=dss[0],b=dss[n-1],list=calEv().filter(v=>vBar(v)&&vEnd(v)>=a&&v.date<=b).sort(vSort);if(!list.length)return '';
   const rows=[];list.forEach(v=>{const i0=Math.max(0,dss.findIndex(d=>d>=v.date)),i1=dss.length-1-[...dss].reverse().findIndex(d=>d<=vEnd(v));
     let r=rows.findIndex(row=>row.every(x=>x.i1<i0||x.i0>i1));if(r<0){r=rows.length;rows.push([])}rows[r].push({v,i0,i1})});
-  return `<div class="g-rows">${rows.map(row=>`<div class="v-track">${row.map(({v,i0,i1})=>`<span class="v-bar" style="--c:${vColor(v)};left:calc(${i0/n*100}% + 2px);width:calc(${(i1-i0+1)/n*100}% - 4px)" onclick="event.stopPropagation();editEvent('${v.id}')" title="${esc(v.title+' · '+vTime(v))}">${esc(v.title)}${v.allDay?'':' · '+esc(v.start)}</span>`).join('')}</div>`).join('')}</div>`;
+  return `<div class="g-rows">${rows.map(row=>`<div class="v-track">${row.map(({v,i0,i1})=>`<span class="v-bar${v.g?' gev':''}" style="--c:${vColor(v)};left:calc(${i0/n*100}% + 2px);width:calc(${(i1-i0+1)/n*100}% - 4px)" onclick="event.stopPropagation();openEv('${v.id}')" title="${esc(v.title+' · '+vTime(v))}">${v.g?'<span class="g-mark">G</span>':''}${esc(v.title)}${v.allDay?'':' · '+esc(v.start)}</span>`).join('')}</div>`).join('')}</div>`;
 }
 /* righe obiettivi sopra la griglia: barra grigia per i giorni attivi, colore nei giorni segnati; tocca un giorno per segnarlo */
 function goalRowsHtml(dss){
@@ -1833,12 +1878,12 @@ function renderMonth(seg){
   let h='<div class="mo-h">'+DOW.map(d=>`<div>${d}</div>`).join('')+'</div><div class="mo-grid">';
   for(let i=0;i<cells;i++){
     if(i%7===0){const wk=[...Array(7)].map((_,k)=>dStr(addDays(start,i+k))),gr=goalRowsHtml(wk);if(gr)h+=`<div class="mo-goals">${gr}</div>`}
-    const d=addDays(start,i),ds=dStr(d),items=(seg[ds]||[]).slice().sort((a,b)=>a.s-b.s),t=dayTot(seg,ds),vs=events.filter(v=>vOn(v,ds)).sort(vSort);
+    const d=addDays(start,i),ds=dStr(d),items=(seg[ds]||[]).slice().sort((a,b)=>a.s-b.s),t=dayTot(seg,ds),vs=calEv().filter(v=>vOn(v,ds)).sort(vSort);
     h+=`<div class="mo-c ${d.getMonth()===mo?'':'out'} ${ds===today?'today':''}" onclick="calGo('${isMobile()?'day':'week'}','${ds}')"><div class="mo-d"><span>${d.getDate()}</span><small>${t?fmtDec(t)+' h':''}</small></div>`+
-      [...vs.map(v=>`<div class="chip imp" style="--c:${vColor(v)}" onclick="event.stopPropagation();editEvent('${v.id}')" title="${esc(v.title+' · '+vTime(v))}">${v.allDay||vBar(v)?'':esc(v.start)+' '}${esc(v.title)}</div>`),
+      [...vs.map(v=>`<div class="chip ${v.g?'gev':'imp'}" style="--c:${vColor(v)}" onclick="event.stopPropagation();openEv('${v.id}')" title="${esc(v.title+' · '+vTime(v))}">${v.allDay||vBar(v)?'':esc(v.start)+' '}${esc(v.title)}</div>`),
         ...items.map(x=>{const c=evColor(x.e);return`<div class="chip" style="border-left-color:${c};background:${c}24">${minToT(x.s)} ${esc(x.e.client)}</div>`})].slice(0,3).join('')+
       (items.length+vs.length>3?`<div class="more">+${items.length+vs.length-3} altre</div>`:'')+
-      `<div class="dots">${[...vs.map(v=>`<i class="imp" style="--c:${vColor(v)}"></i>`),...items.map(x=>`<i style="background:${evColor(x.e)}"></i>`)].slice(0,6).join('')}</div></div>`;
+      `<div class="dots">${[...vs.map(v=>`<i class="${v.g?'gev':'imp'}" style="--c:${vColor(v)}"></i>`),...items.map(x=>`<i style="background:${evColor(x.e)}"></i>`)].slice(0,6).join('')}</div></div>`;
   }
   $('calBody').innerHTML=h+'</div>';
 }
@@ -1859,7 +1904,7 @@ function renderYear(seg){
       const wk=slots.slice(w*7,w*7+7);
       grid+=wk.map(ds=>{if(!ds)return '<div></div>';const t=dayTot(seg,ds);mt+=t;const r=max?t/max:0,d=+ds.slice(8);
         const lines=yrMode==='A'&&mg.length?`<span class="yd-lines">${mg.map(g=>`<i class="${cls(g,ds)}" style="--c:${gColor(g)}"></i>`).join('')}</span>`:'';
-        const yv=events.filter(v=>vOn(v,ds));
+        const yv=calEv().filter(v=>vOn(v,ds));
         return `<div class="yr-d ${ds===today?'today':''} ${yv.length?'hasv':''}" title="${fmtDate(ds)}: ${t?fmtH(t):'nessuna ora'}${mg.filter(g=>gOn(g,ds)).map(g=>' · ✓ '+g.text).join('')}${yv.map(v=>' · '+esc(v.title)).join('')}" onclick="calGo('${isMobile()?'day':'week'}','${ds}')" style="${yv.length?`--c:${vColor(yv[0])};`:''}${t?`background:color-mix(in srgb,var(--accent) ${Math.round(18+55*r)}%,transparent);${r>.6?'color:#fff':''}`:''}"><span>${d}</span>${lines}</div>`}).join('');
       if(yrMode==='B'&&mg.length){const act=mg.filter(g=>wk.some(ds=>ds&&ds>=g.from&&ds<=g.to));
         if(act.length)grid+=`<div class="yw-lines">${act.map(g=>`<div class="yw-track">${wk.map(ds=>`<i class="${cls(g,ds)}" style="--c:${gColor(g)}"></i>`).join('')}</div>`).join('')}</div>`}
@@ -1873,11 +1918,133 @@ document.querySelectorAll('#calViews button').forEach(b=>b.onclick=()=>{calView=
 function calShift(n){const d=calDate;if(calView==='day')calDate=addDays(d,n);else if(calView==='week')calDate=addDays(d,7*n);else if(calView==='month')calDate=new Date(d.getFullYear(),d.getMonth()+n,1);else calDate=new Date(d.getFullYear()+n,0,1);renderCalendar()}
 $('calPrev').onclick=()=>calShift(-1);$('calNext').onclick=()=>calShift(1);$('calTitle').onclick=()=>{calDate=new Date();renderCalendar()};
 $('calColors').onclick=()=>openManage(calBy);
+function updCalFit(){const b=$('calFit');if(!b)return;b.textContent=calCompact?'↕︎ Giornata intera':'↕︎ Orari normali';b.classList.toggle('hidden',!['day','week'].includes(calView))}
+$('calFit').onclick=()=>{calCompact=!calCompact;store('registroOre.calCompact',calCompact);renderCalendar();toast(calCompact?'Giornata intera nello schermo: le ore vuote si stringono':'Orari a altezza fissa')};
+let calRT;addEventListener('resize',()=>{clearTimeout(calRT);calRT=setTimeout(()=>{if(document.body.dataset.tab==='calendario'&&['day','week'].includes(calView))renderCalendar()},150)});
 $('calAdd').onclick=()=>openCreate('act',{date:['day','week'].includes(calView)&&dStr(calDate)>=dStr(monday(calDate))?dStr(calDate):todayStr()});
 /* scorrimento laterale per cambiare giorno/settimana su smartphone */
 let tx=null,ty=null;
 $('calBody').addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
 $('calBody').addEventListener('touchend',e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;tx=null;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.5)calShift(dx<0?1:-1)},{passive:true});
+
+/* ================= Calendari Google (tramite un tuo Google Apps Script, gratuito) =================
+   Lo script gira sul tuo account Google e risponde solo a chi conosce il suo indirizzo e il codice segreto.
+   Gli eventi Google si vedono nel calendario (sola lettura); gli impegni creati qui possono essere copiati su Google. */
+let gcal=Object.assign({url:'',token:'',cals:{},push:'',u:0},load('registroOre.gcal',{})),gcache=Object.assign({at:0,events:[]},load('registroOre.gcache',{})),gBusy=false,gErr='';
+const storeG=()=>{gcal.u=Date.now();store('registroOre.gcal',gcal);scheduleSync()};
+const gTz=()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){return 'Europe/Rome'}};
+let gNormCache=null,gNormKey='';
+function calEv(){const key=gcache.at+'|'+gcal.u+'|'+events.length;if(!gcal.url)return events;
+  if(gNormKey!==key){gNormKey=key;const mine=new Set(events.map(v=>v.gid).filter(Boolean));
+    gNormCache=(gcache.events||[]).filter(x=>gcal.cals[x.cal]?.on!==false&&!mine.has(x.id)).map((x,i)=>{const c=gcal.cals[x.cal]||{};
+      if(x.allDay){const to=dStr(addDays(parseD(x.e),-1));return{id:'g'+i,g:1,gid:x.id,cal:x.cal,calName:c.name||'',title:x.title||'(senza titolo)',date:x.s,to:to>x.s?to:'',allDay:true,start:'',end:'',place:x.loc||'',note:x.desc||'',color:c.color||'#4285f4'}}
+      let d=x.s.slice(0,10),de=x.e.slice(0,10),st=x.s.slice(11,16),en=x.e.slice(11,16);
+      if(de>d&&en==='00:00'&&dStr(addDays(parseD(d),1))===de){de=d;en='24:00'}
+      return{id:'g'+i,g:1,gid:x.id,cal:x.cal,calName:c.name||'',title:x.title||'(senza titolo)',date:d,to:de>d?de:'',allDay:false,start:st,end:en,place:x.loc||'',note:x.desc||'',color:c.color||'#4285f4'}})}
+  return events.concat(gNormCache)}
+function openEv(id){if(String(id).startsWith('g')){const v=calEv().find(x=>x.id===id);if(v)showGEvent(v)}else editEvent(id)}
+function showGEvent(v){const d=parseD(v.date);
+  openModal(v.title,`<div class="grid"><p class="full" style="margin:0"><span class="gst" style="background:${v.color}"></span><b>${esc(v.calName||'Google Calendar')}</b></p>
+    <p class="full lead" style="margin:0">${esc(cap(d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'})))}${v.to?' – '+esc(fmtShort(v.to)):''} · ${esc(v.allDay?'tutto il giorno':v.start+'–'+(v.end==='24:00'?'24:00':v.end))}</p>
+    ${v.place?`<p class="full" style="margin:0">📍 ${esc(v.place)}</p>`:''}${v.note?`<p class="full muted" style="margin:0;white-space:pre-wrap">${esc(v.note)}</p>`:''}
+    <p class="full muted" style="margin:0;font-size:13px">Evento di Google Calendar: si modifica da Google.</p>
+    <div class="row full btns"><a class="btn primary" href="https://calendar.google.com/calendar/r/day/${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}" target="_blank" rel="noopener">Apri Google Calendar</a></div></div>`)}
+async function gCall(params,post){if(!gcal.url)throw new Error('non collegato');
+  let r;try{r=post?await fetch(gcal.url,{method:'POST',body:JSON.stringify({...params,t:gcal.token,tz:gTz()})})
+    :await fetch(gcal.url+(gcal.url.includes('?')?'&':'?')+new URLSearchParams({...params,t:gcal.token,tz:gTz()}),{cache:'no-store'})}
+  catch(e){throw new Error('Google non raggiungibile (controlla la connessione e che lo script sia distribuito con accesso "Chiunque")')}
+  const txt=await r.text();let j;try{j=JSON.parse(txt)}catch(e){throw new Error(/<html/i.test(txt)?'lo script non risponde come app web: ridistribuiscilo con "Esegui come: Me" e "Chi ha accesso: Chiunque"':'risposta non valida')}
+  if(j.error)throw new Error(j.error);return j}
+function gStatus(){const el=$('calGst');if(!el)return;el.style.background=!gcal.url?'var(--line)':gErr?'var(--danger)':'#34a853';
+  $('calGoogle').title=!gcal.url?'Collega i calendari Google':gErr?'Google: '+gErr:'Google aggiornato '+(gcache.at?new Date(gcache.at).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}):'')}
+async function gRefresh(force){if(!gcal.url||gBusy)return;if(!force&&Date.now()-gcache.at<10*60e3)return;gBusy=true;
+  try{const from=addDays(new Date(),-62),to=addDays(new Date(),190);
+    const ids=Object.entries(gcal.cals).filter(([,c])=>c.on!==false).map(([id])=>id);if(!ids.length&&Object.keys(gcal.cals).length){gcache={at:Date.now(),events:[]};return}
+    const j=await gCall({a:'events',from:from.toISOString(),to:to.toISOString(),cals:ids.join(',')});
+    gcache={at:Date.now(),events:j.events||[]};store('registroOre.gcache',gcache);gErr='';gNormKey='';renderCalendar();renderEvents()}
+  catch(e){gErr=e.message}finally{gBusy=false;gStatus()}}
+/* impegni creati qui → anche su Google (se scelto) */
+async function gPush(v){if(!gcal.url||!gcal.push)return;try{
+  const end=v.allDay?dStr(addDays(parseD(vEnd(v)),1)):vEnd(v)+'T'+v.end;
+  const j=await gCall({a:'upsert',cal:v.gcal||gcal.push,id:v.gid||'',title:v.title,allDay:!!v.allDay,start:v.allDay?v.date:v.date+'T'+v.start,end,place:v.place||'',note:v.note||''},true);
+  const o=events.find(x=>x.id===v.id);if(o&&(o.gid!==j.id||!o.gcal)){o.gid=j.id;o.gcal=v.gcal||gcal.push;saveV()}gRefresh(true)}
+  catch(e){toast('Non sono riuscito a copiare l\'impegno su Google: '+e.message,6000)}}
+async function gDel(v){if(!gcal.url||!v.gid)return;try{await gCall({a:'delete',cal:v.gcal||gcal.push,id:v.gid},true);gRefresh(true)}catch(e){toast('Non sono riuscito a eliminarlo da Google: '+e.message,6000)}}
+function gScript(){return `// Registro Ore ↔ Google Calendar. Incolla tutto in un nuovo progetto su script.google.com
+const TOKEN = '${gcal.token}';
+
+function doGet(e) { return handle((e && e.parameter) || {}); }
+function doPost(e) { let b = {}; try { b = JSON.parse(e.postData.contents); } catch (x) {} return handle(b); }
+
+function handle(p) {
+  if (p.t !== TOKEN) return out({ error: 'Codice non valido' });
+  try {
+    const tz = p.tz || Session.getScriptTimeZone(), a = p.a || 'events';
+    if (a === 'cals') return out({ cals: CalendarApp.getAllCalendars().map(c => ({ id: c.getId(), name: c.getName(), color: c.getColor(), own: c.isOwnedByMe() })) });
+    if (a === 'events') {
+      const from = new Date(p.from), to = new Date(p.to), ids = String(p.cals || '').split(',').filter(String);
+      const cals = ids.length ? ids.map(id => CalendarApp.getCalendarById(id)).filter(Boolean) : CalendarApp.getAllCalendars();
+      const f = d => Utilities.formatDate(d, tz, "yyyy-MM-dd'T'HH:mm"), fd = d => Utilities.formatDate(d, tz, 'yyyy-MM-dd'), ev = [];
+      cals.forEach(c => c.getEvents(from, to).forEach(x => {
+        const all = x.isAllDayEvent();
+        ev.push({ id: x.getId(), cal: c.getId(), title: x.getTitle(), allDay: all,
+          s: all ? fd(x.getAllDayStartDate()) : f(x.getStartTime()), e: all ? fd(x.getAllDayEndDate()) : f(x.getEndTime()),
+          loc: x.getLocation() || '', desc: String(x.getDescription() || '').slice(0, 300) });
+      }));
+      return out({ events: ev });
+    }
+    const cal = CalendarApp.getCalendarById(p.cal) || CalendarApp.getDefaultCalendar();
+    const d = s => Utilities.parseDate(s.length > 10 ? s : s + 'T00:00', tz, "yyyy-MM-dd'T'HH:mm");
+    if (a === 'upsert') {
+      let ev = p.id ? cal.getEventById(p.id) : null;
+      const s = d(p.start), en = d(p.end), opt = { location: p.place || '', description: p.note || '' };
+      if (ev) { ev.setTitle(p.title); if (p.allDay) ev.setAllDayDates(s, en); else ev.setTime(s, en); ev.setLocation(opt.location); ev.setDescription(opt.description); }
+      else ev = p.allDay ? cal.createAllDayEvent(p.title, s, en, opt) : cal.createEvent(p.title, s, en, opt);
+      return out({ id: ev.getId() });
+    }
+    if (a === 'delete') { const ev = p.id && cal.getEventById(p.id); if (ev) ev.deleteEvent(); return out({ ok: true }); }
+    return out({ error: 'Azione sconosciuta' });
+  } catch (err) { return out({ error: String(err && err.message || err) }); }
+}
+function out(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
+// Esegui questa funzione una volta dall'editor per autorizzare l'accesso ai calendari
+function autorizza() { Logger.log(CalendarApp.getAllCalendars().map(c => c.getName()).join(', ')); }
+`}
+function openGcal(){if(!gcal.token){gcal.token=[...crypto.getRandomValues(new Uint8Array(18))].map(b=>'abcdefghijkmnpqrstuvwxyz23456789'[b&31]).join('');store('registroOre.gcal',gcal)}
+  const connected=!!gcal.url,cals=Object.entries(gcal.cals);
+  openModal('Calendari Google',`<div class="grid">
+    ${connected?`<div class="full gcal-list" id="gcList">${cals.map(([id,c])=>`<label><input type="checkbox" data-id="${esc(id)}" ${c.on!==false?'checked':''}><i style="background:${esc(c.color||'#4285f4')}"></i><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">${esc(c.name||id)}</span></label>`).join('')||'<p class="muted">Nessun calendario trovato.</p>'}</div>
+      <label class="full">Copia i nuovi impegni anche su<select id="gcPush"><option value="">Non copiare (solo lettura)</option>${cals.filter(([,c])=>c.own).map(([id,c])=>`<option value="${esc(id)}"${gcal.push===id?' selected':''}>${esc(c.name)}</option>`).join('')}</select></label>
+      <p class="full muted" style="margin:0;font-size:13px">${gErr?`<b style="color:var(--danger)">Ultimo errore: ${esc(gErr)}</b><br>`:''}${gcache.at?'Ultimo aggiornamento: '+new Date(gcache.at).toLocaleString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})+' · '+gcache.events.length+' eventi (da 2 mesi fa a 6 mesi avanti).':''}</p>
+      <div class="row full btns" style="flex-wrap:wrap"><button type="button" class="btn primary" id="gcSave">Salva</button><button type="button" class="btn" id="gcNow">↻ Aggiorna ora</button><button type="button" class="btn danger" id="gcOff">Scollega</button></div>`
+    :`<p class="full lead" style="margin:0">Collega i tuoi calendari Google gratis, senza dare password all'app: crei un piccolo "script" sul tuo account Google che mostra qui i tuoi eventi (e, se vuoi, aggiunge su Google gli impegni creati qui). Serve una volta sola, circa 5 minuti, meglio dal Mac.</p>
+      <ol class="full gsteps">
+        <li>Premi <b>Copia lo script</b> qui sotto.</li>
+        <li>Apri <a href="https://script.google.com/home/projects/create" target="_blank" rel="noopener"><b>script.google.com</b></a> con il tuo account Google: si crea un nuovo progetto. Cancella il testo che c'è e <b>incolla</b> lo script, poi salva (💾).</li>
+        <li>In alto scegli la funzione <b>autorizza</b> e premi <b>Esegui</b>: Google ti chiede di autorizzare l'accesso ai calendari. Se compare "App non verificata", tocca <i>Avanzate → Vai al progetto</i> (è il tuo script).</li>
+        <li>Premi <b>Esegui il deployment → Nuovo deployment</b>, tipo <b>App web</b>. Imposta <b>Esegui come: Me</b> e <b>Chi ha accesso: Chiunque</b>, poi <b>Esegui il deployment</b>.</li>
+        <li>Copia l'<b>URL dell'app web</b> (finisce con <code>/exec</code>) e incollalo qui sotto.</li>
+      </ol>
+      <div class="full"><button type="button" class="btn" id="gcCopy">📋 Copia lo script</button></div>
+      <pre class="full gcode" id="gcCode"></pre>
+      <label class="full">URL dell'app web<input id="gcUrl" placeholder="https://script.google.com/macros/s/…/exec" inputmode="url" autocomplete="off" spellcheck="false"></label>
+      <p class="full muted" style="margin:0;font-size:13px">Lo script contiene un codice segreto: chi non lo conosce non può leggere i tuoi eventi. Indirizzo e codice restano nell'app e nella tua sincronizzazione, mai nel repository.</p>
+      <p class="full fl-err" id="gcErr"></p>
+      <div class="row full btns"><button type="button" class="btn primary" id="gcGo">Collega</button></div>`}</div>`);
+  if(!connected){$('gcCode').textContent=gScript();
+    $('gcCopy').onclick=async()=>{try{await navigator.clipboard.writeText(gScript());toast('Script copiato')}catch(e){const r=document.createRange();r.selectNodeContents($('gcCode'));getSelection().removeAllRanges();getSelection().addRange(r);toast('Script selezionato: copialo')}};
+    $('gcGo').onclick=async()=>{const u=$('gcUrl').value.trim();$('gcErr').textContent='';
+      if(!/^https:\/\/script\.google(usercontent)?\.com\/.+/.test(u)){$('gcErr').textContent='Incolla l\'URL dell\'app web (inizia con https://script.google.com/macros/…).';return}
+      $('gcGo').disabled=true;$('gcGo').textContent='Collego…';const old=gcal.url;gcal.url=u;
+      try{const j=await gCall({a:'cals'});gcal.cals={};(j.cals||[]).forEach(c=>gcal.cals[c.id]={name:c.name,color:c.color,own:c.own,on:true});storeG();gErr='';await gRefresh(true);openGcal();toast('Calendari Google collegati')}
+      catch(e){gcal.url=old;$('gcErr').textContent='Non riesco a collegarmi: '+e.message}finally{const b=$('gcGo');if(b){b.disabled=false;b.textContent='Collega'}}}}
+  else{$('gcSave').onclick=()=>{document.querySelectorAll('#gcList input').forEach(i=>{gcal.cals[i.dataset.id].on=i.checked});gcal.push=$('gcPush').value;storeG();gNormKey='';closeModal();gRefresh(true);renderCalendar();toast('Impostazioni Google salvate')};
+    $('gcNow').onclick=async()=>{$('gcNow').disabled=true;await gRefresh(true);openGcal()};
+    $('gcOff').onclick=()=>{if(!confirm('Scollegare i calendari Google? Gli eventi Google spariranno dal calendario (su Google restano).'))return;gcal={url:'',token:'',cals:{},push:'',u:0};storeG();gcache={at:0,events:[]};store('registroOre.gcache',gcache);gNormKey='';closeModal();renderAll();gStatus()}}}
+$('calGoogle').onclick=openGcal;$('miGcal').onclick=()=>{closeMenu();openGcal()};
+setInterval(()=>{if(document.visibilityState==='visible')gRefresh(false)},5*60e3);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)gRefresh(false)});
+setTimeout(()=>gRefresh(false),1500);
 
 /* ================= Import / Export ================= */
 async function download(name,text,type){
@@ -1956,15 +2123,15 @@ function mergeList(a,b,tb){const m=new Map();[...a,...b].forEach(x=>{if(!x||!x.i
 function mergeGoals(a,b,tb){const all=[...a,...b];return mergeList(a,b,tb).map(g=>{if(g.kind!=='text')return g;const d={};
   all.filter(x=>x.id===g.id).forEach(x=>Object.entries(x.days||{}).forEach(([k,v])=>{if(!(k in d)||Math.abs(v)>Math.abs(d[k]))d[k]=v}));
   const keys=Object.keys(d).sort();return{...g,days:keys.reduce((o,k)=>(o[k]=d[k],o),{})}})}
-function localData(){flushNote();return{entries,todos,goals,events,notes,fin:finStore,tomb,colors,colorsU}}
+function localData(){flushNote();return{entries,todos,goals,events,notes,fin:finStore,gcal,tomb,colors,colorsU}}
 function mergeAll(L,R){
   const tb={e:maxMerge(L.tomb.e,R.tomb?.e),t:maxMerge(L.tomb.t,R.tomb?.t),g:maxMerge(L.tomb.g,R.tomb?.g),v:maxMerge(L.tomb.v,R.tomb?.v),n:maxMerge(L.tomb.n,R.tomb?.n),f:maxMerge(L.tomb.f,R.tomb?.f)};
   const rNewer=(R.colorsU||0)>(L.colorsU||0),nc=rNewer?(R.colors||{}):L.colors,oc=rNewer?L.colors:(R.colors||{}),col={};
   ['client','tag','type'].forEach(k=>col[k]={...(oc[k]||{}),...(nc[k]||{})});
-  return{entries:mergeList(L.entries,R.entries||[],tb.e),todos:mergeList(L.todos,R.todos||[],tb.t),goals:mergeGoals(L.goals||[],R.goals||[],tb.g),events:mergeList(L.events||[],R.events||[],tb.v),notes:mergeList(L.notes||[],R.notes||[],tb.n),fin:mergeFin(L.fin,R.fin,tb.f),tomb:tb,colors:col,colorsU:Math.max(L.colorsU||0,R.colorsU||0)};
+  return{entries:mergeList(L.entries,R.entries||[],tb.e),todos:mergeList(L.todos,R.todos||[],tb.t),goals:mergeGoals(L.goals||[],R.goals||[],tb.g),events:mergeList(L.events||[],R.events||[],tb.v),notes:mergeList(L.notes||[],R.notes||[],tb.n),fin:mergeFin(L.fin,R.fin,tb.f),gcal:(R.gcal&&(R.gcal.u||0)>((L.gcal&&L.gcal.u)||0))?R.gcal:L.gcal,tomb:tb,colors:col,colorsU:Math.max(L.colorsU||0,R.colorsU||0)};
 }
 function applyData(d){
-  entries=d.entries;todos=d.todos;goals=d.goals||[];events=d.events||[];notes=d.notes||[];applyFin(d.fin);tomb=d.tomb;tomb.f=tomb.f||{};tomb.g=tomb.g||{};tomb.v=tomb.v||{};tomb.n=tomb.n||{};colors=d.colors;colorsU=d.colorsU;['client','tag','type'].forEach(k=>colors[k]=colors[k]||{});
+  entries=d.entries;todos=d.todos;goals=d.goals||[];events=d.events||[];notes=d.notes||[];applyFin(d.fin);if(d.gcal&&(d.gcal.u||0)!==(gcal.u||0)){const ch=d.gcal.url!==gcal.url;gcal=Object.assign({url:'',token:'',cals:{},push:'',u:0},d.gcal);store('registroOre.gcal',gcal);gNormKey='';if(ch)setTimeout(()=>gRefresh(true),300)}tomb=d.tomb;tomb.f=tomb.f||{};tomb.g=tomb.g||{};tomb.v=tomb.v||{};tomb.n=tomb.n||{};colors=d.colors;colorsU=d.colorsU;['client','tag','type'].forEach(k=>colors[k]=colors[k]||{});
   sigE=new Map(entries.map(e=>[e.id,sigOf(e)]));sigT=new Map(todos.map(t=>[t.id,sigOf(t)]));sigG=new Map(goals.map(g=>[g.id,sigOf(g)]));sigV=new Map(events.map(v=>[v.id,sigOf(v)]));sigN=new Map(notes.map(n=>[n.id,sigOf(n)]));
   store(KEY,entries);store(TKEY,todos);store('registroOre.goals',goals);store('registroOre.events',events);store('registroOre.notes',notes);store('registroOre.tomb',tomb);store(CKEY,colors);store('registroOre.colorsU',colorsU);
 }
@@ -2056,7 +2223,7 @@ $('miInstall').onclick=async()=>{
   <p class="muted" style="margin-top:12px">I dati restano salvati su ogni dispositivo separatamente: per portarli da uno all'altro usa <b>Backup completo</b> e poi <b>Importa</b>.</p>`;
   openModal('Installa come app',h);
 };
-const APP_VERSION=31;
+const APP_VERSION=32;
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
   const hadSW=!!navigator.serviceWorker.controller;let reloaded=false;
   navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{reg.update();
